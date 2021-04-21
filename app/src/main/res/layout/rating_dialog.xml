@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@android:color/transparent">
+
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentEnd="true"
+       android:layout_alignParentTop="true"
+       android:backgroundTint="@color/white"
+       app:fabCustomSize="28dp"
+       android:layout_marginRight="1dp"
+       android:layout_marginTop="-20dp"
+       android:elevation="4dp"
+       android:src="@drawable/close_icon_grey" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginHorizontal="24dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:fontFamily="@font/avenir_medium"
+            android:text="@string/overall_rating"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/avenir_black"
+            android:text="4.5"
+            android:textColor="#36B000"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/avenir_medium"
+            android:gravity="center"
+            android:text="@string/rate_your_experience"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+        <RatingBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:numStars="5"
+            android:progressDrawable="@drawable/custom_rating_bar"
+            android:rating="2.5" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/rating_dialog_button_background"
+            android:fontFamily="@font/avenir_medium"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"/>
+    </LinearLayout>
+
+</RelativeLayout>
