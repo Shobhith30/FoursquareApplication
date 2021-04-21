@@ -112,7 +112,6 @@
         android:layout_below="@id/password_value"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
-
     <EditText
         android:id="@+id/signup_confrim_password_value"
         android:layout_width="match_parent"

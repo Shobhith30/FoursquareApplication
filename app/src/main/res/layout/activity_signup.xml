@@ -130,7 +130,6 @@
         android:maxLength="6"
         android:paddingBottom="30dp"
         android:backgroundTint="#b5abab"/>
-
     <TextView
         android:id="@+id/signup_login"
         android:layout_width="match_parent"
