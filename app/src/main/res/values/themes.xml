@@ -13,4 +13,14 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="myToolBar" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="mynavigation" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:listDivider">@color/separator</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 </resources>

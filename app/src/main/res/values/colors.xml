@@ -10,5 +10,6 @@
     <color name="status_bar_color">#310d20</color>
     <color name="toolbar_background">#370F24</color>
     <color name="blue_button">#351347</color>
+    <color name="separator">#4FFFFFFF</color>
 
 </resources>
