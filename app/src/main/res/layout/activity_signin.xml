@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:background="@drawable/background_copy">
+
+
+    <TextView
+        android:id="@+id/signin_skip_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/skip_logo"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:layout_marginEnd="40dp"
+        android:fontFamily="@font/avenir_book"/>
+
+    <TextView
+        android:id="@+id/signin_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/signin_skip_logo"
+        android:fontFamily="@font/avenir_book"
+        android:text="@string/skip"
+        android:textColor="@color/white"
+        android:textSize="28sp" />
+
+    <ImageView
+        android:id="@+id/signin_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"/>
+
+    <TextView
+        android:id="@+id/signin_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signin_logo"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#b5abab"
+        android:text="@string/email"
+        android:fontFamily="@font/avenir_book"
+        android:textSize="24sp"/>
+
+    <EditText
+        android:id="@+id/signin_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/ryan_wilson"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="28sp"
+        android:fontFamily="@font/avenir_book"
+        android:layout_below="@id/signin_email"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:backgroundTint="#b5abab"/>
+
+
+    <TextView
+        android:id="@+id/signin_password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#b5abab"
+        android:text="@string/password"
+        android:fontFamily="@font/avenir_book"
+        android:textSize="24sp"
+        android:layout_below="@id/signin_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"/>
+
+    <EditText
+        android:id="@+id/sigin_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/ryan_wilson"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textColorHint="@color/white"
+        android:fontFamily="@font/avenir_book"
+        android:layout_below="@id/signin_password_text"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:gravity="center"
+        android:maxLength="6"
+        android:paddingBottom="20dp"
+        android:backgroundTint="#b5abab"/>
+
+    <TextView
+        android:id="@+id/sigin_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password"
+        android:fontFamily="@font/avenir_book"
+        android:textColor="#b5abab"
+        android:textSize="24sp"
+        android:layout_below="@id/sigin_password"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        />
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:text="@string/login"
+        android:layout_below="@id/sigin_password"
+        android:layout_marginTop="80dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/avenir_book"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:background="@drawable/login_button_design"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"/>
+
+<TextView
+    android:id="@+id/create_account"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/create_account"
+    android:layout_centerHorizontal="true"
+    android:textColor="@color/white"
+    android:layout_below="@id/login"
+    android:textSize="28sp"
+    android:fontFamily="@font/avenir_book"
+    android:layout_marginTop="24dp"/>
+
+    <RelativeLayout
+        android:id="@+id/card_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_below="@id/create_account">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            card_view:cardElevation="0dp"
+            android:layout_marginTop="25dp"
+            card_view:cardUseCompatPadding="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="#E6000000"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="0dp"
+                card_view:cardUseCompatPadding="false"
+                >
+
+                <ImageView
+                    android:id="@+id/facebook_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="50dp"
+                    android:src="@drawable/facebook_btn"
+                    />
+                <ImageView
+                    android:id="@+id/google_plus_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/g__btn"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="40dp"/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/signin_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:background="@drawable/login_or_design"
+            android:text="@string/or"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
