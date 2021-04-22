@@ -9,6 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoursquareApplication">
+      
+        <activity android:name=".SlideMenuActivity"></activity>
+        <activity
+            android:name=".FeedbackActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".AddReviewActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".SplashScreenActivity" />
         <activity android:name=".ReviewActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
