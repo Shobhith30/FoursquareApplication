@@ -24,5 +24,11 @@
     <string name="profile_picture">Profile Picture</string>
     <string name="overall_rating">Overall Rating</string>
     <string name="rate_your_experience">How would you rate your experience?</string>
+    <string name="place_image">Place Image</string>
+    <string name="close_dialog">close dialog</string>
+    <string name="rating">Rating</string>
+    <string name="review">Review</string>
+    <string name="photos">Photos</string>
+    <string name="overview">Overview</string>
 
 </resources>
