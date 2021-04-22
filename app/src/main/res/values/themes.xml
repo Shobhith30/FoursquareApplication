@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.FoursquareApplication" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.FoursquareApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/toolbar_background</item>
         <item name="colorPrimaryVariant">@color/status_bar_color</item>
@@ -12,5 +12,15 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="myToolBar" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="mynavigation" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:listDivider">@color/separator</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>
