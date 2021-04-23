@@ -3,12 +3,9 @@ package com.example.foursquareapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity() {
+class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        startActivity(Intent(this,PhotosActivity::class.java))
-
+        setContentView(R.layout.activity_details)
     }
 }
