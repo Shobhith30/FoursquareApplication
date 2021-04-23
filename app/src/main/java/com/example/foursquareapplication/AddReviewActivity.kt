@@ -23,14 +23,12 @@ class AddReviewActivity : AppCompatActivity() {
 
         val submit=findViewById<Button>(R.id.submit)
 
-        submit.setOnClickListener{
-            startActivity(Intent(this,FeedbackActivity::class.java))
-        }
     }
 
     private fun setToolbar() {
         addReviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
         addReviewBinding.toolbarTitle.text = "Add Review"
+        
 
 
     }
