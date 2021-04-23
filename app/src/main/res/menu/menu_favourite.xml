@@ -6,6 +6,7 @@
         android:visible="true"
         android:title="@string/filter"
         android:icon="@drawable/filter_icon"
+        android:orderInCategory="1"
         app:showAsAction="always"
         />
 </menu>
