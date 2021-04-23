@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoursquareApplication">
 
+        <activity android:name=".DetailsActivity"></activity>
         <activity android:name=".SlideMenuActivity" />
         <activity
             android:name=".FeedbackActivity"
@@ -18,8 +19,8 @@
             android:name=".AddReviewActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".SplashScreenActivity" />
-        <activity android:name=".ReviewActivity"/>
         <activity android:name=".HomeActivity"/>
+        <activity android:name=".ReviewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
