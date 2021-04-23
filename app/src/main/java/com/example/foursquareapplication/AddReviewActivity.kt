@@ -23,6 +23,7 @@ class AddReviewActivity : AppCompatActivity() {
 
         val submit=findViewById<Button>(R.id.submit)
 
+
     }
 
     private fun setToolbar() {
