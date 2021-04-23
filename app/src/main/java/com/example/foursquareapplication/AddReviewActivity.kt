@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.widget.ButtonBarLayout
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.foursquareapplication.databinding.ActivityAddReviewBinding
 
 class AddReviewActivity : AppCompatActivity() {
@@ -22,6 +24,18 @@ class AddReviewActivity : AppCompatActivity() {
         setToolbar()
 
         val submit=findViewById<Button>(R.id.submit)
+
+
+        initialise()
+    }
+
+    private fun initialise() {
+
+
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView2)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
+        recyclerView.layoutManager = layoutManager
 
 
     }

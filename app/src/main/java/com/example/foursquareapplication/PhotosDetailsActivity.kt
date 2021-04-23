@@ -9,7 +9,7 @@ import androidx.core.graphics.toColor
 import com.example.foursquareapplication.databinding.ActivityPhotosDetailsBinding
 
 class PhotosDetailsActivity : AppCompatActivity() {
-    private lateinit var feedBackBinding: ActivityPhotosDetailsBinding
+    private lateinit var activityPhotoDetailsBinding: ActivityPhotosDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,16 +22,16 @@ class PhotosDetailsActivity : AppCompatActivity() {
 
 
 
-        feedBackBinding = ActivityPhotosDetailsBinding.inflate(layoutInflater)
-        setContentView(feedBackBinding.root)
+        activityPhotoDetailsBinding = ActivityPhotosDetailsBinding.inflate(layoutInflater)
+        setContentView(activityPhotoDetailsBinding.root)
 
         var modelItems:PhotoModel=intent.getSerializableExtra("data") as PhotoModel
 
-        feedBackBinding.imageview.setImageResource(modelItems.image!!)
+        activityPhotoDetailsBinding.imageview.setImageResource(modelItems.image!!)
 
-        feedBackBinding.toolbar.setNavigationIcon(R.drawable.close_icon)
-        feedBackBinding.toolbarTitle.text = "Attil"
-        feedBackBinding.toolbar.inflateMenu(R.menu.menu_share)
+        activityPhotoDetailsBinding.toolbar.setNavigationIcon(R.drawable.close_icon)
+        activityPhotoDetailsBinding.toolbarTitle.text = "Attil"
+        activityPhotoDetailsBinding.toolbar.inflateMenu(R.menu.menu_share)
 
 
     }
