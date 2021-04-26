@@ -1,5 +1,6 @@
 package com.example.foursquareapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -8,7 +9,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startActivity(Intent(this,PhotosActivity::class.java))
+        //startActivity(Intent(this,ReviewActivity::class.java))
+        supportFragmentManager.beginTransaction().add(R.id.main_root,SearchFilterFragment()).commit()
 
     }
 }

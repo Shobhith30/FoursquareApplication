@@ -5,155 +5,207 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".ReviewActivity">
 
-    <ImageView
-        android:id="@+id/place_image"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/background"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/place_image" />
-
-    <RatingBar
-        android:id="@+id/rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:rating="2.5"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
-        android:progressDrawable="@drawable/custom_rating_bar"
-        app:layout_constraintBottom_toBottomOf="@id/place_image"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/details"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/avenir_book"
-        android:gravity="center"
-        android:text="Indian Restaurant Chinese Restaurant and Continenental"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/rating" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/to_rating_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/avenir_book"
-        android:text="@string/rating"
-        android:textColor="#8D8D8D"
-        android:textSize="16sp"
-        app:drawableTopCompat="@drawable/rating_icon"
-        app:layout_constraintEnd_toStartOf="@+id/to_photo_screen"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/place_image"
-        android:layout_marginTop="15dp"/>
-
-    <TextView
-        android:id="@+id/to_photo_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/avenir_book"
-        android:text="@string/photos"
-        android:textColor="#8D8D8D"
-        android:textSize="16sp"
-        app:drawableTopCompat="@drawable/photos_icon"
-        app:layout_constraintEnd_toStartOf="@+id/to_review_screen"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/to_rating_screen"
-        app:layout_constraintTop_toTopOf="@id/to_rating_screen" />
-
-    <TextView
-        android:id="@+id/to_review_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/avenir_book"
-        android:text="@string/review"
-        android:textColor="#8D8D8D"
-        android:textSize="16sp"
-        app:drawableTopCompat="@drawable/review_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/to_photo_screen"
-        app:layout_constraintTop_toTopOf="@id/to_rating_screen" />
-
-    <View
-        app:layout_constraintTop_toBottomOf="@id/to_rating_screen"
-        android:id="@+id/separator_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="20dp"
-        android:background="#CCCCCC"/>
-    <TextView
-        android:id="@+id/overview_heading"
-        app:layout_constraintTop_toBottomOf="@id/separator_line"
-        app:layout_constraintLeft_toLeftOf="@id/separator_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/overview"
-        android:textColor="#351347"
-        android:textSize="22sp"
-        android:fontFamily="@font/avenir_book"/>
-    <TextView
-        android:id="@+id/overview"
-        app:layout_constraintTop_toBottomOf="@id/overview_heading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="20dp"
-        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a"
-        android:textSize="18sp"
-        android:justificationMode="inter_word"
-        android:textColor="#8D8D8D"
-        android:fontFamily="@font/avenir_book"/>
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/overview"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/map_view_button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/add_review"
-        android:textColor="#F7F7F7"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:fontFamily="@font/avenir_medium"
-        android:background="@color/blue_button" />
-
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <ImageView
+            android:id="@+id/place_image"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="400dp"
+            android:contentDescription="@string/place_image"
+            android:scaleType="fitXY"
+            android:src="@drawable/background"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <RatingBar
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/custom_rating_bar"
+            android:rating="2.5"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            app:layout_constraintBottom_toBottomOf="@id/place_image"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_book"
+            android:gravity="center"
+            android:text="Indian Restaurant Chinese Restaurant and Continenental"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/rating" />
+
+        <TextView
+            android:id="@+id/to_rating_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/avenir_book"
+            android:text="@string/rating"
+            android:textColor="#8D8D8D"
+            android:textSize="16sp"
+            app:drawableTopCompat="@drawable/rating_icon"
+            app:layout_constraintEnd_toStartOf="@+id/to_photo_screen"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/place_image" />
+
+        <TextView
+            android:id="@+id/to_photo_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_book"
+            android:text="@string/photos"
+            android:textColor="#8D8D8D"
+            android:textSize="16sp"
+            app:drawableTopCompat="@drawable/photos_icon"
+            app:layout_constraintEnd_toStartOf="@+id/to_review_screen"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/to_rating_screen"
+            app:layout_constraintTop_toTopOf="@id/to_rating_screen" />
+
+        <TextView
+            android:id="@+id/to_review_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_book"
+            android:text="@string/review"
+            android:textColor="#8D8D8D"
+            android:textSize="16sp"
+            app:drawableTopCompat="@drawable/review_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/to_photo_screen"
+            app:layout_constraintTop_toTopOf="@id/to_rating_screen" />
+
+        <View
+            android:id="@+id/separator_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="#CCCCCC"
+            app:layout_constraintTop_toBottomOf="@id/to_rating_screen" />
+
+        <TextView
+            android:id="@+id/overview_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/avenir_book"
+            android:text="@string/overview"
+            android:textColor="#351347"
+            android:textSize="22sp"
+            app:layout_constraintLeft_toLeftOf="@id/separator_line"
+            app:layout_constraintTop_toBottomOf="@id/separator_line" />
+
+        <TextView
+            android:id="@+id/overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/avenir_book"
+            android:justificationMode="inter_word"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a"
+            android:textColor="#8D8D8D"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/overview_heading" />
+
+        <LinearLayout
+            android:id="@+id/location_information"
+            android:weightSum="2"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F5F5F5"
+            app:layout_constraintTop_toBottomOf="@id/overview"
+            android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:padding="20dp"
+            android:id="@+id/address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Attil"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:text="Kasaragod, Adoor ,Kozhikode Adoor kasaragod"
+                android:textSize="16sp"
+                android:fontFamily="@font/avenir_medium"/>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+918157899615"
+                android:textSize="16sp"
+                android:fontFamily="@font/avenir_medium"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Drive : 20km"
+                android:textSize="16sp"
+                android:fontFamily="@font/avenir_medium"/>
 
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+
+        </LinearLayout>
+
+<!--        <fragment-->
+<!--            android:id="@+id/map"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="match_parent" />-->
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/add_review_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/blue_button"
+            android:fontFamily="@font/avenir_medium"
+            android:gravity="center"
+            android:text="@string/add_review"
+            android:textColor="#F7F7F7"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/location_information" />
+
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:elevation="0dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Attil"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
