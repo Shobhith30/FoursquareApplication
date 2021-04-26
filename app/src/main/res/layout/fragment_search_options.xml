@@ -21,7 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:text="@string/use_my_current_location"
         android:textColor="@color/black"
         android:fontFamily="@font/avenir_book"
@@ -53,7 +53,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:text="@string/select_search_area_on_map"
             android:textColor="@color/black"
             android:fontFamily="@font/avenir_book"

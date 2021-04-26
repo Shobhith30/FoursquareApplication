@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="40dp"/>
 
     <TextView
         android:id="@+id/email"
@@ -20,10 +20,10 @@
         android:textColor="#b5abab"
         android:text="@string/enter_otp"
         android:fontFamily="@font/avenir_book"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:layout_below="@id/signup_logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="20dp"/>
 
     <EditText
         android:id="@+id/email_value"
@@ -32,7 +32,7 @@
         android:inputType="textEmailAddress"
         android:hint="@string/otp_number"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textColorHint="@color/white"
         android:fontFamily="@font/avenir_book"
         android:layout_below="@id/email"
@@ -50,7 +50,7 @@
         android:textColor="#b5abab"
         android:text="@string/mobile_number"
         android:fontFamily="@font/avenir_book"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:layout_below="@id/email_value"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
@@ -62,7 +62,7 @@
         android:inputType="number"
         android:hint="@string/otp_number"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textColorHint="@color/white"
         android:fontFamily="@font/avenir_book"
         android:layout_below="@id/mobile_number"
@@ -79,7 +79,7 @@
         android:textColor="#b5abab"
         android:text="@string/password"
         android:fontFamily="@font/avenir_book"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:layout_below="@id/mobile_value"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
@@ -91,7 +91,7 @@
         android:inputType="numberPassword"
         android:hint="@string/otp_number"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textColorHint="@color/white"
         android:fontFamily="@font/avenir_book"
         android:layout_below="@id/password_signup"
@@ -108,7 +108,7 @@
         android:textColor="#b5abab"
         android:text="@string/confirm_password"
         android:fontFamily="@font/avenir_book"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:layout_below="@id/password_value"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
@@ -120,7 +120,7 @@
         android:inputType="numberPassword"
         android:hint="@string/otp_number"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textColorHint="@color/white"
         android:fontFamily="@font/avenir_book"
         android:layout_below="@id/confrim_password_signup"
@@ -133,13 +133,13 @@
     <TextView
         android:id="@+id/signup_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:text="@string/login"
         android:layout_below="@id/signup_confrim_password_value"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:fontFamily="@font/avenir_book"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:gravity="center"
         android:background="@drawable/login_button_design"
         android:layout_marginStart="40dp"
