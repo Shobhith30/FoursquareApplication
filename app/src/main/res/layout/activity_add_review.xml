@@ -26,10 +26,10 @@
         >
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/add_photos_to_review"
             android:scaleType="centerCrop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             app:srcCompat="@drawable/photos_icon" />
 
     </androidx.cardview.widget.CardView>
@@ -64,17 +64,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        android:padding="8sp"
-        android:letterSpacing="0.03"
-        android:lineSpacingExtra="3dp"
-        android:textColor="#6B000000"
-        android:textSize="14sp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/corner"
+        android:fontFamily="@font/avenir_book"
         android:gravity="top|left"
+        android:lineSpacingExtra="3dp"
         android:lines="10"
         android:maxLines="15"
-        android:minLines="8"
+        android:minLines="7"
+        android:padding="8sp"
+        android:textColor="#6B000000"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -84,6 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
+
         android:fontFamily="@font/avenir_medium"
         android:text="Write Review"
         android:textColor="#A8000000"
