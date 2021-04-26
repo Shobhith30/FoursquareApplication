@@ -10,8 +10,6 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.ImageView
-import com.example.foursquareapplication.databinding.ActivityAddReviewBinding
-import com.example.foursquareapplication.databinding.ActivityFeedbackBinding
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
 
 class PhotosActivity : AppCompatActivity() {
@@ -81,7 +79,7 @@ class PhotosActivity : AppCompatActivity() {
 
             var view=convertView
             if (view==null){
-                view=layoutInflater.inflate(R.layout.row_items,parent,false)
+                view=layoutInflater.inflate(R.layout.item_photos,parent,false)
 
             }
 
