@@ -72,7 +72,6 @@ class AddReviewActivity : AppCompatActivity() {
             adapter = AddReviewPhotoAdapter(capturedPhoto)
             recyclerView.setAdapter(adapter)
 
-
     }
 
     private fun setToolbar() {

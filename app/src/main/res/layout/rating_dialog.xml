@@ -72,6 +72,7 @@
         app:strokeColor="#CCCCCC">
 
         <ImageView
+            android:id="@+id/close_dialog"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@string/close_dialog"
