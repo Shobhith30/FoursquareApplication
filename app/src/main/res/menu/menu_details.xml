@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/share"
+        android:title="Share"
+        android:icon="@drawable/share_icon"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/fav_not_selected"
+        android:title=" Add to Favourite"
+        android:icon="@drawable/favourite_icon"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/fav_selected"
+        android:title="Remove from Favourite"
+        android:icon="@drawable/favourite_icon_selected"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>

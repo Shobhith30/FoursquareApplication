@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/feature_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/add_feature_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Accept Credit Card"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp"
+        android:fontFamily="@font/avenir_book"
+        android:textColor="#8D8D8D"/>
+    <ToggleButton
+        android:id="@+id/add_feature_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:textOn=""
+        android:textOff=""
+        android:background="@drawable/feature_button"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginHorizontal="20dp" />
+    <View
+        app:layout_constraintTop_toBottomOf="@id/feature_name"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
