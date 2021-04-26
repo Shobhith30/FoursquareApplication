@@ -101,6 +101,7 @@
         android:maxLength="6"
         android:paddingBottom="30dp"
         android:backgroundTint="#b5abab"/>
+
     <TextView
         android:id="@+id/confrim_password_signup"
         android:layout_width="wrap_content"
