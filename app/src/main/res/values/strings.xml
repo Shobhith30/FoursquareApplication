@@ -38,4 +38,13 @@
     <string name="submit">Submit</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="address">11th cross bangalore nagar bangalore kasaragod kerala</string>
+    <string name="km">5.4 km</string>
+    <string name="amount">$$$$</string>
+    <string name="dot">•</string>
+    <string name="indian">Indian</string>
+    <string name="attil">Attil</string>
+    <string name="ratings">7.5</string>
+    <string name="use_my_current_location">Use my current location</string>
+    <string name="select_search_area_on_map">Select Search area on map</string>
 </resources>

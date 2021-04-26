@@ -9,8 +9,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //startActivity(Intent(this,ReviewActivity::class.java))
-        supportFragmentManager.beginTransaction().add(R.id.main_root,SearchFilterFragment()).commit()
-
     }
 }

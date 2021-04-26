@@ -19,15 +19,10 @@ class FeedbackActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feedback)
 
-
-
         feedBackBinding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(feedBackBinding.root)
 
         setToolbar()
-
-        val submit=findViewById<Button>(R.id.submit)
-
     }
 
 
