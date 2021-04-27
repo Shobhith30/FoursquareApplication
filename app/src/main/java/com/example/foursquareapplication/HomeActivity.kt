@@ -1,11 +1,12 @@
 package com.example.foursquareapplication
 
-import android.graphics.Color
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Layout
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,7 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val drawer = findViewById<DrawerLayout>(R.id.drawer)
+        val nav_view = findViewById<NavigationView>(R.id.nav_view)
         toggle = ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
@@ -65,10 +67,29 @@ class HomeActivity : AppCompatActivity() {
 
             }
         })
+
+        nav_view.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.fav -> {
+                    val intent = Intent(this, FavouriteActivity::class.java)
+                    startActivity(intent)
+                }
+                else ->{
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
+        menu?.findItem(R.id.menu_search_home)?.setOnMenuItemClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+            return@setOnMenuItemClickListener true
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
