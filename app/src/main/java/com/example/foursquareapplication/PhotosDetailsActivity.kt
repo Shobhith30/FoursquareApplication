@@ -24,7 +24,7 @@ class PhotosDetailsActivity : AppCompatActivity() {
 
         activityPhotoDetailsBinding = ActivityPhotosDetailsBinding.inflate(layoutInflater)
         setContentView(activityPhotoDetailsBinding.root)
-
+        
         var modelItems:PhotoModel=intent.getSerializableExtra("data") as PhotoModel
 
         activityPhotoDetailsBinding.imageview.setImageResource(modelItems.image!!)
