@@ -39,6 +39,9 @@ class DetailsActivity : AppCompatActivity() {
         setSupportActionBar(detailsBinding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         detailsBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
+        detailsBinding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun gotoReviewScreen() {
