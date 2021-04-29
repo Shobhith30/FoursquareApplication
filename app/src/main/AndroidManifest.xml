@@ -27,6 +27,7 @@
         <activity android:name=".FeedbackActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".AddReviewActivity"
+
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MainActivity" />
         <activity android:name=".HomeActivity"/>

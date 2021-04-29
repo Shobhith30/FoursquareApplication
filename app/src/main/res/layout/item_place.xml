@@ -64,8 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:text="•"
+        android:text="@string/dot"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@id/type"
         app:layout_constraintTop_toTopOf="@id/type" />
 
@@ -74,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:text="$$$$"
+        android:text="@string/rupees_3"
         android:textSize="14sp"
         app:layout_constraintLeft_toRightOf="@id/dot"
         app:layout_constraintTop_toTopOf="@id/dot" />

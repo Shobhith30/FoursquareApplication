@@ -1,45 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout_search"
         android:layout_width="match_parent"
-        android:layout_height="140dp">
+        android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_search"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/back_icon"
-        android:background="@color/toolbar_background"
-        app:menu="@menu/menu_favourite"
-        android:theme="@style/Theme.AppCompat">
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_favourite"
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/search_box_design"
-            android:textColor="@color/black" />
-    </androidx.appcompat.widget.Toolbar>
+            android:background="@color/toolbar_background"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            app:menu="@menu/menu_favourite"
+            app:navigationIcon="@drawable/back_icon">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/near_me_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/search_box_design"
-        android:textColor="@color/black"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="63dp"
-        android:layout_marginEnd="52dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/search_box_design"
+                    android:textColor="@color/black"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="@string/search"
+                    app:searchIcon="@drawable/search_grey" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/near_me_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="15dp"
+                    android:background="@drawable/search_box_design"
+                    android:textColor="@color/black"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="Near Me"
+                    app:searchIcon="@drawable/near_me" />
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
     </com.google.android.material.appbar.AppBarLayout>
+
     <FrameLayout
+        android:id="@+id/search_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appBarLayout_search"
-        android:id="@+id/search_fragment"/>
+        android:layout_below="@id/appBarLayout_search" />
 </RelativeLayout>
