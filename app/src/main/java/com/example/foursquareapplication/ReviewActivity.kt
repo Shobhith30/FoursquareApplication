@@ -3,8 +3,6 @@ package com.example.foursquareapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.Toast
 import com.example.foursquareapplication.databinding.ActivityReviewBinding
 
 class ReviewActivity : AppCompatActivity() {
@@ -21,7 +19,7 @@ class ReviewActivity : AppCompatActivity() {
     private fun setToolbar() {
         reviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
         reviewBinding.toolbarTitle.text = "Attil"
-        reviewBinding.toolbar.inflateMenu(R.menu.menu_about_us)
+        reviewBinding.toolbar.inflateMenu(R.menu.menu_home_icon)
         reviewBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }

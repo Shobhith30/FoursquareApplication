@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import com.example.foursquareapplication.R.layout.fragment_search_suggestions
-import com.example.foursquareapplication.databinding.FragmentAboutUsBinding
 import com.example.foursquareapplication.databinding.FragmentSearchSuggestionsBinding
 
 

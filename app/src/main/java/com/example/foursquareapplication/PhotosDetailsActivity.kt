@@ -32,6 +32,9 @@ class PhotosDetailsActivity : AppCompatActivity() {
         activityPhotoDetailsBinding.toolbar.setNavigationIcon(R.drawable.close_icon)
         activityPhotoDetailsBinding.toolbarTitle.text = "Attil"
         activityPhotoDetailsBinding.toolbar.inflateMenu(R.menu.menu_share)
+        activityPhotoDetailsBinding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
 
 
     }

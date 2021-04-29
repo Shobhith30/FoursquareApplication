@@ -3,12 +3,6 @@ package com.example.foursquareapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
-import com.example.foursquareapplication.databinding.ActivityAddReviewBinding
 import com.example.foursquareapplication.databinding.ActivityFeedbackBinding
 
 class FeedbackActivity : AppCompatActivity() {
@@ -36,10 +30,16 @@ class FeedbackActivity : AppCompatActivity() {
 
     private fun setToolbar() {
         feedBackBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
-        feedBackBinding.toolbarTitle.text = "Feedback"
-        feedBackBinding.toolbar.inflateMenu(R.menu.menu)
+        feedBackBinding.toolbarTitle.text = getString(R.string.feedback)
+        feedBackBinding.toolbar.inflateMenu(R.menu.menu_home_icon)
         feedBackBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()
+        }
+        feedBackBinding.toolbar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.home -> onBackPressed()
+            }
+            true
         }
     }
 }

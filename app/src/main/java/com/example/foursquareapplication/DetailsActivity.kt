@@ -93,8 +93,19 @@ class DetailsActivity : AppCompatActivity() {
                 fav = false
                 invalidateOptionsMenu()
             }
+            R.id.share ->{
+                sharePlace()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun sharePlace() {
+        val sharePlaceIntent = Intent(Intent.ACTION_SEND)
+        sharePlaceIntent.putExtra(Intent.EXTRA_TEXT,"place details")
+        sharePlaceIntent.type = "plain/text"
+        val chooser = Intent.createChooser(sharePlaceIntent,"Select App")
+        startActivity(chooser)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
