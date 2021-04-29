@@ -46,4 +46,7 @@
     <string name="ratings">7.5</string>
     <string name="use_my_current_location">Use my current location</string>
     <string name="select_search_area_on_map">Select Search area on map</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="saish_gmail_com">saish@gmail.com</string>
+    <string name="mobile">9844635685</string>
 </resources>
