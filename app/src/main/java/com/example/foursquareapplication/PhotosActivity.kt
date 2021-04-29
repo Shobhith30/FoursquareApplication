@@ -32,7 +32,6 @@ class PhotosActivity : AppCompatActivity() {
 
         setToolbar()
 
-
         val gridView=findViewById<GridView>(R.id.gridView)
 
         for (i in images.indices){
