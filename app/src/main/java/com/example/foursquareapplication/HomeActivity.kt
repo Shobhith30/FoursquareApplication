@@ -55,6 +55,10 @@ class HomeActivity : AppCompatActivity() {
         pager.adapter = adapter
 
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+        val intent=intent
+        val getPosition=intent.getIntExtra("position",0)
+        pager.setCurrentItem(getPosition)
+
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 pager.currentItem = tab.position
@@ -72,6 +76,10 @@ class HomeActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.fav -> {
                     val intent = Intent(this, FavouriteActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.feedback->{
+                    val intent = Intent(this, FeedbackActivity::class.java)
                     startActivity(intent)
                 }
                 else ->{
