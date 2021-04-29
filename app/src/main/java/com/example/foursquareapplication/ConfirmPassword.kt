@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 class ConfirmPassword : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forgot_password)
+        setContentView(R.layout.activity_confrim_password)
 
         val submit = findViewById<TextView>(R.id.submit)
         submit.setOnClickListener {

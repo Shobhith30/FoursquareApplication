@@ -1,8 +1,11 @@
 package com.example.foursquareapplication
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class SignInActivity : AppCompatActivity() {
@@ -17,11 +20,10 @@ class SignInActivity : AppCompatActivity() {
             finish()
         }
 
-        val forgotPassword = findViewById<TextView>(R.id.sigin_forgot_password)
+       val forgotPassword = findViewById<TextView>(R.id.sign_in_forgot_password)
         forgotPassword.setOnClickListener {
             val intent = Intent(this, ForgotPassword::class.java)
             startActivity(intent)
-            finish()
         }
 
         val login = findViewById<TextView>(R.id.login)
