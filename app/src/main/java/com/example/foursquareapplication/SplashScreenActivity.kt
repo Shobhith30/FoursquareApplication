@@ -1,12 +1,13 @@
 package com.example.foursquareapplication
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-@Suppress("DEPRECATION")
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,10 +18,13 @@ class SplashScreenActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        Handler().postDelayed({
-            val intent = Intent(this, SignInActivity::class.java)
+        lifecycleScope.launch {
+            delay(2000)
+            val intent = Intent(this@SplashScreenActivity, SignInActivity::class.java)
             startActivity(intent)
             finish()
-        }, 1000)
+        }
+
+
     }
 }

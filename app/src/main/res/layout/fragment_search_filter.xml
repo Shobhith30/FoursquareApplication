@@ -19,7 +19,7 @@
         android:fontFamily="@font/avenir_medium"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
-        android:text="Sort By"
+        android:text="@string/sort_by"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Popular"
+            android:text="@string/popular"
             android:textColor="@drawable/filter_text_color"
             android:gravity="center"
             android:fontFamily="@font/avenir_medium"
@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Distance"
+            android:text="@string/distance"
             android:textColor="@drawable/filter_text_color"
             android:gravity="center"
             android:fontFamily="@font/avenir_medium"
@@ -61,7 +61,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Rating"
+            android:text="@string/rating"
             android:textColor="@drawable/filter_text_color"
             android:fontFamily="@font/avenir_medium"
             android:textSize="16sp"
@@ -78,8 +78,8 @@
         android:fontFamily="@font/avenir_medium"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
-        android:text="Filter By"
-        android:textSize="16dp"
+        android:text="@string/filter_by"
+        android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/sort_by_radio_group" />
 
     <TextView
@@ -89,7 +89,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/avenir_book"
-        android:text="Set Radius"
+        android:text="@string/set_radius"
         android:textColor="#A3A3A3"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@+id/filter_by_heading" />
@@ -103,7 +103,8 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         android:paddingBottom="20dp"
-        app:layout_constraintTop_toBottomOf="@id/set_radius_heading" />
+        app:layout_constraintTop_toBottomOf="@id/set_radius_heading"
+        android:importantForAutofill="no" />
 
     <CheckBox
         android:id="@+id/price_low"
@@ -113,7 +114,7 @@
         android:background="@drawable/filter_background"
         android:button="@null"
         android:textColor="@drawable/filter_text_color"
-        android:text="₹"
+        android:text="@string/rupees_1"
         android:gravity="center"
         android:fontFamily="@font/avenir_medium"
         android:textSize="16sp"
@@ -128,7 +129,7 @@
         android:layout_height="50dp"
         android:background="@drawable/filter_background"
         android:button="@null"
-        android:text="₹ ₹"
+        android:text="@string/rupees_2"
         android:textColor="@drawable/filter_text_color"
         android:gravity="center"
         android:fontFamily="@font/avenir_medium"
@@ -144,7 +145,7 @@
         android:layout_height="50dp"
         android:background="@drawable/filter_background"
         android:button="@null"
-        android:text="₹ ₹ ₹"
+        android:text="@string/rupees_3"
         android:textColor="@drawable/filter_text_color"
         android:gravity="center"
         android:fontFamily="@font/avenir_medium"
@@ -160,7 +161,7 @@
         android:layout_height="50dp"
         android:background="@drawable/filter_background"
         android:button="@null"
-        android:text="₹ ₹ ₹ ₹"
+        android:text="@string/rupees_4"
         android:textColor="@drawable/filter_text_color"
         android:gravity="center"
         android:fontFamily="@font/avenir_medium"
@@ -178,8 +179,8 @@
         android:fontFamily="@font/avenir_medium"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
-        android:text="Features"
-        android:textSize="16dp"
+        android:text="@string/features"
+        android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/price_low" />
 
     <androidx.recyclerview.widget.RecyclerView

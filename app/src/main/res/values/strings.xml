@@ -31,7 +31,6 @@
     <string name="favourites">Favourites</string>
     <string name="place_image">Place Image</string>
     <string name="close_dialog">close dialog</string>
-    <string name="rating">Rating</string>
     <string name="review">Review</string>
     <string name="photos">Photos</string>
     <string name="overview">Overview</string>
@@ -46,4 +45,15 @@
     <string name="ratings">7.5</string>
     <string name="use_my_current_location">Use my current location</string>
     <string name="select_search_area_on_map">Select Search area on map</string>
+    <string name="sort_by">Sort By</string>
+    <string name="popular">Popular</string>
+    <string name="distance">Distance</string>
+    <string name="rating">Rating</string>
+    <string name="filter_by">Filter By</string>
+    <string name="set_radius">Set Radius</string>
+    <string name="rupees_1">₹</string>
+    <string name="rupees_2">₹ ₹</string>
+    <string name="rupees_3">₹ ₹ ₹</string>
+    <string name="rupees_4">₹ ₹ ₹ ₹</string>
+    <string name="features">Features</string>
 </resources>

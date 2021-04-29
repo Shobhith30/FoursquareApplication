@@ -2,16 +2,21 @@ package com.example.foursquareapplication
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.foursquareapplication.databinding.ActivitySearchMainBinding
 
 
 class SearchActivity : AppCompatActivity() {
+
+    lateinit var searchBinding : ActivitySearchMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_main)
+        searchBinding = ActivitySearchMainBinding.inflate(layoutInflater)
+        setContentView(searchBinding.root)
         supportActionBar?.hide()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_search)
@@ -23,16 +28,47 @@ class SearchActivity : AppCompatActivity() {
          return@setNavigationOnClickListener
     }
 
-        val fragmentSearchOptions = SearchOptionsFragment()
-        val fragmentManager = supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
 
-        transaction.add(R.id.search_fragment, fragmentSearchOptions)
-        transaction.commit()
+        searchBinding.searchPlace.setOnQueryTextFocusChangeListener { v, hasFocus ->
+
+            if(hasFocus) {
+                val fragmentSearchSuggestion = SearchSuggestionsFragment()
+                val fragmentManager = supportFragmentManager
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.search_fragment, fragmentSearchSuggestion)
+                transaction.commit()
+            }
+
+        }
+        searchBinding.nearMeSearch.setOnQueryTextFocusChangeListener { v, hasFocus ->
+
+            if(hasFocus) {
+                val fragmentSearchOptions = SearchOptionsFragment()
+                val fragmentManager = supportFragmentManager
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.search_fragment, fragmentSearchOptions)
+                transaction.commit()
+            }
+        }
+
+
 }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_favourite, menu)
         return super.onCreateOptionsMenu(menu)
 }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.filter -> {
+                val fragmentSearchFilter = SearchFilterFragment()
+                val fragmentManager = supportFragmentManager
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.search_fragment, fragmentSearchFilter)
+                transaction.commit()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
