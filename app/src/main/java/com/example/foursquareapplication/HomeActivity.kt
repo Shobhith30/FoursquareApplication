@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         val intent=intent
         val getPosition=intent.getIntExtra("position",0)
-        pager.setCurrentItem(getPosition)
+        pager.currentItem = getPosition
 
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -82,6 +82,10 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this, FeedbackActivity::class.java)
                     startActivity(intent)
                 }
+               R.id.aboutUs->{
+                    val intent = Intent(this, AboutUsActivity::class.java)
+                    startActivity(intent)
+                }
                 else ->{
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
@@ -98,6 +102,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             return@setOnMenuItemClickListener true
         }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -107,5 +112,5 @@ class HomeActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }
+
