@@ -10,11 +10,10 @@ class ForgotPassword : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
 
-        val getIn = findViewById<TextView>(R.id.get_in)
+        val getIn = findViewById<TextView>(R.id.get_in_button)
         getIn.setOnClickListener {
             val intent = Intent(this, ConfirmPassword::class.java)
             startActivity(intent)
-            finish()
         }
     }
 }
