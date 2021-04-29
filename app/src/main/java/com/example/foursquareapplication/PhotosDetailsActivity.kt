@@ -1,6 +1,5 @@
 package com.example.foursquareapplication
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,9 +25,9 @@ class PhotosDetailsActivity : AppCompatActivity() {
         activityPhotoDetailsBinding = ActivityPhotosDetailsBinding.inflate(layoutInflater)
         setContentView(activityPhotoDetailsBinding.root)
         
-        var modelItems:Photo=intent.getSerializableExtra("data") as Photo
+        var modelItems:PhotoModel=intent.getSerializableExtra("data") as PhotoModel
 
-       activityPhotoDetailsBinding.imageview.setImageResource(modelItems.image!!)
+        activityPhotoDetailsBinding.imageview.setImageResource(modelItems.image!!)
 
         activityPhotoDetailsBinding.toolbar.setNavigationIcon(R.drawable.close_icon)
         activityPhotoDetailsBinding.toolbarTitle.text = "Attil"

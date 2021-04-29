@@ -1,6 +1,5 @@
 package com.example.foursquareapplication
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -43,18 +42,12 @@ class SearchSuggestionsFragment : Fragment() {
         searchSuggestionBinding.suggestionListView.adapter=arrayAdapter
 
         searchSuggestionBinding.suggestionListView.setOnItemClickListener { parent, view, position, id ->
-
-            selectedSuggetion(position)
-
+            Toast.makeText(activity,"item "+names[position],Toast.LENGTH_LONG).show()
         }
+
 
         return searchSuggestionBinding.root
     }
 
-    private fun selectedSuggetion(position:Int){
-        val intent=Intent(activity,HomeActivity::class.java)
-        intent.putExtra("position",position+1)
-        startActivity(intent)
-    }
 
     }

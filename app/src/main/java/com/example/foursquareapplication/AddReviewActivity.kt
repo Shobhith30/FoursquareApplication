@@ -26,16 +26,13 @@ class AddReviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         addReviewBinding = ActivityAddReviewBinding.inflate(layoutInflater)
         setContentView(addReviewBinding.root)
 
         setToolbar()
-        addPhotosToReview()
-        submitReview()
 
-    }
-
-    private fun addPhotosToReview(){
         addReviewBinding.addPhotosToReview.setOnClickListener{
             val takePictureIntent=Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (takePictureIntent.resolveActivity(this.packageManager)!=null){
@@ -45,31 +42,29 @@ class AddReviewActivity : AppCompatActivity() {
                 Toast.makeText(this,"unable to open camera", Toast.LENGTH_LONG).show()
             }
         }
+
     }
-
-    private fun submitReview(){
-        addReviewBinding.submit.setOnClickListener{
-            startActivity(Intent(this,DetailsActivity::class.java))
-        }
-    }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if (requestCode== REQUEST_CODE && resultCode== Activity.RESULT_OK){
-            val takenImage= data?.extras?.get("data") as Bitmap
+             val takenImage= data?.extras?.get("data") as Bitmap
+
             modelList.add(Model(takenImage))
 
             initialise(modelList)
+
+
         }
         else{
             super.onActivityResult(requestCode, resultCode, data)
+
         }
 
     }
 
         private fun initialise(capturedPhoto: ArrayList<Model>) {
+
             val recyclerView = findViewById<RecyclerView>(R.id.recyclerView2)
             val layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
             recyclerView.layoutManager = layoutManager
@@ -82,9 +77,8 @@ class AddReviewActivity : AppCompatActivity() {
     private fun setToolbar() {
         addReviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
         addReviewBinding.toolbarTitle.text = "Add Review"
-        addReviewBinding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
+        
+
 
     }
 }

@@ -23,14 +23,6 @@ class FeedbackActivity : AppCompatActivity() {
         setContentView(feedBackBinding.root)
 
         setToolbar()
-        submitFeedBack()
-
-
-    }
-    private fun submitFeedBack(){
-        feedBackBinding.submit.setOnClickListener{
-            startActivity(Intent(this,HomeActivity::class.java))
-        }
     }
 
 
@@ -38,8 +30,5 @@ class FeedbackActivity : AppCompatActivity() {
         feedBackBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
         feedBackBinding.toolbarTitle.text = "Feedback"
         feedBackBinding.toolbar.inflateMenu(R.menu.menu)
-        feedBackBinding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
     }
 }
