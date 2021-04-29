@@ -23,7 +23,7 @@ class SearchActivity : AppCompatActivity() {
          return@setNavigationOnClickListener
     }
 
-        val fragmentSearchOptions = SearchOptionsFragment()
+        val fragmentSearchOptions = SearchSuggestionsFragment()
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
 
