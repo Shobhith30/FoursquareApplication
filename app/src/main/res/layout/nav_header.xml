@@ -39,7 +39,7 @@
             android:layout_height="60dp"
             android:contentDescription="@string/profile_picture"
             android:scaleType="centerCrop"
-            android:src="@drawable/splashscreen" />
+            android:src="@drawable/ic_person" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

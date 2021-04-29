@@ -1,35 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<group android:checkableBehavior="single" android:id="@+id/grp1">
-    <item android:id="@+id/fav"
-        android:icon="@drawable/favourite_icon_copy"
-        android:title="Favourites">
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/fav"
+            android:icon="@drawable/favourite_icon"
+            android:title="@string/favourites">
 
-    </item>
-</group>
-    <group android:checkableBehavior="single" android:id="@+id/grp2">
-    <item android:id="@+id/feedback"
-android:icon="@drawable/feedback"
-        android:title="Feedback">
+        </item>
+    </group>
+    <group
+        android:id="@+id/grp2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/feedback"
+            android:icon="@drawable/feedback"
+            android:title="@string/feedback">
 
-    </item>
+        </item>
 
-</group>
-
-    <group android:checkableBehavior="single" android:id="@+id/grp3">
-    <item android:id="@+id/aboutUs"
-android:icon="@drawable/about"
-    android:title="About Us">
-
-</item>
     </group>
 
-    <group android:checkableBehavior="single" android:id="@+id/grp4">
-    <item android:id="@+id/logOut"
-android:icon="@drawable/logout"
-    android:title="LogOut">
+    <group
+        android:id="@+id/grp3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/aboutUs"
+            android:icon="@drawable/about"
+            android:title="@string/about_us">
 
-</item>
+        </item>
     </group>
 
+    <group
+        android:id="@+id/grp4"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/logOut"
+            android:icon="@drawable/logout"
+            android:title="@string/logout">
+
+        </item>
+    </group>
+    <group android:enabled="false" android:id="@+id/grp5">
+        <item android:title="" />
+    </group>
 </menu>
