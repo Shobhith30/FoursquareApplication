@@ -7,37 +7,47 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout_favourite"
         android:layout_width="match_parent"
-        android:layout_height="160dp">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_favourite"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             app:navigationIcon="@drawable/back_icon"
             android:background="@color/toolbar_background"
             app:menu="@menu/menu_favourite"
             android:theme="@style/Theme.AppCompat">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/favourites"
-                android:textSize="24sp"
-                android:layout_gravity="center"
-                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
-        </androidx.appcompat.widget.Toolbar>
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/favourites"
+                    android:textSize="24sp"
+                    android:layout_gravity="center"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_favourite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/search_box_design"
-            android:textColor="@color/black"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"/>
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_favourite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/search_box_design"
+                android:textColor="@color/black"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/attil"
+                app:searchIcon="@drawable/search_grey"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"/>
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
