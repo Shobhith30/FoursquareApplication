@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#b5abab"
-        android:text="@string/enter_otp"
+        android:text="@string/email"
         android:fontFamily="@font/avenir_book"
         android:textSize="18sp"
         android:layout_below="@id/signup_logo"

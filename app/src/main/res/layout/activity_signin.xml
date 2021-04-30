@@ -166,6 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="50dp"
+                        android:scaleType="fitXY"
                         android:src="@drawable/facebook_btn" />
 
                     <ImageView
@@ -173,6 +174,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/g__btn"
+                        android:scaleType="fitXY"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="50dp" />
                 </LinearLayout>
