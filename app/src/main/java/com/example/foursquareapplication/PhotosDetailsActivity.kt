@@ -1,5 +1,6 @@
 package com.example.foursquareapplication
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,8 +21,6 @@ class PhotosDetailsActivity : AppCompatActivity() {
         }*/
         setContentView(R.layout.activity_photos_details)
 
-
-
         activityPhotoDetailsBinding = ActivityPhotosDetailsBinding.inflate(layoutInflater)
         setContentView(activityPhotoDetailsBinding.root)
         
@@ -35,8 +34,18 @@ class PhotosDetailsActivity : AppCompatActivity() {
         activityPhotoDetailsBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        activityPhotoDetailsBinding.toolbar.setOnMenuItemClickListener {
+            sharePhoto()
+            true
+        }
 
-
+    }
+    private fun sharePhoto() {
+        val sharePlaceIntent = Intent(Intent.ACTION_SEND)
+        sharePlaceIntent.putExtra(Intent.EXTRA_TEXT,"photo")
+        sharePlaceIntent.type = "plain/text"
+        val chooser = Intent.createChooser(sharePlaceIntent,"Select App")
+        startActivity(chooser)
     }
 
 }

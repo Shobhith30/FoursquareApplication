@@ -23,16 +23,22 @@
         app:cardCornerRadius="5sp"
         app:layout_constraintStart_toEndOf="@+id/recyclerView2"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        >
 
-        <ImageButton
+        >
+        <ImageView
             android:id="@+id/add_photos_to_review"
-            android:scaleType="centerCrop"
+            android:scaleType="center"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            app:srcCompat="@drawable/photos_icon" />
+            app:srcCompat="@drawable/ic_add_a_photo"
+            tools:ignore="VectorDrawableCompat"
+            android:background="#19000000"
 
+
+            />
     </androidx.cardview.widget.CardView>
+
+
 
     <Button
         android:id="@+id/submit"

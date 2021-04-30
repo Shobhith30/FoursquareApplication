@@ -59,12 +59,7 @@ class PhotosActivity : AppCompatActivity() {
             onBackPressed()
         }
         photoBinding.toolbar.setOnMenuItemClickListener{
-
             addPhotos()
-
-            Toast.makeText(this,"camera",Toast.LENGTH_LONG).show()
-
-
             true
         }
     }
@@ -75,7 +70,7 @@ class PhotosActivity : AppCompatActivity() {
             startActivityForResult(takePictureIntent, REQUEST_CODE)
         }
         else{
-            Toast.makeText(this,"unable to open camera", Toast.LENGTH_LONG).show()
+            Toast.makeText(this,"Unable to open camera", Toast.LENGTH_LONG).show()
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -84,8 +79,6 @@ class PhotosActivity : AppCompatActivity() {
             val takenImage= data?.extras?.get("data") as Bitmap
 
         }
-
-
         else{
             super.onActivityResult(requestCode, resultCode, data)
         }
