@@ -38,10 +38,13 @@ class DetailsActivity : AppCompatActivity() {
     private fun setupActionBar() {
         setSupportActionBar(detailsBinding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        detailsBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
-        detailsBinding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
+        detailsBinding.toolbar.let {
+            it.setNavigationIcon(R.drawable.back_icon)
+            it.setNavigationOnClickListener {
+                onBackPressed()
+            }
         }
+
     }
 
     private fun gotoReviewScreen() {
@@ -116,7 +119,6 @@ class DetailsActivity : AppCompatActivity() {
             menu?.findItem(R.id.fav_not_selected)?.setVisible(true)
             menu?.findItem(R.id.fav_selected)?.setVisible(false)
         }
-
 
         return super.onPrepareOptionsMenu(menu)
     }
