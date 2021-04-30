@@ -33,6 +33,7 @@ class AddReviewActivity : AppCompatActivity() {
 
         setToolbar()
 
+
         addReviewBinding.addPhotosToReview.setOnClickListener{
             val takePictureIntent=Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (takePictureIntent.resolveActivity(this.packageManager)!=null){
@@ -41,6 +42,9 @@ class AddReviewActivity : AppCompatActivity() {
             else{
                 Toast.makeText(this,"unable to open camera", Toast.LENGTH_LONG).show()
             }
+        }
+        addReviewBinding.submit.setOnClickListener{
+            startActivity(Intent(this,DetailsActivity::class.java))
         }
 
     }
@@ -78,7 +82,7 @@ class AddReviewActivity : AppCompatActivity() {
         addReviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
         addReviewBinding.toolbarTitle.text = "Add Review"
 
-
-
     }
+
+
 }
