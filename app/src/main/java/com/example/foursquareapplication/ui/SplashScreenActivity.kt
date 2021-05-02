@@ -6,6 +6,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.ui.authentication.SignInActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package com.example.foursquareapplication.ui
+package com.example.foursquareapplication.ui.authentication
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,16 +6,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foursquareapplication.R
 
-class SignUpActivity :  AppCompatActivity() {
+class ForgotPassword : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
+        setContentView(R.layout.activity_forgot_password)
 
-        val signup = findViewById<TextView>(R.id.signup_login)
-        signup.setOnClickListener {
-            val intent = Intent(this, SignInActivity::class.java)
+        val getIn = findViewById<TextView>(R.id.get_in_button)
+        getIn.setOnClickListener {
+            val intent = Intent(this, ConfirmPassword::class.java)
             startActivity(intent)
-            finish()
         }
     }
 }

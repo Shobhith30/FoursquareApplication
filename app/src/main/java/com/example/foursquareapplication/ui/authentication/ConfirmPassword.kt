@@ -1,4 +1,4 @@
-package com.example.foursquareapplication.ui
+package com.example.foursquareapplication.ui.authentication
 
 import android.content.Intent
 import android.os.Bundle

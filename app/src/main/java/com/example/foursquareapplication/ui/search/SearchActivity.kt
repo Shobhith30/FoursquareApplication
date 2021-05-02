@@ -1,12 +1,15 @@
 package com.example.foursquareapplication.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivitySearchMainBinding
+import com.example.foursquareapplication.ui.DetailsActivity
 import com.example.foursquareapplication.ui.SearchFilterFragment
 
 
@@ -27,6 +30,18 @@ class SearchActivity : AppCompatActivity() {
          onBackPressed()
          return@setNavigationOnClickListener
     }
+
+        searchBinding.searchPlace.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                startActivity(Intent(this@SearchActivity,DetailsActivity::class.java))
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
 
 
         searchBinding.searchPlace.setOnQueryTextFocusChangeListener { v, hasFocus ->
