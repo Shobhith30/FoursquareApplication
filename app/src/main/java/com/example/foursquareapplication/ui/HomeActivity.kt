@@ -1,19 +1,19 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.Layout
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
-import com.example.foursquareapplication.databinding.ActivityHomeBinding
+import com.example.foursquareapplication.adapter.HomeTabAdapter
+import com.example.foursquareapplication.R
+import com.example.foursquareapplication.ui.search.SearchActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 
@@ -78,11 +78,11 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
 
-                R.id.feedback->{
+                R.id.feedback ->{
                     val intent = Intent(this, FeedbackActivity::class.java)
                     startActivity(intent)
                 }
-               R.id.aboutUs->{
+               R.id.aboutUs ->{
                     val intent = Intent(this, AboutUsActivity::class.java)
                     startActivity(intent)
                 }

@@ -1,4 +1,4 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater

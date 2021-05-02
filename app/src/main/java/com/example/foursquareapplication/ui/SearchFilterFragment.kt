@@ -1,4 +1,4 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.adapter.FeatureAdapter
 import com.example.foursquareapplication.databinding.FragmentSearchFilterBinding
-import com.example.foursquareapplication.databinding.FragmentSearchResultBinding
 
 class SearchFilterFragment : Fragment() {
 

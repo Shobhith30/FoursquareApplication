@@ -1,9 +1,10 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.foursquareapplication.R
 
 class FavouriteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,10 +1,11 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.foursquareapplication.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

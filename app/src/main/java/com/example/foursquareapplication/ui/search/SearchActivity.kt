@@ -1,13 +1,13 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui.search
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivitySearchMainBinding
+import com.example.foursquareapplication.ui.SearchFilterFragment
 
 
 class SearchActivity : AppCompatActivity() {

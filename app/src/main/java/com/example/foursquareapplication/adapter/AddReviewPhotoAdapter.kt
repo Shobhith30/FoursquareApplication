@@ -1,10 +1,12 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foursquareapplication.model.Model
+import com.example.foursquareapplication.R
 
 class AddReviewPhotoAdapter (val capturedPhotos: ArrayList<Model>): RecyclerView.Adapter<AddReviewPhotoAdapter.AddReviewPhotosViewHolder>() {
 

@@ -1,19 +1,17 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.widget.ButtonBarLayout
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foursquareapplication.adapter.AddReviewPhotoAdapter
+import com.example.foursquareapplication.model.Model
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityAddReviewBinding
 
 
@@ -44,7 +42,7 @@ class AddReviewActivity : AppCompatActivity() {
             }
         }
         addReviewBinding.submit.setOnClickListener{
-            startActivity(Intent(this,DetailsActivity::class.java))
+            startActivity(Intent(this, DetailsActivity::class.java))
         }
 
     }
