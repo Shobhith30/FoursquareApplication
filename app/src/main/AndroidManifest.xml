@@ -21,21 +21,21 @@
         <activity android:name=".ui.FavouriteActivity"/>
         <activity android:name=".ui.search.SearchActivity"/>
         <activity android:name=".ui.PhotosDetailsActivity" />
-        <activity android:name=".PhotosActivity" />
+        <activity android:name=".ui.PhotosActivity" />
         <activity android:name=".ui.DetailsActivity" />
         <activity android:name=".ui.SlideMenuActivity" />
         <activity android:name=".ui.FeedbackActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".AddReviewActivity"
+        <activity android:name=".ui.AddReviewActivity"
 
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ui.HomeActivity"/>
         <activity android:name=".ui.ReviewActivity" />
-        <activity android:name=".ui.SignInActivity"/>
-        <activity android:name=".ui.SignUpActivity"/>
-        <activity android:name=".ui.ForgotPassword"/>
-        <activity android:name=".ui.ConfirmPassword"/>
+        <activity android:name=".ui.authentication.SignInActivity"/>
+        <activity android:name=".ui.authentication.SignUpActivity"/>
+        <activity android:name=".ui.authentication.ForgotPassword"/>
+        <activity android:name=".ui.authentication.ConfirmPassword"/>
         <activity android:name=".ui.AboutUsActivity"/>
     </application>
 

@@ -1,10 +1,11 @@
-package com.example.foursquareapplication.ui
+package com.example.foursquareapplication.ui.authentication
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.ui.HomeActivity
 
 class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
