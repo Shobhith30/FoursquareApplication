@@ -1,12 +1,10 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
-import android.widget.ImageView
-import androidx.core.graphics.toColor
+import com.example.foursquareapplication.model.PhotoModel
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityPhotosDetailsBinding
 
 class PhotosDetailsActivity : AppCompatActivity() {
@@ -24,7 +22,7 @@ class PhotosDetailsActivity : AppCompatActivity() {
         activityPhotoDetailsBinding = ActivityPhotosDetailsBinding.inflate(layoutInflater)
         setContentView(activityPhotoDetailsBinding.root)
         
-        var modelItems:PhotoModel=intent.getSerializableExtra("data") as PhotoModel
+        var modelItems: PhotoModel =intent.getSerializableExtra("data") as PhotoModel
 
         activityPhotoDetailsBinding.imageview.setImageResource(modelItems.image!!)
 

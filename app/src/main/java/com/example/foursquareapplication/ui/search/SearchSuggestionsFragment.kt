@@ -1,4 +1,4 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
-import com.example.foursquareapplication.R.layout.fragment_search_suggestions
 import com.example.foursquareapplication.databinding.FragmentSearchSuggestionsBinding
+import com.example.foursquareapplication.ui.HomeActivity
 
 
 class SearchSuggestionsFragment : Fragment() {
@@ -36,12 +34,12 @@ class SearchSuggestionsFragment : Fragment() {
         val names= arrayOf("Top pick","Popular","Lunch","Coffee")
 
         val arrayAdapter:ArrayAdapter<String> = ArrayAdapter(
-            activity!!,android.R.layout.simple_list_item_1,names
+            requireActivity(),android.R.layout.simple_list_item_1,names
         )
 
         searchSuggestionBinding.suggestionListView.adapter=arrayAdapter
 
-        searchSuggestionBinding.suggestionListView.setOnItemClickListener { parent, view, position, id ->
+        searchSuggestionBinding.suggestionListView.setOnItemClickListener { _, _, position, _ ->
 
             selectedSuggetion(position)
 
@@ -51,7 +49,7 @@ class SearchSuggestionsFragment : Fragment() {
     }
 
     private fun selectedSuggetion(position:Int){
-        val intent=Intent(activity,HomeActivity::class.java)
+        val intent=Intent(activity, HomeActivity::class.java)
         intent.putExtra("position",position+1)
         startActivity(intent)
     }

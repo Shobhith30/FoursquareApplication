@@ -1,7 +1,8 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityAboutUsBinding
 
 class AboutUsActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityDetailsBinding
 
 class DetailsActivity : AppCompatActivity() {

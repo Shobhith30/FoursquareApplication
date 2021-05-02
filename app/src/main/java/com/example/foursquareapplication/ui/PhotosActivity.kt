@@ -1,4 +1,4 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.app.Activity
 import android.content.Context
@@ -12,6 +12,8 @@ import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.Toast
+import com.example.foursquareapplication.model.PhotoModel
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
 
 
@@ -44,7 +46,7 @@ class PhotosActivity : AppCompatActivity() {
         gridView.adapter=customAdapter
 
         gridView.setOnItemClickListener { parent, view, position, id ->
-            val intent= Intent(this,PhotosDetailsActivity::class.java)
+            val intent= Intent(this, PhotosDetailsActivity::class.java)
             intent.putExtra("data",modelist[position])
             startActivity(intent)
         }

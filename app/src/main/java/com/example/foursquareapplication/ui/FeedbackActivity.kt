@@ -1,8 +1,9 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityFeedbackBinding
 
 class FeedbackActivity : AppCompatActivity() {
@@ -23,7 +24,7 @@ class FeedbackActivity : AppCompatActivity() {
     }
     private fun submitFeedBack(){
         feedBackBinding.submit.setOnClickListener{
-            startActivity(Intent(this,HomeActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
         }
     }
 

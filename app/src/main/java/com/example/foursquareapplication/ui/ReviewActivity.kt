@@ -1,8 +1,9 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityReviewBinding
 
 class ReviewActivity : AppCompatActivity() {
@@ -25,7 +26,7 @@ class ReviewActivity : AppCompatActivity() {
         }
         reviewBinding.toolbar.setOnMenuItemClickListener {
             when(it.itemId){
-                R.id.home -> startActivity(Intent(this,HomeActivity::class.java))
+                R.id.home -> startActivity(Intent(this, HomeActivity::class.java))
             }
             true
 

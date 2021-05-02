@@ -11,32 +11,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoursquareApplication">
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".ui.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FavouriteActivity"/>
-        <activity android:name=".SearchActivity"/>
-        <activity android:name=".PhotosDetailsActivity" />
+        <activity android:name=".ui.FavouriteActivity"/>
+        <activity android:name=".ui.search.SearchActivity"/>
+        <activity android:name=".ui.PhotosDetailsActivity" />
         <activity android:name=".PhotosActivity" />
-        <activity android:name=".DetailsActivity" />
-        <activity android:name=".SlideMenuActivity" />
-        <activity android:name=".FeedbackActivity"
+        <activity android:name=".ui.DetailsActivity" />
+        <activity android:name=".ui.SlideMenuActivity" />
+        <activity android:name=".ui.FeedbackActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".AddReviewActivity"
 
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".HomeActivity"/>
-        <activity android:name=".ReviewActivity" />
-        <activity android:name=".SignInActivity"/>
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".ForgotPassword"/>
-        <activity android:name=".ConfirmPassword"/>
-        <activity android:name=".AboutUsActivity"/>
+        <activity android:name=".ui.HomeActivity"/>
+        <activity android:name=".ui.ReviewActivity" />
+        <activity android:name=".ui.SignInActivity"/>
+        <activity android:name=".ui.SignUpActivity"/>
+        <activity android:name=".ui.ForgotPassword"/>
+        <activity android:name=".ui.ConfirmPassword"/>
+        <activity android:name=".ui.AboutUsActivity"/>
     </application>
 
 </manifest>

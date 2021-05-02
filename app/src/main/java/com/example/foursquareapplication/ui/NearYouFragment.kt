@@ -1,10 +1,11 @@
-package com.example.foursquareapplication
+package com.example.foursquareapplication.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.foursquareapplication.R
 
 class NearYouFragment : Fragment() {
     override fun onCreateView(
