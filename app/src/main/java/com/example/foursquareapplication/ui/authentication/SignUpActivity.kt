@@ -2,6 +2,7 @@ package com.example.foursquareapplication.ui.authentication
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.SyncStateContract
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivitySignupBinding
+import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.ui.HomeActivity
 import com.example.foursquareapplication.viewmodel.AuthenticationViewModel
 import kotlin.math.sign
@@ -52,8 +54,15 @@ class SignUpActivity :  AppCompatActivity() {
                         authenticationViewModel.authenticateUser(loginUser).observe(this, {
                             Log.d("user", "login")
                             if (it != null) {
-                                if (it.getStatus() == 200)
+                                if (it.getStatus() == 200) {
+                                    val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE,
+                                        MODE_PRIVATE)
+                                    val sharedEditor = sharedPreferences.edit()
+                                    val userId = it.getData().getUserData().getUserId().toString()
+                                    sharedEditor.putString(Constants.USER_ID,userId)
+                                    sharedEditor.apply()
                                     startActivity(Intent(this, HomeActivity::class.java))
+                                }
                                 else
                                     Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT).show()
                             }
@@ -62,7 +71,6 @@ class SignUpActivity :  AppCompatActivity() {
                         Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT)
                             .show()
                     }
-
                 }
             })
         }
@@ -81,6 +89,10 @@ class SignUpActivity :  AppCompatActivity() {
                 signUpBinding.mobileValue.error = "Enter Phone Number"
                 signUpBinding.mobileValue.requestFocus()
 
+            }
+            phone.length != 10 -> {
+                signUpBinding.mobileValue.error = "Enter Valid Phone Number"
+                signUpBinding.mobileValue.requestFocus()
             }
             password.isEmpty()->{
                 signUpBinding.passwordValue.error = "Enter Password"

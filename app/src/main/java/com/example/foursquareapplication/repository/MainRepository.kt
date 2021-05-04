@@ -47,7 +47,8 @@ class MainRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     loginUser.value = response.body()
                 } else {
-                    Toast.makeText(application,response.raw().toString(), Toast.LENGTH_SHORT).show()
+                    Log.d("resposne","${response.body()?.error}")
+                    Toast.makeText(application,response.errorBody()?.string(), Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -62,4 +63,66 @@ class MainRepository(private val application: Application) {
         return loginUser
     }
 
+    fun generateOtp(email : HashMap<String,String>) : LiveData<User> {
+
+        val userOtp : MutableLiveData<User> = MutableLiveData()
+        val generateOtpCall = authenticationApi.generateOtp(email)
+        generateOtpCall.enqueue(object : Callback<User>{
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+
+                if(response.isSuccessful){
+                    userOtp.value = response.body()
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                userOtp.value = null
+                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+            }
+
+        })
+        return userOtp
+    }
+
+    fun validateOtp( otp : HashMap<String,String>): LiveData<User> {
+        val userOtp : MutableLiveData<User> = MutableLiveData()
+        val validateOtpCall = authenticationApi.validateOtp(otp)
+        validateOtpCall.enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.isSuccessful) {
+                    userOtp.value = response.body()
+                } else {
+                    Toast.makeText(application, "Invalid OTP", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                userOtp.value = null
+                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+            }
+
+        })
+          return userOtp
+        }
+
+    fun confirmPassword(password: HashMap<String, String>): LiveData<User> {
+        val userPassword : MutableLiveData<User> = MutableLiveData()
+        val validateOtpCall = authenticationApi.confirmPassword(password)
+        validateOtpCall.enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.isSuccessful) {
+                    userPassword.value = response.body()
+                } else {
+                    Toast.makeText(application, "Invalid OTP", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                userPassword.value = null
+                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+            }
+
+        })
+        return userPassword
+    }
 }
