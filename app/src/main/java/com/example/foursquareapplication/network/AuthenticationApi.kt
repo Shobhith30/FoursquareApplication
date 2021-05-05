@@ -2,10 +2,7 @@ package com.example.foursquareapplication.network
 
 import com.example.foursquareapplication.model.User
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface AuthenticationApi {
 
@@ -15,4 +12,13 @@ interface AuthenticationApi {
 
     @POST("authenticate")
     fun authenticateUser(@Body user : HashMap<String,String>) : Call<User>
+
+    @POST("generateOtp")
+    fun generateOtp(@Body email : HashMap<String,String>) : Call<User>
+
+    @PUT("validateOtp")
+    fun validateOtp(@Body otp: HashMap<String, String>) : Call<User>
+
+    @PUT("changePassword")
+    fun confirmPassword( @Body password : HashMap<String,String>) : Call<User>
 }

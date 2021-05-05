@@ -9,11 +9,11 @@ data class User(
     @SerializedName("pageNo") val pageNo : Int,
     @SerializedName("pageSize") val pageSize : Int,
     @SerializedName("lastPage") val lastPage : Boolean,
-   ) {
+    @SerializedName("data") private val data : Data) {
 
     fun getStatus() = status
     fun getMessage() = message
-    //fun getData() = data
+    fun getData() = data
 }
 
 data class Data(

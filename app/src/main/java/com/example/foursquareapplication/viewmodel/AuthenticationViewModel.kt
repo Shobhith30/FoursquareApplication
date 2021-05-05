@@ -19,4 +19,15 @@ class AuthenticationViewModel(application: Application)  :AndroidViewModel(appli
         return mainRepository.authenticateUser(user)
     }
 
+    fun generateOtp(email : HashMap<String,String>): LiveData<User> {
+        return mainRepository.generateOtp(email)
+    }
+
+    fun validateOtp( otp : HashMap<String,String>) : LiveData<User>{
+        return mainRepository.validateOtp(otp)
+    }
+
+    fun confirmPassword( password : HashMap<String,String>) : LiveData<User>{
+        return  mainRepository.confirmPassword(password)
+    }
 }
