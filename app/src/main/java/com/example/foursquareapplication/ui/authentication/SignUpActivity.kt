@@ -59,7 +59,9 @@ class SignUpActivity :  AppCompatActivity() {
                                         MODE_PRIVATE)
                                     val sharedEditor = sharedPreferences.edit()
                                     val userId = it.getData().getUserData().getUserId().toString()
+                                    val token = it.getData().getToken()
                                     sharedEditor.putString(Constants.USER_ID,userId)
+                                    sharedEditor.putString(Constants.USER_TOKEN,token)
                                     sharedEditor.apply()
                                     startActivity(Intent(this, HomeActivity::class.java))
                                 }
