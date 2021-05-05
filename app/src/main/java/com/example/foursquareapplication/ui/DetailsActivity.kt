@@ -6,27 +6,72 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityDetailsBinding
+import com.example.foursquareapplication.helper.ChangeRatingColor
+import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.PlaceResponse
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
-class DetailsActivity : AppCompatActivity() {
+class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var detailsBinding: ActivityDetailsBinding
     var fav = true
+    private var placeResponse: PlaceResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         detailsBinding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(detailsBinding.root)
 
+        placeResponse = intent.getParcelableExtra(Constants.PLACE_RESPOSNE)
+        addGoogleMap()
+        loadDataToViews(placeResponse)
         openRatingDialog()
         gotoPhotosScreen()
         gotoReviewScreen()
         gotoAddReviewScreen()
         setupActionBar()
 
+    }
+
+    private fun addGoogleMap() {
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    private fun loadDataToViews(placeResponse: PlaceResponse?) {
+        if (placeResponse != null) {
+            val placeData = placeResponse.getData()[0].getPlace()
+            if (placeData != null) {
+                detailsBinding.overview.text =
+                    placeData.getOverview()
+                detailsBinding.rating.rating =
+                    placeData.getOverallRating() / 2
+                detailsBinding.address.text = placeData.getAddress()
+                detailsBinding.phone.text = placeData.getPhone().toString()
+                detailsBinding.distance.text = "${placeResponse.getData()[0].getDistance()} Km"
+                Glide.with(this).load(placeData.getImage())
+                    .placeholder(R.drawable.loading).into(detailsBinding.placeImage)
+                val placeTypesList = arrayListOf<String>()
+                for(type in placeData.getPlaceType()){
+                    placeTypesList.add(type.getCategoryName())
+                }
+                val placeType = placeTypesList.joinToString(",")
+                detailsBinding.placeType.text = placeType
+            }
+        }
     }
 
     private fun gotoAddReviewScreen() {
@@ -39,6 +84,7 @@ class DetailsActivity : AppCompatActivity() {
     private fun setupActionBar() {
         setSupportActionBar(detailsBinding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        detailsBinding.toolbarTitle.text = placeResponse?.getData()?.get(0)?.getPlace()?.getName()
         detailsBinding.toolbar.let {
             it.setNavigationIcon(R.drawable.back_icon)
             it.setNavigationOnClickListener {
@@ -51,6 +97,8 @@ class DetailsActivity : AppCompatActivity() {
     private fun gotoReviewScreen() {
         detailsBinding.toReviewScreen.setOnClickListener {
             val reviewIntent = Intent(this, ReviewActivity::class.java)
+            val placeId = placeResponse?.getData()?.get(0)?.getPlace()?.getPlaceId()
+            reviewIntent.putExtra(Constants.PLACE_ID, placeId)
             startActivity(reviewIntent)
         }
     }
@@ -75,6 +123,18 @@ class DetailsActivity : AppCompatActivity() {
             ratingDialog.findViewById<ImageView>(R.id.close_dialog).setOnClickListener {
                 alertDialog.cancel()
             }
+            val ratingValue = placeResponse?.getData()?.get(0)?.getPlace()?.getOverallRating()
+            if (ratingValue != null) {
+                val rating = ratingDialog.findViewById<TextView>(R.id.overall_rating)
+                rating.setTextColor(ChangeRatingColor().getRatingColor(ratingValue))
+                rating.text = ratingValue.toString()
+            }
+            val submitRating = ratingDialog.findViewById<TextView>(R.id.submit)
+            val ratingBar = ratingDialog.findViewById<RatingBar>(R.id.rating_bar)
+            submitRating.setOnClickListener {
+                val userRating = ratingBar.rating
+
+            }
 
         }
     }
@@ -97,7 +157,7 @@ class DetailsActivity : AppCompatActivity() {
                 fav = false
                 invalidateOptionsMenu()
             }
-            R.id.share ->{
+            R.id.share -> {
                 sharePlace()
             }
         }
@@ -106,9 +166,9 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun sharePlace() {
         val sharePlaceIntent = Intent(Intent.ACTION_SEND)
-        sharePlaceIntent.putExtra(Intent.EXTRA_TEXT,"place details")
+        sharePlaceIntent.putExtra(Intent.EXTRA_TEXT, "place details")
         sharePlaceIntent.type = "plain/text"
-        val chooser = Intent.createChooser(sharePlaceIntent,"Select App")
+        val chooser = Intent.createChooser(sharePlaceIntent, "Select App")
         startActivity(chooser)
     }
 
@@ -122,5 +182,24 @@ class DetailsActivity : AppCompatActivity() {
         }
 
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onMapReady(maps: GoogleMap) {
+        if (placeResponse != null) {
+            val placeData = placeResponse!!.getData()[0].getPlace()
+            val location = LatLng(placeData!!.getLatitude(), placeData!!.getLongitude())
+
+            maps.addMarker(MarkerOptions().position(location))
+            maps.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        location.latitude,
+                        location.longitude
+                    ), 16.0f
+                )
+            )
+
+        }
+
     }
 }
