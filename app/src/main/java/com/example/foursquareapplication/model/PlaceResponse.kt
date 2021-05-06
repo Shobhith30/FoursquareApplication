@@ -10,7 +10,7 @@ data class PlaceResponse(
     private val pageNo: Int,
     private val pageSize: Int,
     private val lastPage: Boolean,
-    private val data: ArrayList<DataPlace>
+    private val data: List<DataPlace>
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(

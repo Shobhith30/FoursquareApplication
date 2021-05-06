@@ -15,6 +15,7 @@ import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityDetailsBinding
 import com.example.foursquareapplication.helper.ChangeRatingColor
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.DataPlace
 import com.example.foursquareapplication.model.PlaceResponse
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -27,14 +28,14 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var detailsBinding: ActivityDetailsBinding
     var fav = true
-    private var placeResponse: PlaceResponse? = null
+    private var placeResponse: DataPlace? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         detailsBinding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(detailsBinding.root)
 
-        placeResponse = intent.getParcelableExtra(Constants.PLACE_RESPOSNE)
+        //placeResponse = intent?.getParcelableExtra(Constants.PLACE_RESPOSNE)
         addGoogleMap()
         loadDataToViews(placeResponse)
         openRatingDialog()
@@ -51,9 +52,9 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun loadDataToViews(placeResponse: PlaceResponse?) {
+    private fun loadDataToViews(placeResponse: DataPlace?) {
         if (placeResponse != null) {
-            val placeData = placeResponse.getData()[0].getPlace()
+            val placeData = placeResponse.getPlace()
             if (placeData != null) {
                 detailsBinding.overview.text =
                     placeData.getOverview()
@@ -61,7 +62,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     placeData.getOverallRating() / 2
                 detailsBinding.address.text = placeData.getAddress()
                 detailsBinding.phone.text = placeData.getPhone().toString()
-                detailsBinding.distance.text = "${placeResponse.getData()[0].getDistance()} Km"
+                detailsBinding.distance.text = "${placeResponse.getDistance()} Km"
                 Glide.with(this).load(placeData.getImage())
                     .placeholder(R.drawable.loading).into(detailsBinding.placeImage)
                 val placeTypesList = arrayListOf<String>()
@@ -84,7 +85,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setupActionBar() {
         setSupportActionBar(detailsBinding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        detailsBinding.toolbarTitle.text = placeResponse?.getData()?.get(0)?.getPlace()?.getName()
+        detailsBinding.toolbarTitle.text = placeResponse?.getPlace()?.getName()
         detailsBinding.toolbar.let {
             it.setNavigationIcon(R.drawable.back_icon)
             it.setNavigationOnClickListener {
@@ -97,7 +98,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun gotoReviewScreen() {
         detailsBinding.toReviewScreen.setOnClickListener {
             val reviewIntent = Intent(this, ReviewActivity::class.java)
-            val placeId = placeResponse?.getData()?.get(0)?.getPlace()?.getPlaceId()
+            val placeId = placeResponse?.getPlace()?.getPlaceId()
             reviewIntent.putExtra(Constants.PLACE_ID, placeId)
             startActivity(reviewIntent)
         }
@@ -123,7 +124,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             ratingDialog.findViewById<ImageView>(R.id.close_dialog).setOnClickListener {
                 alertDialog.cancel()
             }
-            val ratingValue = placeResponse?.getData()?.get(0)?.getPlace()?.getOverallRating()
+            val ratingValue = placeResponse?.getPlace()?.getOverallRating()
             if (ratingValue != null) {
                 val rating = ratingDialog.findViewById<TextView>(R.id.overall_rating)
                 rating.setTextColor(ChangeRatingColor().getRatingColor(ratingValue))
@@ -186,7 +187,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(maps: GoogleMap) {
         if (placeResponse != null) {
-            val placeData = placeResponse!!.getData()[0].getPlace()
+            val placeData = placeResponse!!.getPlace()
             val location = LatLng(placeData!!.getLatitude(), placeData!!.getLongitude())
 
             maps.addMarker(MarkerOptions().position(location))

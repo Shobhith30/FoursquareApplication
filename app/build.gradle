@@ -81,5 +81,6 @@ dependencies {
     
     def paging_version = "1.0.0"
     implementation "android.arch.paging:runtime:$paging_version"
+    implementation 'com.google.android.gms:play-services-location:15.0.0'
 
 }
