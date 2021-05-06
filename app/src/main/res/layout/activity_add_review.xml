@@ -63,10 +63,10 @@
         android:textColor="#A8000000"
         android:text="Add a photos to your review"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/feedback" />
+        app:layout_constraintTop_toBottomOf="@+id/addReview" />
 
     <EditText
-        android:id="@+id/feedback"
+        android:id="@+id/addReview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"

@@ -24,7 +24,7 @@ class FeedbackActivity : AppCompatActivity() {
     }
     private fun submitFeedBack(){
         feedBackBinding.submit.setOnClickListener{
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, DetailsActivity::class.java))
         }
     }
 

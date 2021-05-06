@@ -14,7 +14,7 @@
         android:id="@+id/grp2"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/feedback"
+            android:id="@+id/addReview"
             android:icon="@drawable/feedback"
             android:title="@string/feedback">
 

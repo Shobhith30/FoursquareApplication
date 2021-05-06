@@ -1,6 +1,6 @@
 package com.example.foursquareapplication.model
 
-data class Review(
+data class Review (
     private val status: Int,
     private val message: String,
     private val pageNo: Int,
@@ -32,3 +32,4 @@ data class ReviewData(
     fun getDate() = date
 
 }
+

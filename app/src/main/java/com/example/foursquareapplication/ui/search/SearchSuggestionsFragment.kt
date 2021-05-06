@@ -33,7 +33,6 @@ class SearchSuggestionsFragment : Fragment() {
 
         _searchSuggestionBinding = FragmentSearchSuggestionsBinding.inflate(inflater,container,false)
 
-
         val names= arrayOf("Top pick","Popular","Lunch","Coffee")
 
         val arrayAdapter:ArrayAdapter<String> = ArrayAdapter(
