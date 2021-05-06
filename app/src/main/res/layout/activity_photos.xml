@@ -31,7 +31,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridView_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+   <!-- <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +50,7 @@
         android:layout_marginTop="2dp"
         >
 
-    </GridView>
+    </GridView>-->
 
 
 </LinearLayout>
