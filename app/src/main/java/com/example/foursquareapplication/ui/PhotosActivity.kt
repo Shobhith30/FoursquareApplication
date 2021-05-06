@@ -13,91 +13,58 @@ import android.widget.GridView
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.foursquareapplication.model.PhotoModel
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.adapter.PictureAdapter
+import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
+import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.PhotoData
 import com.example.foursquareapplication.model.Photos
 import com.example.foursquareapplication.viewmodel.PhotosViewModel
+import com.example.foursquareapplication.viewmodel.ReviewViewModel
 
 
 private const val REQUEST_CODE=42
 class PhotosActivity : AppCompatActivity() {
 
     private lateinit var photoBinding: ActivityPhotosBinding
+    private lateinit var pictureAdapter : PictureAdapter
     private lateinit var photosViewModel : PhotosViewModel
-
-
-/*
-    var modelist=ArrayList<PhotoModel>()
-*/
-
-    var images= intArrayOf(R.drawable.idli_vada,R.drawable.kabab)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         photoBinding = ActivityPhotosBinding.inflate(layoutInflater)
         setContentView(photoBinding.root)
-        photosViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(PhotosViewModel::class.java)
-
 
         setToolbar()
 
-        val gridView=findViewById<GridView>(R.id.gridView)
+        photosViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(PhotosViewModel::class.java)
+        pictureAdapter= PictureAdapter(this)
+        val gridView=GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false)
+        photoBinding.gridViewRecyclerView.layoutManager=gridView
+        photoBinding.gridViewRecyclerView.adapter=pictureAdapter
 
-        /*for (i in images.indices){
-            modelist.add(PhotoModel(images[i]))
-        }*/
+      //  val placeId = intent.getIntExtra(Constants.PLACE_ID,0)
+        val placeId=10
+        if(placeId!=0) {
+            photosViewModel.getPictures(placeId)?.observe(this,{
+                if (it!=null)
+                    pictureAdapter.submitList(it)
+            })
 
-/*
-        var customAdapter=customAdapter(modelist, this, it)
-*/
-
-/*
-        gridView.adapter=customAdapter
-*/
-/*
-        gridView.setOnItemClickListener { parent, view, position, id ->
-            val intent= Intent(this, PhotosDetailsActivity::class.java)
-            intent.putExtra("data",modelist[position])
-            startActivity(intent)
-        }*/
-
-        photosViewModel.getPhotos(10,0,5).observe(this,{
-            println(it)
-
-            var customAdapter=customAdapter(this,it)
-            gridView.adapter= customAdapter
-
-            gridView.setOnItemClickListener { parent, view, position, id ->
-                val intent= Intent(this, PhotosDetailsActivity::class.java)
-
-/*
-                intent.putExtra("data",modelist[position])
-*/
-                startActivity(intent)
-            }
-
-
-        })
-
-        getPictures()
+        }
+        else{
+            println("124578"+placeId)
+        }
 
     }
 
-    private fun getPictures() {
 
-       /* var imageView=findViewById<ImageView>(R.id.image1)
-
-
-        photosViewModel.addReview(10,0,5).observe(this,{
-            println(it)
-
-            Glide.with(applicationContext).load(it.getData()[0].getImageUrl()).into(imageView)
-
-        })*/
-    }
 
     private fun setToolbar() {
 
@@ -134,69 +101,5 @@ class PhotosActivity : AppCompatActivity() {
 
     }
 
-
-    class customAdapter(
-/*
-        var itemModel: ArrayList<PhotoModel>,
-*/
-        var context: Context,
-        var photos: Photos
-    ): BaseAdapter(){
-
-        var layoutInflater=context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        override fun getCount(): Int {
-            return photos.getPageSize()
-        }
-
-        override fun getItem(position: Int): Any {
-            return photos.getData()[position]
-/*
-            return itemModel[position]
-*/
-        }
-
-        override fun getItemId(position: Int): Long {
-
-            return position.toLong()
-        }
-
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-
-            var view=convertView
-            if (view==null){
-                view=layoutInflater.inflate(R.layout.item_photos,parent,false)
-
-            }
-
-            var imageView=view?.findViewById<ImageView>(R.id.image1)
-
-
-            Glide.with(context).load(photos.getData()[0].getImageUrl()).into(imageView!!)
-
-            println(photos.getData()[0].getImageUrl())
-
-           /* photosViewModel.addReview(10,0,5).observe(this,{
-                println(it)
-
-                if (imageView != null) {
-                    Glide.with(context).load(it.getData()[0].getImageUrl()).into(imageView)
-                }
-
-            })*/
-
-/*
-            Glide.with(context).load("https://aws-foursquare.s3.us-east-2.amazonaws.com/ReviewImage/mae-mu-noodles-vegetables-egg.jpg").into(imageView!!)
-*/
-/*
-            imageView?.setImageResource(itemModel[position].image!!)
-*/
-
-
-            return view!!
-
-        }
-    }
 }
 

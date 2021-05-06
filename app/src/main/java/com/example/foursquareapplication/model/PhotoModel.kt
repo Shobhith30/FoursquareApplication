@@ -1,6 +1,7 @@
 package com.example.foursquareapplication.model
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import java.io.Serializable
@@ -15,6 +16,10 @@ class Model(image: Bitmap) :Serializable{
 
     var image: Bitmap?= image
 
+}
+
+class ReviewPhotos(image:Uri){
+    var image:Uri?=image
 }
 
 /*data class Model1(val bf:Int?=0) : Parcelable {

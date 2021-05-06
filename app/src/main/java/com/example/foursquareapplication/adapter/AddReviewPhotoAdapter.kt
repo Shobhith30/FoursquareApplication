@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.foursquareapplication.model.Model
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.model.ReviewPhotos
 
-class AddReviewPhotoAdapter (val capturedPhotos: ArrayList<Model>): RecyclerView.Adapter<AddReviewPhotoAdapter.AddReviewPhotosViewHolder>() {
+class AddReviewPhotoAdapter(val capturedPhotos: ArrayList<ReviewPhotos>): RecyclerView.Adapter<AddReviewPhotoAdapter.AddReviewPhotosViewHolder>() {
 
 
     class AddReviewPhotosViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,7 +31,8 @@ class AddReviewPhotoAdapter (val capturedPhotos: ArrayList<Model>): RecyclerView
 
     override fun onBindViewHolder(holder: AddReviewPhotosViewHolder, position: Int) {
         val reviewPhoto=capturedPhotos[position]
-        holder.addReviewPhoto.setImageBitmap(reviewPhoto.image)
+        holder.addReviewPhoto.setImageURI(reviewPhoto.image)
+       // holder.addReviewPhoto.setImageBitmap(reviewPhoto.image)
 
 
     }
