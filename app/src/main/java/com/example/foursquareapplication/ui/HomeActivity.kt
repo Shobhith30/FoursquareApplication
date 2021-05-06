@@ -78,7 +78,7 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
 
-                R.id.feedback ->{
+                R.id.addReview ->{
                     val intent = Intent(this, FeedbackActivity::class.java)
                     startActivity(intent)
                 }

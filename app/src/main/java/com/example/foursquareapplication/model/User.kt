@@ -2,6 +2,12 @@ package com.example.foursquareapplication.model
 
 import com.google.gson.annotations.SerializedName
 
+data class userPlace(
+    val user:User,
+    val place:PlaceResponse
+
+)
+
 data class User(
     @SerializedName("status") private val status : Int,
     @SerializedName("error") val error : String,
