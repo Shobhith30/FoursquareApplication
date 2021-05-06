@@ -32,9 +32,12 @@ class ReviewActivity : AppCompatActivity() {
 
         val placeId = intent.getIntExtra(Constants.PLACE_ID,0)
         if(placeId!=0) {
-            reviewViewModel.getReview(11)?.observe(this, {
-                if (it != null)
+            reviewViewModel.getReview(placeId)?.observe(this, {
+                if (it != null) {
                     reviewAdapter.submitList(it)
+                    reviewBinding.toolbarTitle.text = it[0]?.getPlaceName()
+                }
+
 
             })
         }
@@ -44,7 +47,6 @@ class ReviewActivity : AppCompatActivity() {
 
     private fun setToolbar() {
         reviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
-        reviewBinding.toolbarTitle.text = "Attil"
         reviewBinding.toolbar.inflateMenu(R.menu.menu_home_icon)
         reviewBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()

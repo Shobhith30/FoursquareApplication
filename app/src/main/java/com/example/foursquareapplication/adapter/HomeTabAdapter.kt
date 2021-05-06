@@ -1,5 +1,6 @@
 package com.example.foursquareapplication.adapter
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -7,23 +8,35 @@ import com.example.foursquareapplication.ui.NearYouFragment
 
 internal class HomeTabAdapter(fm: FragmentManager, var totalTabs: Int): FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {
-        return when (position) {
+         when (position) {
             0 -> {
-                NearYouFragment()
+                val fragment =  NearYouFragment()
+                val bundle = Bundle()
+                bundle.putString("key","nearBy")
+                fragment.arguments = bundle
+                return fragment
             }
             1 ->{
-                NearYouFragment()
+                val fragment =  NearYouFragment()
+                val bundle = Bundle()
+                bundle.putString("key","topPick")
+                fragment.arguments = bundle
+                return fragment
             }
             2->{
-                NearYouFragment()
+                val fragment =  NearYouFragment()
+                val bundle = Bundle()
+                bundle.putString("key","popular")
+                fragment.arguments = bundle
+                return fragment
             }
             3->{
-                NearYouFragment()
+                return NearYouFragment()
             }
             4->{
-                NearYouFragment()
+                return NearYouFragment()
             }
-            else -> getItem(position)
+            else -> return getItem(position)
         }
     }
     override fun getCount(): Int {
