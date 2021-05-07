@@ -8,7 +8,7 @@ import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 import com.example.foursquareapplication.datasource.PicturesDataSource
 import com.example.foursquareapplication.datasource.PicturesDataSourseFactory
-import com.example.foursquareapplication.model.PhotoData
+import com.example.foursquareapplication.model.*
 import com.example.foursquareapplication.repository.PhotosRepository
 
 class PhotosViewModel(application: Application)  : AndroidViewModel(application) {
@@ -19,6 +19,10 @@ class PhotosViewModel(application: Application)  : AndroidViewModel(application)
 
     private val getPhotosRepository = PhotosRepository(application)
 
+    fun getPicture(token: String?, photoId: Int): LiveData<PhotoDetails> {
+println("bgf"+photoId)
+        return getPhotosRepository.getPhotoDetails(token,photoId)
+    }
     fun getPictures(placeId : Int)  : LiveData<PagedList<PhotoData>>?{
         val itemDataSourceFactory = PicturesDataSourseFactory(placeId)
 
@@ -34,6 +38,8 @@ class PhotosViewModel(application: Application)  : AndroidViewModel(application)
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
         return itemPagedList
     }
+
+
 
 
 

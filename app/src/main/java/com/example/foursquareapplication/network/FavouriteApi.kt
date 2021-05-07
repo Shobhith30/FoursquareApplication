@@ -1,5 +1,6 @@
 package com.example.foursquareapplication.network
 
+import com.example.foursquareapplication.model.FavouriteResponse
 import com.example.foursquareapplication.model.PlaceResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -10,7 +11,7 @@ interface FavouriteApi {
 
     @GET("getFavourite")
     fun getFavourite(@Query("userId") userId : Int,
-                     @Query("pageNo") pageNumber : Int = 0,
-                     @Query("pageSize") pageSize : Int = 5,
-                     @Header("Authorization") token : String) : Call<PlaceResponse>
+                     @Query("pageNo") pageNumber : Int,
+                     @Query("pageSize") pageSize : Int,
+                     @Header("Authorization") token : String) : Call<FavouriteResponse>
 }

@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivitySigninBinding
 import com.example.foursquareapplication.helper.Constants

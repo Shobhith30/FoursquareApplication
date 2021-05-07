@@ -1,16 +1,12 @@
 package com.example.foursquareapplication.repository
 
 import android.app.Application
-import android.net.Uri
-import android.provider.SyncStateContract
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.foursquareapplication.helper.Constants
-import com.example.foursquareapplication.model.Photos
-import com.example.foursquareapplication.model.Review
-import com.example.foursquareapplication.network.AuthenticationApi
+import com.example.foursquareapplication.model.PhotoDetails
+import com.example.foursquareapplication.model.PhotoDetailsData
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.network.PhotosApi
 import retrofit2.Call
@@ -19,36 +15,30 @@ import retrofit2.Response
 
 class PhotosRepository(private val application: Application) {
 
-    private val authenticationApi =
+   /* private val authenticationApi =
         FourSquareApiInstance.getApiInstance(AuthenticationApi::class.java)
-        private val PhotosApi= FourSquareApiInstance.getApiInstance(PhotosApi::class.java)
+*/        private val photosApi= FourSquareApiInstance.getApiInstance(PhotosApi::class.java)
 
 
-
-    fun uploadPhotos(photos:Uri):LiveData<Photos>{
-        val getFoodPictures: MutableLiveData<Photos> = MutableLiveData()
-
-       // val registerDetails = PhotosApi.uploadReviewImage(3,3,Constants.USER_TOKEN,)
-
-        return getFoodPictures
-    }
-
-    fun getPictures(placeId:Int,pageNo:Int,pageSize:Int): LiveData<Photos> {
-        val getFoodPictures: MutableLiveData<Photos> = MutableLiveData()
-        val getFoodPicturescall = authenticationApi.getPictures(placeId,pageNo,pageSize)
-        getFoodPicturescall.enqueue(object : Callback<Photos> {
-            override fun onResponse(call: Call<Photos>, response: Response<Photos>) {
+    fun getPhotoDetails(token: String?, photoId: Int): LiveData<PhotoDetails> {
+        println("jhc"+photoId)
+        val getFoodPictures: MutableLiveData<PhotoDetails> = MutableLiveData()
+        val getFoodPicturescall = photosApi.getPhotoDetails(token!!,photoId)
+        getFoodPicturescall.enqueue(object : Callback<PhotoDetails> {
+            override fun onResponse(call: Call<PhotoDetails>, response: Response<PhotoDetails>) {
                 if (response.isSuccessful) {
                     getFoodPictures.value = response.body()
+                    println("response"+response.body())
                 } else {
-                    Log.d("resposne","${response.body()?.getError()}")
+                    Log.d("resposne","${response.body()}")
+                    println("response data"+response.body())
+
                     Toast.makeText(application,response.errorBody()?.string(), Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<Photos>, t: Throwable) {
+            override fun onFailure(call: Call<PhotoDetails>, t: Throwable) {
 
-                getFoodPictures.value = null
                 Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
 
             }
