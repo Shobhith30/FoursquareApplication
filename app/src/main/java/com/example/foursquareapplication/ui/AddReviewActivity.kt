@@ -39,7 +39,6 @@ class AddReviewActivity : AppCompatActivity() {
 
 
 
-
     var modelList=ArrayList<ReviewPhotos>()
     var adapter: AddReviewPhotoAdapter? = null
 
@@ -68,6 +67,7 @@ class AddReviewActivity : AppCompatActivity() {
             it.type="image/*"
             val minType= arrayOf("image/jpeg","image/png")
             it.putExtra(Intent.EXTRA_MIME_TYPES,minType)
+            it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
             startActivityForResult(it, REQUEST_CODE)
         }    }
 
@@ -90,27 +90,34 @@ class AddReviewActivity : AppCompatActivity() {
                 if (token != null) {
                     val newtoken = "Bearer $token"
 
-                val userReview = hashMapOf("userId" to "74","placeId" to "10","review" to review)
+                    val userReview = hashMapOf("userId" to "74", "placeId" to "9", "review" to review)
 
-                    val parcelFileDiscriptor=contentResolver.openFileDescriptor(selectedImage!!,"r",null)?: return@setOnClickListener
-                    val inputStream =FileInputStream(parcelFileDiscriptor.fileDescriptor)
-                    val file = File(cacheDir,contentResolver.getFileName(selectedImage!!))
-                    val outputStream=FileOutputStream(file)
-                    inputStream.copyTo(outputStream)
 
-                    val imagefile=RequestBody.create(MediaType.parse("image/*"),file)
+                    for (images in modelList) {
+                        println(images.image)
 
-                    PhotosApi.uploadReviewImage(10,74,newtoken,MultipartBody.Part.createFormData("files",file.name,imagefile)
-                    ).enqueue(object: Callback<User>{
-                        override fun onResponse(call: Call<User>, response: Response<User>) {
-                            Toast.makeText(applicationContext,"done",Toast.LENGTH_LONG).show()
-                        }
 
-                        override fun onFailure(call: Call<User>, t: Throwable) {
-                            Toast.makeText(applicationContext," not done",Toast.LENGTH_LONG).show()
-                        }
+                        val parcelFileDiscriptor = contentResolver.openFileDescriptor(selectedImage!!, "r", null)
+                                ?: return@setOnClickListener
+                        val inputStream = FileInputStream(parcelFileDiscriptor.fileDescriptor)
+                        val file = File(cacheDir, contentResolver.getFileName(images.image!!))
+                        val outputStream = FileOutputStream(file)
+                        inputStream.copyTo(outputStream)
 
-                    })
+                        val imagefile = RequestBody.create(MediaType.parse("image/*"), file)
+
+                        PhotosApi.uploadReviewImage(9, 74, newtoken, MultipartBody.Part.createFormData("files", file.name, imagefile)
+                        ).enqueue(object : Callback<User> {
+                            override fun onResponse(call: Call<User>, response: Response<User>) {
+                                Toast.makeText(applicationContext, "done", Toast.LENGTH_LONG).show()
+                            }
+
+                            override fun onFailure(call: Call<User>, t: Throwable) {
+                            //    Toast.makeText(applicationContext, " not done"+t.message, Toast.LENGTH_LONG).show()
+                            }
+
+                        })
+                    }
 
                 addReviewViewModel.addReview(newtoken,userReview).observe(this, {
                     if (it != null) {
@@ -135,17 +142,26 @@ class AddReviewActivity : AppCompatActivity() {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode==Activity.RESULT_OK){
-        when (requestCode) {
-            100 -> {
-                selectedImage = data?.data
-                modelList.add(ReviewPhotos(selectedImage!!))
-                initialise(modelList)
-            }
-        }
-    }else{
-            super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (requestCode== REQUEST_CODE){
+            if (resultCode==Activity.RESULT_OK){
+                if (data!!.clipData!=null){
+                    val count=data.clipData!!.itemCount
+                    for (i in 0 until count){
+                        selectedImage=data.clipData!!.getItemAt(i).uri
+                        modelList.add(ReviewPhotos(selectedImage!!))
+                        initialise(modelList)
+                    }
+                }
+                else{
+                    selectedImage=data.data
+
+                    modelList.add(ReviewPhotos(selectedImage!!))
+                    initialise(modelList)
+
+                }
+            }
         }
 
     }

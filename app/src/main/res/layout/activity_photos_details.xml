@@ -46,8 +46,8 @@
 
             <ImageView
                 android:id="@+id/profile_picture"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="2dp"
                 android:contentDescription="@string/profile_picture"
                 android:scaleType="centerCrop"
@@ -62,7 +62,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/ContactName"
+                android:id="@+id/UserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/avenir_medium"
@@ -73,7 +73,7 @@
             </TextView>
 
             <TextView
-                android:id="@+id/ContactNumber"
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/avenir_book"

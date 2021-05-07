@@ -1,6 +1,8 @@
 package com.example.foursquareapplication.network
 
 import android.graphics.Bitmap
+import com.example.foursquareapplication.model.PhotoDetails
+import com.example.foursquareapplication.model.PhotoDetailsData
 import com.example.foursquareapplication.model.Photos
 import com.example.foursquareapplication.model.User
 import okhttp3.MultipartBody
@@ -16,6 +18,13 @@ interface PhotosApi {
         @Query("pageNo")pageNo:Int,
         @Query("pageSize")pageSize:Int
     ) : Call<Photos>
+
+    @GET("getPhoto")
+    fun getPhotoDetails(
+            @Header("Authorization") token:String,
+            @Query("photoId") placeId: Int
+
+    ) :Call<PhotoDetails>
 
     @Multipart
     @POST("uploadReviewImage")
