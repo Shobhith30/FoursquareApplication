@@ -1,6 +1,7 @@
 package com.example.foursquareapplication.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.location.Location
 import android.location.LocationListener
 import android.os.Build
@@ -8,22 +9,30 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.example.foursquareapplication.adapter.HomeTabAdapter
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.helper.GPSTracker
 import com.example.foursquareapplication.helper.LocationService
+import com.example.foursquareapplication.ui.authentication.SignInActivity
 import com.example.foursquareapplication.ui.search.SearchActivity
+import com.example.foursquareapplication.viewmodel.LocationViewModel
 import com.example.foursquareapplication.viewmodel.PlaceViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
+import kotlin.math.log
 
 class HomeActivity : AppCompatActivity() {
 
@@ -32,6 +41,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var locationService: LocationService
     private lateinit var listener : LocationListener
     private lateinit var placeViewModel: PlaceViewModel
+    private lateinit var locationViewModel: LocationViewModel
+    private lateinit var sharedPreferences: SharedPreferences
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +51,9 @@ class HomeActivity : AppCompatActivity() {
         getUserLocation()
         supportActionBar?.hide()
 
+        sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
         placeViewModel = ViewModelProvider(this).get(PlaceViewModel::class.java)
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
         val toolbar = findViewById<Toolbar>(R.id.toolbar_home)
         setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.menu_icon)
@@ -52,7 +65,8 @@ class HomeActivity : AppCompatActivity() {
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        setUserProfile(nav_view)
+        disableLogout(nav_view)
         val tabs = findViewById<TabLayout>(R.id.tab_home)
         val pager = findViewById<ViewPager>(R.id.home_pager)
 
@@ -68,6 +82,7 @@ class HomeActivity : AppCompatActivity() {
         pager.adapter = adapter
 
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+        pager.offscreenPageLimit = 3
         val intent=intent
         val getPosition=intent.getIntExtra("position",0)
         pager.currentItem = getPosition
@@ -99,12 +114,50 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this, AboutUsActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.logOut ->{
+                    logOutUser()
+                }
                 else ->{
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                 }
             }
             true
+        }
+    }
+
+    private fun disableLogout(navView : NavigationView?) {
+        val menu = navView?.menu
+        val logout = menu?.findItem(R.id.logOut)
+        logout?.isEnabled = sharedPreferences.contains(Constants.USER_ID)
+    }
+
+    private fun logOutUser() {
+        val editor = sharedPreferences.edit()
+        editor.remove(Constants.USER_ID)
+        editor.apply()
+        startActivity(Intent(this,SignInActivity::class.java))
+        finish()
+    }
+
+    private fun setUserProfile(navView: NavigationView?) {
+        val header = navView?.getHeaderView(0)
+        val profilePicture = header?.findViewById<ImageView>(R.id.profile_picture)
+        val userName = header?.findViewById<TextView>(R.id.user_name)
+        if(sharedPreferences.contains(Constants.USER_ID)){
+            val name = sharedPreferences.getString(Constants.USER_NAME,"")
+            val image = sharedPreferences.getString(Constants.USER_IMAGE,"")
+            Toast.makeText(applicationContext, name, Toast.LENGTH_SHORT).show()
+            userName?.text = name
+            if (profilePicture != null) {
+                Glide.with(applicationContext).load(image).into(profilePicture)
+            }
+        }
+        val userDetails = header?.findViewById<ConstraintLayout>(R.id.user_details)
+        userDetails?.setOnClickListener {
+            if(sharedPreferences.contains(Constants.GUEST_USER)){
+                startActivity(Intent(this,SignInActivity::class.java))
+            }
         }
     }
 
@@ -120,7 +173,7 @@ class HomeActivity : AppCompatActivity() {
         listener = object : LocationListener{
             override fun onLocationChanged(location: Location) {
                 gpsTracker.stopGps(listener)
-                placeViewModel.setLocation(location)
+                locationViewModel.setLocation(location)
                 //Toast.makeText(applicationContext, "$location", Toast.LENGTH_SHORT).show()
 
             }
@@ -145,7 +198,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun getServiceLocation(){
         locationService.getLocation(this, { location ->
-            placeViewModel.setLocation(location as Location)
+            locationViewModel.setLocation(location as Location)
 
         },{
             Toast.makeText(this, "Cannot fetch location", Toast.LENGTH_SHORT).show()

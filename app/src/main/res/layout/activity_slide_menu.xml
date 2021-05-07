@@ -23,8 +23,8 @@
         android:fitsSystemWindows="false"
         app:headerLayout="@layout/nav_header"
         app:itemIconSize="18sp"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="#C6FFFFFF"
+        app:itemIconTint="@color/menu_selector_text_color"
+        app:itemTextColor="@color/menu_selector_text_color"
         android:theme="@style/mynavigation"
         app:menu="@menu/main_menu" />
 

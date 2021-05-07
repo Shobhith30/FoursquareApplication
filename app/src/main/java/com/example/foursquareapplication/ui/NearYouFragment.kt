@@ -19,6 +19,7 @@ import com.example.foursquareapplication.adapter.PlaceAdapter
 import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.FragmentNearYouBinding
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.viewmodel.LocationViewModel
 import com.example.foursquareapplication.viewmodel.PlaceViewModel
 import com.example.foursquareapplication.viewmodel.ReviewViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,7 +35,8 @@ class NearYouFragment : Fragment() {
     private var mapReady : Boolean = false
     private var location : Location? = null
     private lateinit var nearYouBinding : FragmentNearYouBinding
-    private val placeViewModel: PlaceViewModel by activityViewModels<PlaceViewModel>()
+    private lateinit var placeViewModel: PlaceViewModel
+    private val locationViewModel  :LocationViewModel by activityViewModels()
     private lateinit var placeAdapter : PlaceAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,16 +51,18 @@ class NearYouFragment : Fragment() {
         supportMapFragment.getMapAsync{
             myMap = it
             mapReady = true
+            enableMyLocationIfPermitted()
             setCurrentLocationOnMap()
+
         }
 
-
-        placeViewModel.getLocation().observe(requireActivity(), {
+        placeViewModel = ViewModelProvider(this).get(PlaceViewModel::class.java)
+        locationViewModel.getLocation().observe(viewLifecycleOwner, {
             location = it
             enableMyLocationIfPermitted()
             setCurrentLocationOnMap()
             loadPlaceData(it)
-            Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
         })
         return  nearYouBinding.root
     }
@@ -85,8 +89,8 @@ class NearYouFragment : Fragment() {
             placeViewModel.getPlaceDetails(type, location.latitude, location.longitude)
                 ?.observe(viewLifecycleOwner, {
                     if (it != null) {
-                        if (it.size > 0) {
-                            Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                        if (it.size>0) {
+                            if(it.get(0)?.getPlace() != null)
                             placeAdapter.submitList(it)
                         }
                     }

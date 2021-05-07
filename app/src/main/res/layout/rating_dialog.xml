@@ -48,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:numStars="5"
-            android:progressDrawable="@drawable/custom_rating_bar"
-            android:rating="2.5" />
+            android:stepSize="1"
+            android:progressDrawable="@drawable/custom_rating_bar" />
 
         <TextView
             android:id="@+id/submit"

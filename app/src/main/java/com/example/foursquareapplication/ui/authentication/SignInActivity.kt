@@ -33,8 +33,23 @@ class SignInActivity : AppCompatActivity() {
         }
 
 
+        setSkipLoginListener()
         setSignUpOnClickListener()
         setForgotPasswordOnclickListener()
+    }
+
+    private fun setSkipLoginListener() {
+        signInBinding.signinSkip.setOnClickListener {
+            val sharedPreferences = getSharedPreferences(
+                Constants.USER_PREFERENCE,
+                MODE_PRIVATE
+            )
+            val sharedEditor = sharedPreferences.edit()
+            sharedEditor.putBoolean(Constants.GUEST_USER,true)
+            sharedEditor.apply()
+            startActivity(Intent(this,HomeActivity::class.java))
+            finish()
+        }
     }
 
     private fun setForgotPasswordOnclickListener() {
@@ -76,7 +91,6 @@ class SignInActivity : AppCompatActivity() {
 
                         val loginUser = hashMapOf("email" to signInUserName, "password" to signInPassword)
                         authenticationViewModel.authenticateUser(loginUser).observe(this, {
-                            Log.d("user", "login")
                             if (it != null) {
                                 if (it.getStatus() == Constants.STATUS_OK) {
                                     val sharedPreferences = getSharedPreferences(
@@ -85,9 +99,14 @@ class SignInActivity : AppCompatActivity() {
                                     )
                                     val sharedEditor = sharedPreferences.edit()
                                     val userId = it.getData().getUserData().getUserId().toString()
+                                    val userName = it.getData().getUserData().getUserName()
+                                    val userImage = it.getData().getUserData().getImage()
                                     val token = it.getData().getToken()
                                     sharedEditor.putString(Constants.USER_ID, userId)
+                                    sharedEditor.putString(Constants.USER_NAME,userName)
+                                    sharedEditor.putString(Constants.USER_IMAGE,userImage)
                                     sharedEditor.putString(Constants.USER_TOKEN,token)
+                                    sharedEditor.remove(Constants.GUEST_USER)
                                     sharedEditor.apply()
                                     startActivity(Intent(this, HomeActivity::class.java))
                                 } else {

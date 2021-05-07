@@ -39,6 +39,7 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
 
     }
+
     fun setFilter(query: String,userId : Int , token : String): LiveData<PagedList<Place>> {
         val itemDataSourceFactory = GetFavouriteDataSourceFactory(query,userId,token)
 

@@ -1,6 +1,9 @@
 package com.example.foursquareapplication.helper
 
 object Constants {
+    val GUEST_USER: String = "com.example.foursquareapplication.helper.guest_user"
+    val USER_NAME: String = "com.example.foursquareapplication.helper.user_name"
+    val USER_IMAGE = "com.example.foursquareapplication.helper.user_image"
     val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
     val PLACE_ID: String = "com.example.foursquareapplication.helper.place_id"
     val PLACE_RESPOSNE: String = "com.example.foursquareapplication.helper.place_response"

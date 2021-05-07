@@ -41,7 +41,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(detailsBinding.root)
 
         reviewViewModel = ViewModelProvider.AndroidViewModelFactory(application)
-                .create(ReviewViewModel::class.java)
+            .create(ReviewViewModel::class.java)
         placeResponse = intent?.getParcelableExtra(Constants.PLACE_RESPOSNE)
         val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
         isLoggedIn = sharedPreferences.contains(Constants.USER_ID)
@@ -57,7 +57,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addGoogleMap() {
         val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
@@ -65,14 +65,14 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (placeResponse != null) {
             val placeData = placeResponse
             detailsBinding.overview.text =
-                    placeData.getOverview()
+                placeData.getOverview()
             detailsBinding.rating.rating =
-                    placeData.getOverallRating() / 2
+                placeData.getOverallRating() / 2
             detailsBinding.address.text = placeData.getAddress()
             detailsBinding.phone.text = placeData.getPhone().toString()
             //detailsBinding.distance.text = String.format("%.1f Km", placeResponse.getDistance())
             Glide.with(this).load(placeData.getImage())
-                    .placeholder(R.drawable.loading).into(detailsBinding.placeImage)
+                .placeholder(R.drawable.loading).into(detailsBinding.placeImage)
             val placeTypesList = arrayListOf<String>()
             for (type in placeData.getPlaceType()) {
                 placeTypesList.add(type.getCategoryName())
@@ -125,11 +125,11 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun openRatingDialog() {
         detailsBinding.toRatingScreen.setOnClickListener {
             val ratingDialog =
-                    layoutInflater.inflate(R.layout.rating_dialog, detailsBinding.rootView, false)
+                layoutInflater.inflate(R.layout.rating_dialog, detailsBinding.rootView, false)
             val alertDialog = AlertDialog.Builder(this)
-                    .setView(ratingDialog)
-                    .setCancelable(false)
-                    .create()
+                .setView(ratingDialog)
+                .setCancelable(false)
+                .create()
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
             alertDialog.show()
             ratingDialog.findViewById<ImageView>(R.id.close_dialog).setOnClickListener {
@@ -159,26 +159,26 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun submitUserRating(userRating : Int) {
         if (userRating > 0) {
             val sharedPreferences =
-                    getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
+                getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
             val userId = sharedPreferences.getString(Constants.USER_ID, "")
             val token = "Bearer ${sharedPreferences.getString(Constants.USER_TOKEN, "")}"
             val placeId = placeResponse?.getPlaceId()
             val rating = hashMapOf<String, String>(
-                    "userId" to userId.toString(),
-                    "placeId" to placeId.toString(),
-                    "rating" to userRating.toString()
+                "userId" to userId.toString(),
+                "placeId" to placeId.toString(),
+                "rating" to userRating.toString()
             )
-//            reviewViewModel.addRating(token, rating).observe(this, {
-//                if (it.getStatus() == Constants.STATUS_OK)
-//                    Toast.makeText(
-//                            applicationContext,
-//                            "Thank you for your Feedback!",
-//                            Toast.LENGTH_LONG
-//                    ).show()
-//                else
-//                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_LONG)
-//                            .show()
-//            })
+            reviewViewModel.addRating(token, rating).observe(this, {
+                if (it.getStatus() == Constants.STATUS_OK)
+                    Toast.makeText(
+                        applicationContext,
+                        "Thank you for your Feedback!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                else
+                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_LONG)
+                        .show()
+            })
         }
     }
 
@@ -234,12 +234,12 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             maps.addMarker(MarkerOptions().position(location))
             maps.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                            LatLng(
-                                    location.latitude,
-                                    location.longitude
-                            ), 16.0f
-                    )
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        location.latitude,
+                        location.longitude
+                    ), 16.0f
+                )
             )
 
         }

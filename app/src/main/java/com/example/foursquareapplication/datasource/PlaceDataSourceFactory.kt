@@ -20,7 +20,7 @@ class PlaceDataSourceFactory(val type : String,val latitude : Double,val longitu
 
         //posting the datasource to get the values
         itemLiveDataSource.postValue(itemDataSource)
-        Log.d("here",itemDataSource.toString())
+        Log.d("here",itemDataSource.type)
 
         //returning the datasource
         return itemDataSource

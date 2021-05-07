@@ -9,16 +9,17 @@
     <ImageView
         android:id="@+id/place_image"
         android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/place_image"
         android:scaleType="fitXY"
         android:src="@drawable/background"
+        app:layout_constraintBottom_toBottomOf="@+id/address"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
@@ -26,6 +27,8 @@
         android:text="Attil"
         android:textColor="#1D1D26"
         android:textSize="16sp"
+        app:layout_constraintRight_toLeftOf="@+id/favourite"
+        android:layout_marginEnd="5dp"
         app:layout_constraintLeft_toRightOf="@id/place_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -101,11 +104,13 @@
         android:maxLines="1"
         android:text="11th cross bangalore nagar bangalore kasaragod kerala"
         android:textSize="14sp"
+        android:paddingBottom="5dp"
         app:layout_constraintLeft_toLeftOf="@id/type"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/type" />
 
     <ToggleButton
+        android:id="@+id/favourite"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="20dp"

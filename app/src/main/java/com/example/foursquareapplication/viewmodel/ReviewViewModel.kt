@@ -9,12 +9,15 @@ import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 import com.example.foursquareapplication.datasource.ReviewDataSource
 import com.example.foursquareapplication.datasource.ReviewDataSourceFactory
+import com.example.foursquareapplication.model.Rating
 import com.example.foursquareapplication.model.ReviewData
+import com.example.foursquareapplication.repository.ReviewRepository
 
 
 class ReviewViewModel(application: Application)  : AndroidViewModel(application) {
 
     //creating livedata for PagedList  and PagedKeyedDataSource
+    val reviewRepository = ReviewRepository(application)
     var itemPagedList: LiveData<PagedList<ReviewData>>? = null
     var liveDataSource: LiveData<PageKeyedDataSource<Int, ReviewData>>? = null
 
@@ -37,5 +40,9 @@ class ReviewViewModel(application: Application)  : AndroidViewModel(application)
         //Building the paged list
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
         return itemPagedList
+    }
+
+    fun addRating(token : String,rating : HashMap<String,String>) : LiveData<Rating>{
+        return reviewRepository.addRating(token,rating)
     }
 }

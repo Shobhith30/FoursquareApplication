@@ -62,6 +62,7 @@ class FavouriteDataSource(val query : String,val userId: Int, val token: String)
                     val adjacentKey = if (params.key > 0) params.key - 1 else null
                     if (response.body()?.getData() != null) {
 
+
                         Log.d("after","before")
                         val data = filterData(response.body()!!.getData())
                         callback.onResult(data, adjacentKey)
@@ -87,8 +88,10 @@ class FavouriteDataSource(val query : String,val userId: Int, val token: String)
                         val key = if (!(response.body()!!.getLastPage())) params.key + 1 else null
 
                         //passing the loaded data and next page value
+
                         val data = filterData(response.body()!!.getData())
                         callback.onResult(data, key)
+
                     }
                 }
 
