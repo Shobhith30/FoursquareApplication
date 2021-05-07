@@ -8,13 +8,7 @@ import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 import com.example.foursquareapplication.datasource.PicturesDataSource
 import com.example.foursquareapplication.datasource.PicturesDataSourseFactory
-import com.example.foursquareapplication.datasource.ReviewDataSource
-import com.example.foursquareapplication.datasource.ReviewDataSourceFactory
 import com.example.foursquareapplication.model.PhotoData
-import com.example.foursquareapplication.model.Photos
-import com.example.foursquareapplication.model.Review
-import com.example.foursquareapplication.model.ReviewData
-import com.example.foursquareapplication.repository.AddReviewRepository
 import com.example.foursquareapplication.repository.PhotosRepository
 
 class PhotosViewModel(application: Application)  : AndroidViewModel(application) {

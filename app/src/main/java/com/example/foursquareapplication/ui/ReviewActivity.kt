@@ -17,13 +17,15 @@ class ReviewActivity : AppCompatActivity() {
     private lateinit var reviewBinding: ActivityReviewBinding
     private lateinit var reviewAdapter : ReviewAdapter
     private lateinit var reviewViewModel : ReviewViewModel
+    private var isLoggedIn = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         reviewBinding = ActivityReviewBinding.inflate(layoutInflater)
         setContentView(reviewBinding.root)
 
         setToolbar()
-
+        val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
+        isLoggedIn = sharedPreferences.contains(Constants.USER_ID)
         reviewViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(ReviewViewModel::class.java)
         reviewAdapter = ReviewAdapter(this)
         reviewBinding.reviewRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -47,13 +49,13 @@ class ReviewActivity : AppCompatActivity() {
 
     private fun setToolbar() {
         reviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
-        reviewBinding.toolbar.inflateMenu(R.menu.menu_home_icon)
+        reviewBinding.toolbar.inflateMenu(R.menu.menu_review)
         reviewBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
         reviewBinding.toolbar.setOnMenuItemClickListener {
             when(it.itemId){
-                R.id.home -> startActivity(Intent(this, HomeActivity::class.java))
+                R.id.add_review -> startActivity(Intent(this, AddReviewActivity::class.java))
             }
             true
 

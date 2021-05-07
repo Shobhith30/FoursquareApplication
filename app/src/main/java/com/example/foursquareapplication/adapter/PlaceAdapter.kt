@@ -1,14 +1,11 @@
 package com.example.foursquareapplication.adapter
 
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -16,14 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ItemPlaceBinding
-import com.example.foursquareapplication.databinding.ItemReviewBinding
 import com.example.foursquareapplication.helper.ChangeRatingColor
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.helper.PlaceUtils
 import com.example.foursquareapplication.model.DataPlace
-import com.example.foursquareapplication.model.Review
-import com.example.foursquareapplication.model.ReviewData
 import com.example.foursquareapplication.ui.DetailsActivity
-import kotlin.math.round
 
 
 class PlaceAdapter (private val mCtx: Context) :
@@ -52,6 +46,18 @@ class PlaceAdapter (private val mCtx: Context) :
                     holder.placeBinding.ratingBackground.setBackgroundColor(ratingBackground)
 
                 }
+                val cost = PlaceUtils().getCost(it.getCost(),holder.placeBinding.priceRange.context)
+                if(cost == null){
+                    holder.placeBinding.dot.visibility = View.GONE
+                }else{
+                    holder.placeBinding.priceRange.text = cost
+                }
+                if(it.getPlaceType().size>0){
+                    val type = PlaceUtils().getShortPlaceType(it.getPlaceType()[0].getCategoryName())
+                    holder.placeBinding.type.text = type
+                }else{
+                    holder.placeBinding.type.visibility = View.GONE
+                }
                 holder.placeBinding.address.text = it.getLandmark()
             }
             holder.placeBinding.distance.text = String.format("%.1f km", item.getDistance())
@@ -68,7 +74,7 @@ class PlaceAdapter (private val mCtx: Context) :
                 placeBinding.root.setOnClickListener {
                     val intent = Intent(mCtx,DetailsActivity::class.java)
                     val bundle = Bundle()
-                    val item = getItem(bindingAdapterPosition)
+                    val item = getItem(bindingAdapterPosition)?.getPlace()
                     bundle.putParcelable(Constants.PLACE_RESPOSNE,item)
                     intent.putExtras(bundle)
                     mCtx.startActivity(intent)

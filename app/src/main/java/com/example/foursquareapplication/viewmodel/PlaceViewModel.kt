@@ -2,6 +2,7 @@ package com.example.foursquareapplication.viewmodel
 
 import android.app.Application
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,14 +20,15 @@ import com.example.foursquareapplication.repository.PlaceRepository
 class PlaceViewModel() : ViewModel() {
 
 
-    var liveDataSource: LiveData<PageKeyedDataSource<Int, DataPlace>>? = null
+    var itemPagedList: LiveData<PagedList<DataPlace>>? = null
     private var locationData : MutableLiveData<Location> = MutableLiveData()
 
     fun getPlaceDetails(type: String, latitude: Double,longitude: Double): LiveData<PagedList<DataPlace>>? {
+        Log.d("here-v",type)
         val itemDataSourceFactory = PlaceDataSourceFactory(type,latitude,longitude)
-        var itemPagedList: LiveData<PagedList<DataPlace>>? = null
+
         //getting the live data source from data source factory
-        liveDataSource = itemDataSourceFactory.itemLiveDataSource
+        val liveDataSource = itemDataSourceFactory.itemLiveDataSource
 
         //Getting PagedList config
         val pagedListConfig = PagedList.Config.Builder()
@@ -38,8 +40,5 @@ class PlaceViewModel() : ViewModel() {
         return itemPagedList
     }
 
-    fun setLocation(location : Location) {
-        locationData.postValue( location)
-    }
-    fun getLocation() : LiveData<Location> =  locationData
+
 }

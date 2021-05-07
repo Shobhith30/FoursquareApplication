@@ -43,16 +43,16 @@ class SignUpActivity :  AppCompatActivity() {
         val password = signUpBinding.passwordValue.text.toString().trim()
         val rePassword = signUpBinding.signupConfrimPasswordValue.text.toString().trim()
         if(validateUserInputs(email,phone,password,rePassword)) {
-            Log.d("user","button")
+
             val user = hashMapOf("email" to email,"phone" to phone,"password" to password)
             authenticationViewModel.registerUser(user).observe(this, {
-                Log.d("user", "register")
+
                 if (it != null) {
                     if (it.getStatus() == 200) {
-                        Log.d("user", "after-register")
+
                         val loginUser = hashMapOf("email" to email, "password" to password)
                         authenticationViewModel.authenticateUser(loginUser).observe(this, {
-                            Log.d("user", "login")
+
                             if (it != null) {
                                 if (it.getStatus() == 200) {
                                     val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE,
@@ -60,7 +60,11 @@ class SignUpActivity :  AppCompatActivity() {
                                     val sharedEditor = sharedPreferences.edit()
                                     val userId = it.getData().getUserData().getUserId().toString()
                                     val token = it.getData().getToken()
-                                    sharedEditor.putString(Constants.USER_ID,userId)
+                                    val userName = it.getData().getUserData().getUserName()
+                                    val userImage = it.getData().getUserData().getImage()
+                                    sharedEditor.putString(Constants.USER_ID, userId)
+                                    sharedEditor.putString(Constants.USER_NAME,userName)
+                                    sharedEditor.putString(Constants.USER_IMAGE,userImage)
                                     sharedEditor.putString(Constants.USER_TOKEN,token)
                                     sharedEditor.apply()
                                     startActivity(Intent(this, HomeActivity::class.java))

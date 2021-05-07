@@ -10,6 +10,7 @@ import com.example.foursquareapplication.network.ReviewApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 
 class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>() {
@@ -18,13 +19,17 @@ class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, ReviewData>
     ) {
-        val response = FourSquareApiInstance.getApiInstance(ReviewApi::class.java)
-            .getReviews(placeId, FIRST_PAGE,3)
-            .execute()
-        if(response.body()!=null) {
+        try {
+            val response = FourSquareApiInstance.getApiInstance(ReviewApi::class.java)
+                .getReviews(placeId, FIRST_PAGE, 3)
+                .execute()
+            if(response.isSuccessful){
+                if (response.body()?.getData() != null) {
 
-            callback.onResult(response.body()!!.getData(), null, FIRST_PAGE + 1)
-        }
+                    callback.onResult(response.body()!!.getData(), null, FIRST_PAGE + 1)
+                }
+            }
+        }catch(e:Exception){}
 
     }
 
@@ -36,8 +41,10 @@ class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>(
                 override fun onResponse(call: Call<Review>, response: Response<Review>) {
                     val adjacentKey = if (params.key > 0) params.key - 1 else null
                     if (response.body() != null) {
+                        if(response.body()?.getData()!=null) {
 
-                        callback.onResult(response.body()!!.getData(), adjacentKey)
+                            callback.onResult(response.body()!!.getData(), adjacentKey)
+                        }
                     }
                 }
 
@@ -59,13 +66,12 @@ class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>(
             .enqueue(object : Callback<Review>{
                 override fun onResponse(call: Call<Review>, response: Response<Review>) {
                     if (response.body() != null) {
-                        //if the response has next page
-                        //incrementing the next page number
-                        Log.e("after","after")
-                        val key = if (!(response.body()!!.getLastPage())) params.key + 1 else null
+                        if(response.body()?.getData()!=null) {
+                            val key =
+                                if (!(response.body()!!.getLastPage())) params.key + 1 else null
 
-                        //passing the loaded data and next page value
-                        callback.onResult(response.body()!!.getData(), key)
+                            callback.onResult(response.body()!!.getData(), key)
+                        }
                     }
                 }
 

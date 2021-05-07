@@ -52,9 +52,9 @@
     <string name="filter_by">Filter By</string>
     <string name="set_radius">Set Radius</string>
     <string name="rupees_1">₹</string>
-    <string name="rupees_2">₹ ₹</string>
-    <string name="rupees_3">₹ ₹ ₹</string>
-    <string name="rupees_4">₹ ₹ ₹ ₹</string>
+    <string name="rupees_2">₹₹</string>
+    <string name="rupees_3">₹₹₹</string>
+    <string name="rupees_4">₹₹₹₹</string>
     <string name="features">Features</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="saish_gmail_com">saish@gmail.com</string>

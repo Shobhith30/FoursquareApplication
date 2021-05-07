@@ -23,7 +23,7 @@ class FavouriteDataSource(val userId : Int,val token : String) : PageKeyedDataSo
 
         if(response.body()!=null) {
 
-            callback.onResult(response.body()!!.getData(), null, FIRST_PAGE + 1)
+            callback.onResult(response.body()!!.getData() as List<DataPlace>, null, FIRST_PAGE + 1)
         }
     }
 
@@ -35,7 +35,7 @@ class FavouriteDataSource(val userId : Int,val token : String) : PageKeyedDataSo
                     val adjacentKey = if (params.key > 0) params.key - 1 else null
                     if (response.body() != null) {
 
-                        callback.onResult(response.body()!!.getData(), adjacentKey)
+                        callback.onResult(response.body()!!.getData() as List<DataPlace>, adjacentKey)
                     }
                 }
 
@@ -58,7 +58,7 @@ class FavouriteDataSource(val userId : Int,val token : String) : PageKeyedDataSo
                         val key = if (!(response.body()!!.getLastPage())) params.key + 1 else null
 
                         //passing the loaded data and next page value
-                        callback.onResult(response.body()!!.getData(), key)
+                        callback.onResult(response.body()!!.getData() as List<DataPlace>, key)
                     }
                 }
 

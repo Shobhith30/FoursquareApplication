@@ -35,4 +35,5 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
         return itemPagedList
     }
+
 }

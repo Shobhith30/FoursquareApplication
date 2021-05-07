@@ -23,7 +23,7 @@ interface PhotosApi {
         @Query("placeId") placeId:Int,
         @Query("userId") userId:Int,
         @Header("Authorization") token:String,
-        @Part files:MultipartBody.Part
+        @Part files:ArrayList<MultipartBody.Part>
         ):Call<User>
 
 }
