@@ -41,7 +41,8 @@
                 app:queryHint="@string/attil"
                 app:searchIcon="@drawable/search_grey"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="12dp"
+                android:theme="@style/Theme.AppCompat.DayNight"/>
 
             </LinearLayout>
 
@@ -50,12 +51,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appBarLayout_favourite"
         android:id="@+id/favourite_recyclerView"
         android:clipToPadding="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="160dp"
         />
 
 </RelativeLayout>

@@ -5,7 +5,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.foursquareapplication.model.PlaceResponse
+import com.example.foursquareapplication.model.FavouriteResponse
+
 import com.example.foursquareapplication.network.FavouriteApi
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import retrofit2.Call
@@ -16,11 +17,11 @@ class FavouriteRepository (private val application: Application)  {
     private val favouriteApi =
         FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
 
-    fun getFavourite(userId: Int, pageNumber: Int, pageSize: Int, token: String): LiveData<PlaceResponse> {
-        val favouritePlace : MutableLiveData<PlaceResponse> = MutableLiveData()
+    fun getFavourite(userId: Int, pageNumber: Int, pageSize: Int, token: String): LiveData<FavouriteResponse> {
+        val favouritePlace : MutableLiveData<FavouriteResponse> = MutableLiveData()
         val getFavouriteCall = favouriteApi.getFavourite(userId,pageNumber,pageSize,token)
-        getFavouriteCall.enqueue(object : Callback<PlaceResponse> {
-            override fun onResponse(call: Call<PlaceResponse>, response: Response<PlaceResponse>) {
+        getFavouriteCall.enqueue(object : Callback<FavouriteResponse> {
+            override fun onResponse(call: Call<FavouriteResponse>, response: Response<FavouriteResponse>) {
                 if (response.isSuccessful) {
                     favouritePlace.value = response.body()
                 } else {
@@ -29,7 +30,7 @@ class FavouriteRepository (private val application: Application)  {
                 }
             }
 
-            override fun onFailure(call: Call<PlaceResponse>, t: Throwable) {
+            override fun onFailure(call: Call<FavouriteResponse>, t: Throwable) {
 
                 favouritePlace.value = null
                 Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
