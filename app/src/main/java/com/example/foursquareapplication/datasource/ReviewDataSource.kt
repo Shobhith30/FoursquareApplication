@@ -81,7 +81,7 @@ class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>(
 
     companion object {
         //the size of a page that we want
-        const val PAGE_SIZE = 3
+        const val PAGE_SIZE = 10
 
         //we will start from the first page which is 1
         private const val FIRST_PAGE = 0
