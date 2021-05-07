@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -21,19 +22,35 @@ import com.example.foursquareapplication.R
 import com.example.foursquareapplication.adapter.PictureAdapter
 import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
+import com.example.foursquareapplication.getFileName
 import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.model.PhotoData
 import com.example.foursquareapplication.model.Photos
+import com.example.foursquareapplication.model.ReviewPhotos
+import com.example.foursquareapplication.model.User
+import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.viewmodel.PhotosViewModel
 import com.example.foursquareapplication.viewmodel.ReviewViewModel
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 
-private const val REQUEST_CODE=42
+private const val REQUEST_CODE=100
 class PhotosActivity : AppCompatActivity() {
 
     private lateinit var photoBinding: ActivityPhotosBinding
     private lateinit var pictureAdapter : PictureAdapter
     private lateinit var photosViewModel : PhotosViewModel
+    private var selectedImage: Uri?=null
+    private val PhotosApi= FourSquareApiInstance.getApiInstance(com.example.foursquareapplication.network.PhotosApi::class.java)
+    var modelList=ArrayList<ReviewPhotos>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,30 +92,89 @@ class PhotosActivity : AppCompatActivity() {
             onBackPressed()
         }
         photoBinding.toolbar.setOnMenuItemClickListener{
-            addPhotos()
-            true
+            openImageChooser()
+                       true
         }
     }
-    private fun addPhotos(){
 
-        val takePictureIntent=Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(this.packageManager)!=null){
-            startActivityForResult(takePictureIntent, REQUEST_CODE)
-        }
-        else{
-            Toast.makeText(this,"Unable to open camera", Toast.LENGTH_LONG).show()
+    private fun openImageChooser() {
+        Intent(Intent.ACTION_PICK).also {
+            it.type="image/*"
+            val minType= arrayOf("image/jpeg","image/png")
+            it.putExtra(Intent.EXTRA_MIME_TYPES,minType)
+            it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
+            startActivityForResult(Intent.createChooser(it, "SELECT IMAGES"), REQUEST_CODE)
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        if (requestCode== REQUEST_CODE && resultCode== Activity.RESULT_OK){
-            val takenImage= data?.extras?.get("data") as Bitmap
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode== REQUEST_CODE){
+            if (resultCode==Activity.RESULT_OK){
+                if (data!!.clipData!=null){
+                    val count=data.clipData!!.itemCount
+                    for (i in 0 until count){
+                        selectedImage=data.clipData!!.getItemAt(i).uri
+                        modelList.add(ReviewPhotos(selectedImage!!))
+                    }
+                }
+                else{
+                    val selectedImage=data.data
+                    modelList.add(ReviewPhotos(selectedImage!!))
+
+
+                }
+                println("size"+modelList.size)
+
+
+            }
+        }
+        uploadImage()
+
+    }
+
+    private fun uploadImage(){
+        val sharedPreferences = getSharedPreferences(
+                Constants.USER_PREFERENCE,
+                MODE_PRIVATE
+        )
+        val token = sharedPreferences.getString(Constants.USER_TOKEN,"")
+        println(token)
+        if (token != null) {
+            val newtoken = "Bearer $token"
+
+            for (images in modelList) {
+
+                println("sizeM"+modelList.size)
+
+                val parcelFileDiscriptor = contentResolver.openFileDescriptor(selectedImage!!, "r", null)
+                        ?: return
+                val inputStream = FileInputStream(parcelFileDiscriptor.fileDescriptor)
+                val file = File(cacheDir, contentResolver.getFileName(images.image!!))
+                val outputStream = FileOutputStream(file)
+                inputStream.copyTo(outputStream)
+
+                val imagefile = RequestBody.create(MediaType.parse("image/*"), file)
+
+                PhotosApi.uploadReviewImage(9, 74, newtoken, MultipartBody.Part.createFormData("files", file.name, imagefile)
+                ).enqueue(object : Callback<User> {
+                    override fun onResponse(call: Call<User>, response: Response<User>) {
+                        Toast.makeText(applicationContext,"uploaded",Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onFailure(call: Call<User>, t: Throwable) {
+                        println("error"+t.message)
+                        Toast.makeText(applicationContext,"not uploaded"+ t.message,Toast.LENGTH_LONG).show()
+
+                    }
+
+                })
+            }
+            startActivity(Intent(this,PhotosActivity::class.java))
 
         }
-        else{
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-
     }
 
 }

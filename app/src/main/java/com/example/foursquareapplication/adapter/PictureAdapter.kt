@@ -1,6 +1,7 @@
 package com.example.foursquareapplication.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ListAdapter
@@ -14,6 +15,7 @@ import com.example.foursquareapplication.databinding.ItemPhotosBinding
 import com.example.foursquareapplication.databinding.ItemReviewBinding
 import com.example.foursquareapplication.model.PhotoData
 import com.example.foursquareapplication.model.ReviewData
+import com.example.foursquareapplication.ui.PhotosDetailsActivity
 
 class PictureAdapter (private val mCtx: Context) :
     PagedListAdapter<PhotoData, PictureAdapter.ItemViewHolder>(PictureAdapter.DIFF_CALLBACK){
@@ -28,11 +30,15 @@ class PictureAdapter (private val mCtx: Context) :
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = getItem(position)
         if (item != null) {
-            println("gehhhh"+ item?.getImageUrl())
-
-            holder.photosBinding.image1
+          //  println("gehhhh"+ item?.getphotoId())
 
             Glide.with(mCtx).load(item.getImageUrl()).placeholder(R.drawable.loading).into(holder.photosBinding.image1)
+
+            holder.photosBinding.image1.setOnClickListener {
+                val intent=Intent(it.context,PhotosDetailsActivity::class.java)
+                intent.putExtra("photoId",item.getphotoId())
+                it.context.startActivity(intent)
+            }
 
         } else {
             println("ge"+ item?.getImageUrl())
