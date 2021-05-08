@@ -1,5 +1,7 @@
 package com.example.foursquareapplication.adapter
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.*
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +22,8 @@ import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.model.DataPlace
 import com.example.foursquareapplication.model.Place
 import com.example.foursquareapplication.ui.DetailsActivity
+import com.example.foursquareapplication.ui.FavouriteActivity
+import com.example.foursquareapplication.viewmodel.FavouriteViewModel
 
 class FavouriteAdapter(private val mCtx: Context) :
     PagedListAdapter<Place, FavouriteAdapter.ItemViewHolder>(DIFF_CALLBACK) {
@@ -25,6 +32,7 @@ class FavouriteAdapter(private val mCtx: Context) :
         val inflater = LayoutInflater.from(parent.context)
         val favouriteBinding = ItemFavouritesBinding.inflate(inflater,parent,false)
         return ItemViewHolder(favouriteBinding)
+
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
@@ -40,6 +48,27 @@ class FavouriteAdapter(private val mCtx: Context) :
             holder.landmark.text = item.getName()
             holder.address.text = item.getAddress()
             Glide.with(mCtx).load(item.getImage()).placeholder(R.drawable.loading).into(holder.image)
+
+            holder.removeFavourite.setOnClickListener {
+                val placeId = item.getPlaceId()
+                val sharedPreferences = mCtx.getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
+                val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
+                val newToken = "Bearer $token"
+                val userId = sharedPreferences.getString(Constants.USER_ID, "").toString()
+
+                val userFavourite = hashMapOf("userId" to userId, "placeId" to placeId.toString())
+                val favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(mCtx.applicationContext as Application).create(FavouriteViewModel::class.java)
+
+                if (placeId != 0) {
+                    favouriteViewModel.deleteFavourite(newToken, userFavourite).observeForever({
+                        if (it.getStatus() == Constants.STATUS_OK) {
+                            Toast.makeText(mCtx, it.getMessage(), Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(mCtx, it.getMessage(), Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+            }
         } else {
             Toast.makeText(mCtx, "Item is null", Toast.LENGTH_LONG).show()
         }
@@ -52,6 +81,9 @@ class FavouriteAdapter(private val mCtx: Context) :
             val image = favouriteBinding.placeImageFavourite
             val favouriteType = favouriteBinding.typeFavourite
             val address = favouriteBinding.addressFavourite
+
+            val removeFavourite = favouriteBinding.removeFavourite
+
         init {
             favouriteBinding.root.setOnClickListener {
                 val intent = Intent(mCtx, DetailsActivity::class.java)
@@ -61,6 +93,7 @@ class FavouriteAdapter(private val mCtx: Context) :
                 intent.putExtras(bundle)
                 mCtx.startActivity(intent)
             }
+
         }
 
     }
