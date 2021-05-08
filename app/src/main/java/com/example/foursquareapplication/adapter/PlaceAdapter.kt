@@ -17,6 +17,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.foursquareapplication.OnFavouriteCLickListener
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ItemPlaceBinding
 import com.example.foursquareapplication.helper.ChangeRatingColor
@@ -37,8 +38,9 @@ class PlaceAdapter (private val mCtx: Context) :
     val userId = sharedPreferences.getString(Constants.USER_ID,"")
     var token = sharedPreferences.getString(Constants.USER_TOKEN,"")
     var favouriteData : List<Place>?=null
+    private  var listeenr : OnFavouriteCLickListener? =null
     init {
-        //getFavourite()
+        getFavourite()
     }
 
 
@@ -57,7 +59,6 @@ class PlaceAdapter (private val mCtx: Context) :
         if (item != null) {
 
             item.getPlace()?.let {
-                Toast.makeText(mCtx, "here", Toast.LENGTH_SHORT).show()
                 val isFavourite = checkIsFavourite(it.getPlaceId())
                 if(isFavourite)
                     holder.placeBinding.favourite.isChecked = true
@@ -116,11 +117,19 @@ class PlaceAdapter (private val mCtx: Context) :
                     val bundle = Bundle()
                     val item = getItem(bindingAdapterPosition)?.getPlace()
                     bundle.putParcelable(Constants.PLACE_RESPOSNE,item)
+                    bundle.putBoolean(Constants.IS_FAVOURITE,placeBinding.favourite.isChecked)
                     intent.putExtras(bundle)
                     mCtx.startActivity(intent)
                 }
+                placeBinding.favourite.setOnClickListener {
+                    val item = getItem(bindingAdapterPosition)?.getPlace()
+                    listeenr?.onFavouriteClick(placeBinding.favourite.isChecked,item?.getPlaceId())
+
+                }
 
             }
+
+
 
     }
 
@@ -134,10 +143,15 @@ class PlaceAdapter (private val mCtx: Context) :
                 if(it!=null) {
                     if (it.getStatus() == Constants.STATUS_OK) {
                         favouriteData = it.getData()
+                        notifyDataSetChanged()
                     }
                 }
             })
         }
+    }
+
+    fun setClickListener(listener: OnFavouriteCLickListener) {
+        this.listeenr = listener
     }
 
     companion object {

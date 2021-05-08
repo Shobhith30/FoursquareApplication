@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.foursquareapplication.model.Resource
 import com.example.foursquareapplication.model.User
 import com.example.foursquareapplication.repository.MainRepository
 
@@ -15,7 +16,7 @@ class AuthenticationViewModel(application: Application)  :AndroidViewModel(appli
         return mainRepository.registerUser(user)
     }
 
-    fun authenticateUser(user : HashMap<String,String>): LiveData<User> {
+    fun authenticateUser(user : HashMap<String,String>): LiveData<Resource<User>> {
         return mainRepository.authenticateUser(user)
     }
 

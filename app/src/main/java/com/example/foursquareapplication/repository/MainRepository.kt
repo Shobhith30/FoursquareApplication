@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.foursquareapplication.model.Resource
 import com.example.foursquareapplication.model.User
 import com.example.foursquareapplication.network.AuthenticationApi
 import com.example.foursquareapplication.network.FourSquareApiInstance
@@ -39,23 +40,23 @@ class MainRepository(private val application: Application) {
         return registerUser
     }
 
-    fun authenticateUser(user: HashMap<String, String>): LiveData<User> {
-        val loginUser: MutableLiveData<User> = MutableLiveData()
+    fun authenticateUser(user: HashMap<String, String>): MutableLiveData<Resource<User>> {
+        val loginUser: MutableLiveData<Resource<User>> = MutableLiveData()
         val authenticateCall = authenticationApi.authenticateUser(user)
+        loginUser.postValue(Resource.loading())
         authenticateCall.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    loginUser.value = response.body()
+                    loginUser.postValue(Resource.success(response.body()))
+
                 } else {
-                    Log.d("resposne","${response.body()?.error}")
-                    Toast.makeText(application,response.errorBody()?.string(), Toast.LENGTH_SHORT).show()
+                    loginUser.postValue(Resource.error("Couldn't login! Check username or password"))
                 }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
 
-                loginUser.value = null
-                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+                loginUser.postValue(Resource.error(t.message.toString()))
 
             }
 

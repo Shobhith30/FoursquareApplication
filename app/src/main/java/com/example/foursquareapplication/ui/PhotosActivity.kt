@@ -1,36 +1,22 @@
 package com.example.foursquareapplication.ui
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.*
-import android.widget.BaseAdapter
-import android.widget.GridView
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.adapter.PictureAdapter
-import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
 import com.example.foursquareapplication.getFileName
 import com.example.foursquareapplication.helper.Constants
-import com.example.foursquareapplication.model.PhotoData
-import com.example.foursquareapplication.model.Photos
 import com.example.foursquareapplication.model.ReviewPhotos
 import com.example.foursquareapplication.model.User
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.viewmodel.PhotosViewModel
-import com.example.foursquareapplication.viewmodel.ReviewViewModel
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -158,19 +144,19 @@ class PhotosActivity : AppCompatActivity() {
 
                 val imagefile = RequestBody.create(MediaType.parse("image/*"), file)
 
-                PhotosApi.uploadReviewImage(9, 74, newtoken, MultipartBody.Part.createFormData("files", file.name, imagefile)
-                ).enqueue(object : Callback<User> {
-                    override fun onResponse(call: Call<User>, response: Response<User>) {
-                        Toast.makeText(applicationContext,"uploaded",Toast.LENGTH_LONG).show()
-                    }
-
-                    override fun onFailure(call: Call<User>, t: Throwable) {
-                        println("error"+t.message)
-                        Toast.makeText(applicationContext,"not uploaded"+ t.message,Toast.LENGTH_LONG).show()
-
-                    }
-
-                })
+//                PhotosApi.uploadReviewImage(9, 74, newtoken, MultipartBody.Part.createFormData("files", file.name, imagefile)
+//                ).enqueue(object : Callback<User> {
+//                    override fun onResponse(call: Call<User>, response: Response<User>) {
+//                        Toast.makeText(applicationContext,"uploaded",Toast.LENGTH_LONG).show()
+//                    }
+//
+//                    override fun onFailure(call: Call<User>, t: Throwable) {
+//                        println("error"+t.message)
+//                        Toast.makeText(applicationContext,"not uploaded"+ t.message,Toast.LENGTH_LONG).show()
+//
+//                    }
+//
+//                })
             }
             startActivity(Intent(this,PhotosActivity::class.java))
 

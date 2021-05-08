@@ -24,18 +24,15 @@ class PlaceViewModel() : ViewModel() {
     private var locationData : MutableLiveData<Location> = MutableLiveData()
 
     fun getPlaceDetails(type: String, latitude: Double,longitude: Double): LiveData<PagedList<DataPlace>>? {
-        Log.d("here-v",type)
+
         val itemDataSourceFactory = PlaceDataSourceFactory(type,latitude,longitude)
 
-        //getting the live data source from data source factory
         val liveDataSource = itemDataSourceFactory.itemLiveDataSource
 
-        //Getting PagedList config
         val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false).setInitialLoadSizeHint(5)
+            .setEnablePlaceholders(true)
             .setPageSize(ReviewDataSource.PAGE_SIZE).build()
 
-        //Building the paged list
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
         return itemPagedList
     }

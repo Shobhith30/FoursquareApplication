@@ -15,6 +15,7 @@ import com.example.foursquareapplication.datasource.ReviewDataSource
 import com.example.foursquareapplication.model.Place
 import android.util.Log
 import com.example.foursquareapplication.datasource.GetFavouriteDataSourceFactory
+import com.example.foursquareapplication.model.AddFavouriteResponse
 import com.example.foursquareapplication.model.FavouriteResponse
 import com.example.foursquareapplication.repository.FavouriteRepository
 
@@ -67,7 +68,7 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
     fun getItemPageList() = itemPagedList
 
 
-    fun addToFavourite(token : String, favourite : HashMap<String,String>): LiveData<FavouriteResponse> {
+    fun addToFavourite(token : String, favourite : HashMap<String,String>): LiveData<AddFavouriteResponse> {
         return favouriteRepository.addToFavourite(token, favourite)
     }
 

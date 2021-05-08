@@ -1,5 +1,6 @@
 package com.example.foursquareapplication.network
 
+import com.example.foursquareapplication.model.AddFavouriteResponse
 import com.example.foursquareapplication.model.FavouriteResponse
 import com.example.foursquareapplication.model.PlaceResponse
 import okhttp3.ResponseBody
@@ -16,9 +17,9 @@ interface FavouriteApi {
 
     @POST("addFavourite")
     fun addToFavourite(@Header("Authorization") token : String,
-                       @Body favourite : HashMap<String,String> ) : Call<FavouriteResponse>
+                       @Body favourite : HashMap<String,String> ) : Call<AddFavouriteResponse>
 
-    @DELETE("deleteFavourite")
+    @HTTP(method = "DELETE", path = "deleteFavourite", hasBody = true)
     fun deleteFavourite(@Header("Authorization") token : String,
                         @Body favourite : HashMap<String,String> ) : Call<FavouriteResponse>
 }

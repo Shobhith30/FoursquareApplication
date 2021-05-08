@@ -1,6 +1,14 @@
 package com.example.foursquareapplication.helper
 
 object Constants {
+    val REQUEST_EXTERNAL_STORAGE: Int = 101
+    const val MAX_AGE = 30
+    const val MAX_STALE = 30
+    const val CACHE_SIZE = (5 * 1024 * 1024).toLong()
+    const val SPLASH_DELAY = 2000L
+    const val CACHE_CONTROL = "Cache-Control"
+    const val APP_ID = "APPID"
+    val IS_FAVOURITE: String = "com.example.foursquareapplication.helper.is_favourite"
     val FAV_PAGE_NUMBER: Int = 0
     val FAV_PAGE_SIZE: Int = 200
     val GUEST_USER: String = "com.example.foursquareapplication.helper.guest_user"

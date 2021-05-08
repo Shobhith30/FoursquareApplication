@@ -1,7 +1,10 @@
 package com.example.foursquareapplication.ui
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,29 +14,34 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityDetailsBinding
 import com.example.foursquareapplication.helper.ChangeRatingColor
 import com.example.foursquareapplication.helper.Constants
-import com.example.foursquareapplication.model.DataPlace
 import com.example.foursquareapplication.model.Place
+import com.example.foursquareapplication.viewmodel.FavouriteViewModel
 import com.example.foursquareapplication.viewmodel.ReviewViewModel
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.lang.Math.round
+
 
 class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var detailsBinding: ActivityDetailsBinding
-    var fav = true
+    var fav : Boolean? = true
     private var isLoggedIn = false
     private var placeResponse: Place? = null
     private lateinit var reviewViewModel: ReviewViewModel
+    private lateinit var favouriteViewModel : FavouriteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +50,10 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         reviewViewModel = ViewModelProvider.AndroidViewModelFactory(application)
             .create(ReviewViewModel::class.java)
+        favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(application)
+            .create(FavouriteViewModel::class.java)
         placeResponse = intent?.getParcelableExtra(Constants.PLACE_RESPOSNE)
+        fav = intent?.getBooleanExtra(Constants.IS_FAVOURITE, false)
         val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
         isLoggedIn = sharedPreferences.contains(Constants.USER_ID)
         addGoogleMap()
@@ -79,6 +90,31 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             val placeType = placeTypesList.joinToString(",")
             detailsBinding.placeType.text = placeType
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            fusedLocationClient.lastLocation.addOnSuccessListener(
+                this
+            ) { location ->
+                if (location != null) {
+                    val results = FloatArray(2)
+                    Location.distanceBetween(
+                        placeData.getLatitude(), placeData.getLongitude(),
+                        location.latitude, location.longitude,
+                        results)
+                    detailsBinding.distance.text = String.format("Drive : %.1f Km",results[0]/1000)
+                }
+            }
+
+
         }
     }
 
@@ -145,7 +181,11 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             val ratingBar = ratingDialog.findViewById<RatingBar>(R.id.rating_bar)
             submitRating.setOnClickListener {
                 if(!isLoggedIn){
-                    Toast.makeText(applicationContext, "Please Login to Add Review", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Please Login to Add Review",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }else {
                     val userRating = ratingBar.rating.toInt()
                     submitUserRating(userRating)
@@ -156,7 +196,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun submitUserRating(userRating : Int) {
+    private fun submitUserRating(userRating: Int) {
         if (userRating > 0) {
             val sharedPreferences =
                 getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
@@ -189,16 +229,33 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-
+        val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
+        val userId = sharedPreferences.getString(Constants.USER_ID, "")
+        val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
         when (item.itemId) {
             R.id.fav_not_selected -> {
-                fav = true
-                invalidateOptionsMenu()
+
+                if (userId != null && token != null)
+                    addFavourite(placeResponse, userId, token)
+                else
+                    Toast.makeText(
+                        applicationContext,
+                        "Login to Perform this operation",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
             }
             R.id.fav_selected -> {
-                fav = false
-                invalidateOptionsMenu()
+
+                if (userId != null && token != null)
+                    removeFavourite(placeResponse, userId, token)
+                else
+                    Toast.makeText(
+                        applicationContext,
+                        "Login to Perform this operation",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
             }
             R.id.share -> {
                 sharePlace()
@@ -207,7 +264,49 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun sharePlace() {
+    private fun addFavourite(item: Place?, userId: String, token: String) {
+        if(item!=null){
+            val token = "Bearer $token"
+            val placeId = item.getPlaceId().toString()
+            val favourite = hashMapOf("userId" to userId, "placeId" to placeId)
+            favouriteViewModel.addToFavourite(token, favourite).observe(this, {
+                if (it != null) {
+                    fav = true
+                    invalidateOptionsMenu()
+                    if (it.getStatus() == Constants.STATUS_OK) {
+
+                        Toast.makeText(applicationContext, "Added to favourite", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun removeFavourite(item: Place?, userId: String, token: String) {
+        if (item != null) {
+            val token = "Bearer $token"
+            val placeId = item.getPlaceId().toString()
+            val favourite = hashMapOf("userId" to userId, "placeId" to placeId)
+            favouriteViewModel.deleteFavourite(token, favourite).observe(this, {
+                if (it != null) {
+                    if (it.getStatus() == Constants.STATUS_OK) {
+
+                        Toast.makeText(
+                            applicationContext,
+                            "Removed from favourite",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        fav = false
+                        invalidateOptionsMenu()
+                    }
+                }
+            })
+        }
+    }
+
+
+        private fun sharePlace() {
         val sharePlaceIntent = Intent(Intent.ACTION_SEND)
         sharePlaceIntent.putExtra(Intent.EXTRA_TEXT, "place details")
         sharePlaceIntent.type = "plain/text"
@@ -216,7 +315,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (fav) {
+        if (fav == true) {
             menu?.findItem(R.id.fav_selected)?.setVisible(true)
             menu?.findItem(R.id.fav_not_selected)?.setVisible(false)
         } else {
