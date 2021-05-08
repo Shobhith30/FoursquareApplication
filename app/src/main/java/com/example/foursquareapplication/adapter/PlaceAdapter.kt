@@ -88,6 +88,7 @@ class PlaceAdapter (private val mCtx: Context) :
                 holder.placeBinding.address.text = it.getLandmark()
             }
             holder.placeBinding.distance.text = String.format("%.1f km", item.getDistance())
+            val sharedPreferences = mCtx.getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
 
 
         } else {
