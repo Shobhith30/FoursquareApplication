@@ -15,11 +15,13 @@ import com.example.foursquareapplication.datasource.ReviewDataSource
 import com.example.foursquareapplication.model.Place
 import android.util.Log
 import com.example.foursquareapplication.datasource.GetFavouriteDataSourceFactory
+import com.example.foursquareapplication.model.FavouriteResponse
+import com.example.foursquareapplication.repository.FavouriteRepository
 
 
 class FavouriteViewModel(application: Application)  : AndroidViewModel(application) {
 
-    //creating livedata for PagedList  and PagedKeyedDataSource
+    private val favouriteRepository = FavouriteRepository(application)
     var itemPagedList: LiveData<PagedList<Place>>? = null
     var liveDataSource: LiveData<PageKeyedDataSource<Int, Place>>? = null
     var text : MutableLiveData<String> = MutableLiveData()
@@ -37,7 +39,12 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
 
         //Building the paged list
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
+        itemPagedList?.value?.dataSource?.invalidate()
 
+    }
+
+    fun getFavouriteData(userId: Int,pageNumber:Int, pageSize :Int, token: String): LiveData<FavouriteResponse> {
+        return favouriteRepository.getFavourite(userId,pageNumber,pageSize,token)
     }
 
     fun setFilter(query: String,userId : Int , token : String): LiveData<PagedList<Place>> {
@@ -58,6 +65,15 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
     }
 
     fun getItemPageList() = itemPagedList
+
+
+    fun addToFavourite(token : String, favourite : HashMap<String,String>): LiveData<FavouriteResponse> {
+        return favouriteRepository.addToFavourite(token, favourite)
+    }
+
+    fun deleteFavourite(token : String, favourite : HashMap<String,String>): LiveData<FavouriteResponse> {
+        return favouriteRepository.deleteFavourite(token, favourite)
+    }
 
 
 

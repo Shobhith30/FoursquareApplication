@@ -1,12 +1,18 @@
 package com.example.foursquareapplication.adapter
 
+import android.app.Application
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,11 +23,26 @@ import com.example.foursquareapplication.helper.ChangeRatingColor
 import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.helper.PlaceUtils
 import com.example.foursquareapplication.model.DataPlace
+import com.example.foursquareapplication.model.FavouriteResponse
+import com.example.foursquareapplication.model.Place
 import com.example.foursquareapplication.ui.DetailsActivity
+import com.example.foursquareapplication.viewmodel.FavouriteViewModel
 
 
 class PlaceAdapter (private val mCtx: Context) :
     PagedListAdapter<DataPlace, PlaceAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+
+    private val favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(mCtx.applicationContext as Application).create(FavouriteViewModel::class.java)
+    private val sharedPreferences: SharedPreferences = mCtx.getSharedPreferences(Constants.USER_PREFERENCE,MODE_PRIVATE)
+    val userId = sharedPreferences.getString(Constants.USER_ID,"")
+    var token = sharedPreferences.getString(Constants.USER_TOKEN,"")
+    var favouriteData : List<Place>?=null
+    init {
+        //getFavourite()
+    }
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 
         val inflater =
@@ -30,11 +51,16 @@ class PlaceAdapter (private val mCtx: Context) :
         return ItemViewHolder(placeBinding)
     }
 
+
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = getItem(position)
         if (item != null) {
 
             item.getPlace()?.let {
+                Toast.makeText(mCtx, "here", Toast.LENGTH_SHORT).show()
+                val isFavourite = checkIsFavourite(it.getPlaceId())
+                if(isFavourite)
+                    holder.placeBinding.favourite.isChecked = true
                 holder.placeBinding.name.text = it.getName()
                 Glide.with(mCtx).load(it.getImage()).placeholder(R.drawable.loading).into(holder.placeBinding.placeImage)
                 val rating = it.getOverallRating()
@@ -68,6 +94,20 @@ class PlaceAdapter (private val mCtx: Context) :
         }
     }
 
+    private fun checkIsFavourite(placeId: Int) : Boolean {
+        var isFavourite = false
+        if(favouriteData!=null){
+            for( data in favouriteData!!){
+                if(data.getPlaceId() == placeId) {
+                    isFavourite = true
+                    break
+                }
+            }
+        }
+        return isFavourite
+    }
+
+
     inner class ItemViewHolder(val placeBinding: ItemPlaceBinding) :
         RecyclerView.ViewHolder(placeBinding.root) {
             init {
@@ -79,8 +119,25 @@ class PlaceAdapter (private val mCtx: Context) :
                     intent.putExtras(bundle)
                     mCtx.startActivity(intent)
                 }
+
             }
 
+    }
+
+    private fun getFavourite() {
+        if(userId!=null && token!=null) {
+            val token = "Bearer $token"
+            val pageNumber = 0
+            val pageSize = 200
+            val owner = (mCtx as AppCompatActivity)
+            favouriteViewModel.getFavouriteData(userId.toInt(),pageNumber,pageSize,token).observe(owner,{
+                if(it!=null) {
+                    if (it.getStatus() == Constants.STATUS_OK) {
+                        favouriteData = it.getData()
+                    }
+                }
+            })
+        }
     }
 
     companion object {
@@ -101,4 +158,5 @@ class PlaceAdapter (private val mCtx: Context) :
                 }
             }
     }
+
 }
