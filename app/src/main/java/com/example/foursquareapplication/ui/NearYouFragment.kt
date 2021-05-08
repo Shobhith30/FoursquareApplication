@@ -1,6 +1,8 @@
 package com.example.foursquareapplication.ui
 
 import android.Manifest
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -8,17 +10,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.adapter.PlaceAdapter
 import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.FragmentNearYouBinding
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.viewmodel.FavouriteViewModel
 import com.example.foursquareapplication.viewmodel.LocationViewModel
 import com.example.foursquareapplication.viewmodel.PlaceViewModel
 import com.example.foursquareapplication.viewmodel.ReviewViewModel
@@ -62,6 +65,7 @@ class NearYouFragment : Fragment() {
             enableMyLocationIfPermitted()
             setCurrentLocationOnMap()
             loadPlaceData(it)
+
             //Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
         })
         return  nearYouBinding.root
@@ -82,10 +86,11 @@ class NearYouFragment : Fragment() {
                 nearYouBinding.mapLayout.visibility = View.VISIBLE
             }
 
-            placeAdapter = PlaceAdapter(requireContext())
+            placeAdapter = PlaceAdapter(requireActivity())
             nearYouBinding.placeRecyclerview.layoutManager = LinearLayoutManager(requireContext())
             nearYouBinding.placeRecyclerview.isNestedScrollingEnabled = false
             nearYouBinding.placeRecyclerview.adapter = placeAdapter
+            getFavourite()
             placeViewModel.getPlaceDetails(type, location.latitude, location.longitude)
                 ?.observe(viewLifecycleOwner, {
                     if (it != null) {
@@ -98,6 +103,30 @@ class NearYouFragment : Fragment() {
                 })
         }
     }
+
+    private fun getFavourite(){
+        val favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(FavouriteViewModel::class.java)
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences(Constants.USER_PREFERENCE,
+            Context.MODE_PRIVATE
+        )
+        val userId = sharedPreferences.getString(Constants.USER_ID,"")
+        var token = sharedPreferences.getString(Constants.USER_TOKEN,"")
+        if(userId!=null && token!=null) {
+            val userToken = "Bearer $token"
+            val pageNumber = Constants.FAV_PAGE_NUMBER
+            val pageSize = Constants.FAV_PAGE_SIZE
+            favouriteViewModel.getFavouriteData(userId.toInt(),pageNumber,pageSize,userToken).observe(viewLifecycleOwner,{
+                if(it!=null) {
+                    if (it.getStatus() == Constants.STATUS_OK) {
+                        placeAdapter.favouriteData = it.getData()
+                        placeAdapter.notifyDataSetChanged()
+                    }
+                }
+            })
+        }
+    }
+
+
 
     private fun enableMyLocationIfPermitted() {
         if (ContextCompat.checkSelfPermission(

@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foursquareapplication.databinding.ItemFilterFeatureBinding
+import com.example.foursquareapplication.model.Place
 
 class FeatureAdapter(private val featureList: ArrayList<String>) :
     RecyclerView.Adapter<FeatureAdapter.FeatureViewHolder>() {
+    private val mainList : ArrayList<Place> = arrayListOf()
+
 
     inner class FeatureViewHolder(val featureBinding: ItemFilterFeatureBinding) :
         RecyclerView.ViewHolder(featureBinding.root) {
@@ -37,8 +40,8 @@ class FeatureAdapter(private val featureList: ArrayList<String>) :
     }
 
     override fun onBindViewHolder(holder: FeatureViewHolder, position: Int) {
-        holder.featureBinding.featureName.text = featureList[position]
 
+        holder.featureBinding.featureName.text = featureList[position]
 
     }
 
