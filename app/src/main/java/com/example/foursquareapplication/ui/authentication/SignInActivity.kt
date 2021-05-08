@@ -3,6 +3,7 @@ package com.example.foursquareapplication.ui.authentication
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.lifecycle.observe
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivitySigninBinding
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.Status
 import com.example.foursquareapplication.ui.HomeActivity
 import com.example.foursquareapplication.viewmodel.AuthenticationViewModel
 import kotlin.math.sign
@@ -88,33 +90,52 @@ class SignInActivity : AppCompatActivity() {
         val signInUserName = signInBinding.signinUsername.text.toString()
         val signInPassword = signInBinding.siginPassword.text.toString()
         if(validateUserInputs(signInUserName,signInPassword)) {
-
                         val loginUser = hashMapOf("email" to signInUserName, "password" to signInPassword)
                         authenticationViewModel.authenticateUser(loginUser).observe(this, {
-                            if (it != null) {
-                                if (it.getStatus() == Constants.STATUS_OK) {
-                                    val sharedPreferences = getSharedPreferences(
-                                        Constants.USER_PREFERENCE,
-                                        MODE_PRIVATE
-                                    )
-                                    val sharedEditor = sharedPreferences.edit()
-                                    val userId = it.getData().getUserData().getUserId().toString()
-                                    val userName = it.getData().getUserData().getUserName()
-                                    val userImage = it.getData().getUserData().getImage()
-                                    val token = it.getData().getToken()
-                                    sharedEditor.putString(Constants.USER_ID, userId)
-                                    sharedEditor.putString(Constants.USER_NAME,userName)
-                                    sharedEditor.putString(Constants.USER_IMAGE,userImage)
-                                    sharedEditor.putString(Constants.USER_TOKEN,token)
-                                    sharedEditor.remove(Constants.GUEST_USER)
-                                    sharedEditor.apply()
-                                    startActivity(Intent(this, HomeActivity::class.java))
-                                } else {
-                                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT).show()
+
+                            when (it.status) {
+                                Status.LOADING -> {
+                                    showProgressBar()
                                 }
+                                Status.SUCCESS -> {
+                                    val data = it.data
+                                    if (data != null) {
+                                        val sharedPreferences = getSharedPreferences(
+                                            Constants.USER_PREFERENCE,
+                                            MODE_PRIVATE
+                                        )
+                                        val sharedEditor = sharedPreferences.edit()
+                                        val userId =
+                                            data.getData().getUserData().getUserId().toString()
+                                        val userName = data.getData().getUserData().getUserName()
+                                        val userImage = data.getData().getUserData().getImage()
+                                        val token = data.getData().getToken()
+                                        sharedEditor.putString(Constants.USER_ID, userId)
+                                        sharedEditor.putString(Constants.USER_NAME, userName)
+                                        sharedEditor.putString(Constants.USER_IMAGE, userImage)
+                                        sharedEditor.putString(Constants.USER_TOKEN, token)
+                                        sharedEditor.remove(Constants.GUEST_USER)
+                                        sharedEditor.apply()
+                                        hideProgressBar()
+                                        startActivity(Intent(this, HomeActivity::class.java))
+                                    }
+                                }
+                                Status.ERROR -> {
+                                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT).show()
+                                    hideProgressBar()
+                                }
+
                             }
+
                         })}
                 }
+
+    private fun showProgressBar() {
+        signInBinding.progressBar.visibility = View.VISIBLE
+    }
+    private fun hideProgressBar(){
+        signInBinding.progressBar.visibility = View.GONE
+    }
 
     private fun validateUserInputs(email: String, password: String): Boolean {
         var isValid = false

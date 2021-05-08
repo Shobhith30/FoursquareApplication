@@ -1,13 +1,10 @@
 package com.example.foursquareapplication.network
 
-import android.graphics.Bitmap
 import com.example.foursquareapplication.model.PhotoDetails
-import com.example.foursquareapplication.model.PhotoDetailsData
 import com.example.foursquareapplication.model.Photos
 import com.example.foursquareapplication.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 interface PhotosApi {
@@ -32,7 +29,7 @@ interface PhotosApi {
         @Query("placeId") placeId:Int,
         @Query("userId") userId:Int,
         @Header("Authorization") token:String,
-        @Part files:MultipartBody.Part
+        @Part files: ArrayList<MultipartBody.Part>
         ):Call<User>
 
 }
