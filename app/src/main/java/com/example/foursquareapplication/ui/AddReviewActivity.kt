@@ -101,7 +101,7 @@ class AddReviewActivity : AppCompatActivity() {
 
         addReviewBinding.submit.setOnClickListener{
             val review=addReviewBinding.addReview.text.toString().trim()
-            if (review.isEmpty()){
+            if (review.isEmpty() && modelList.isEmpty()){
                 startActivity(Intent(this, DetailsActivity::class.java))
             }
             else {
@@ -115,16 +115,13 @@ class AddReviewActivity : AppCompatActivity() {
                         "review" to review
                     )
 
-
-
                 addReviewViewModel.addReview(newtoken, userReview).observe(this, {
                     if (it != null) {
                         println(it)
                         if (it.getStatus() == Constants.STATUS_OK) {
-
-                            addReviewImage()
-
-
+                            if (modelList.isNotEmpty()){
+                                addReviewImage()
+                            }
                         } else {
                             Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT)
                                 .show()
@@ -135,6 +132,8 @@ class AddReviewActivity : AppCompatActivity() {
                 })
             }
             }
+            val intent=Intent(this,DetailsActivity::class.java)
+            startActivity(intent)
         }
     }
     private fun getRealPathFromURI(contentURI: Uri): String? {
@@ -186,11 +185,10 @@ class AddReviewActivity : AppCompatActivity() {
                 }
 
 
-
             }
 
             PhotosApi.uploadReviewImage(
-                10, 74, token, reviewImagesParts
+                9, 74, token, reviewImagesParts
             ).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     Toast.makeText(applicationContext, "Review Added", Toast.LENGTH_LONG).show()
@@ -220,10 +218,8 @@ class AddReviewActivity : AppCompatActivity() {
                 }
                 else{
                     selectedImage=data.data
-
                     modelList.add(ReviewPhotos(selectedImage!!))
                     initialise(modelList)
-
                 }
             }
         }
