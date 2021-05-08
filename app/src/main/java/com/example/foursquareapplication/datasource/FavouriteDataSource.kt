@@ -2,6 +2,7 @@ package com.example.foursquareapplication.datasource
 
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
+import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.model.*
 import com.example.foursquareapplication.network.FavouriteApi
 import com.example.foursquareapplication.network.FourSquareApiInstance
@@ -20,7 +21,7 @@ class FavouriteDataSource(val query : String,val userId: Int, val token: String)
     ) {
         try {
             val response = FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
-                    .getFavourite(userId.toInt(), FIRST_PAGE,3,token).execute()
+                    .getFavourite(userId.toInt(), FIRST_PAGE,Constants.FAV_PAGE_SIZE,token).execute()
 
             if (response.isSuccessful) {
                 if (response.body()?.getData() != null) {
@@ -56,7 +57,7 @@ class FavouriteDataSource(val query : String,val userId: Int, val token: String)
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Place>) {
         val response = FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
-            .getFavourite(userId.toInt(),params.key,3,token)
+            .getFavourite(userId.toInt(),params.key,Constants.FAV_PAGE_SIZE,token)
             .enqueue(object : Callback<FavouriteResponse>{
                 override fun onResponse(call: Call<FavouriteResponse>, response: Response<FavouriteResponse>) {
                     val adjacentKey = if (params.key > 0) params.key - 1 else null
@@ -78,7 +79,7 @@ class FavouriteDataSource(val query : String,val userId: Int, val token: String)
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int,Place>) {
         FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
-            .getFavourite(userId.toInt(),params.key,3,token)
+            .getFavourite(userId.toInt(),params.key,Constants.FAV_PAGE_SIZE,token)
             .enqueue(object : Callback<FavouriteResponse>{
                 override fun onResponse(call: Call<FavouriteResponse>, response: Response<FavouriteResponse>) {
                     if (response.body()?.getData() != null) {

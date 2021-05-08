@@ -9,11 +9,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.foursquareapplication.OnFavouriteCLickListener
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.adapter.FavouriteAdapter
 import com.example.foursquareapplication.adapter.ReviewAdapter
@@ -28,12 +30,13 @@ import com.example.foursquareapplication.viewmodel.AuthenticationViewModel
 import com.example.foursquareapplication.viewmodel.FavouriteViewModel
 import com.example.foursquareapplication.viewmodel.ReviewViewModel
 
-class FavouriteActivity : AppCompatActivity() {
+class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
 
     private lateinit var favouriteBinding: ActivityFavouriteBinding
     private lateinit var favouriteAdapter: FavouriteAdapter
     private lateinit var favouriteViewModel: FavouriteViewModel
     private var favList: PagedList<Place>? = null
+    private var pagedList :  MutableLiveData<PagedList<Place>> = MutableLiveData()
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +78,7 @@ class FavouriteActivity : AppCompatActivity() {
 
         favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(FavouriteViewModel::class.java)
         favouriteAdapter = FavouriteAdapter(this)
+        favouriteAdapter.setListener(this)
         favouriteBinding.favouriteRecyclerView.layoutManager = LinearLayoutManager(this)
         favouriteBinding.favouriteRecyclerView.adapter = favouriteAdapter
 
@@ -86,17 +90,19 @@ class FavouriteActivity : AppCompatActivity() {
         if (userId != null) {
             favouriteViewModel.getFavourite("", userId, newToken)
             favouriteViewModel.getItemPageList()?.observe(this) {
-                Log.i("Navya", "userId : $userId and $newToken")
-                Log.i("Navya", "$it")
-                Toast.makeText(this, "Favourite", Toast.LENGTH_LONG).show()
-                if (it.size > 0) {
-                    favList = it
-                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
-                    favouriteAdapter.submitList(it)
 
+                if (it.size > 0) {
+                    if (it.get(0) != null) {
+                        pagedList.value = it
+                        //favouriteAdapter.submitList(it)
+
+                    }
                 }
             }
         }
+
+
+
 
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         divider.setDrawable(applicationContext.resources.getDrawable(R.drawable.divider))
@@ -108,6 +114,25 @@ class FavouriteActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_favourite, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getFavourite()
+    }
+    fun getFavourite(){
+        pagedList.observe(this){
+            if (it.size > 0) {
+                if (it.get(0) != null) {
+                    favouriteAdapter = FavouriteAdapter(this)
+                    favouriteAdapter.setListener(this)
+                    favouriteBinding.favouriteRecyclerView.layoutManager = LinearLayoutManager(this)
+                    favouriteBinding.favouriteRecyclerView.adapter = favouriteAdapter
+                    favouriteAdapter.submitList(it)
+                    it.dataSource.invalidate()
+                }
+            }
+        }
     }
 
     fun performFilter(query: String?) {
@@ -128,5 +153,34 @@ class FavouriteActivity : AppCompatActivity() {
         }
         val list = favouriteAdapter.currentList
         list?.removeAt(0)
+    }
+
+    override fun onFavouriteClick(isFav: Boolean, id: Int?) {}
+
+    override fun removeFavourite(id: Int?) {
+       deleteFavourite(id)
+    }
+
+    private fun deleteFavourite(id: Int?) {
+        val placeId = id
+        val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
+        val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
+        val newToken = "Bearer $token"
+        val userId = sharedPreferences.getString(Constants.USER_ID, "").toString()
+
+        val userFavourite = hashMapOf("userId" to userId, "placeId" to placeId.toString())
+        val favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(FavouriteViewModel::class.java)
+
+        if (placeId != null) {
+            favouriteViewModel.deleteFavourite(newToken, userFavourite).observe(this) {
+                if (it.getStatus() == Constants.STATUS_OK) {
+                    getFavourite()
+                    Toast.makeText(this, it.getMessage(), Toast.LENGTH_SHORT).show()
+
+                } else {
+                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
