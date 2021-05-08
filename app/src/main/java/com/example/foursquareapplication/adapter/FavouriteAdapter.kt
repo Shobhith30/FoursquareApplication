@@ -21,6 +21,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.foursquareapplication.OnFavouriteCLickListener
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ItemFavouritesBinding
 import com.example.foursquareapplication.helper.ChangeRatingColor
@@ -35,6 +36,8 @@ import com.google.android.gms.location.LocationServices
 
 class FavouriteAdapter(private val mCtx: Context) :
     PagedListAdapter<Place, FavouriteAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+
+    private var listener : OnFavouriteCLickListener?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
@@ -97,26 +100,8 @@ class FavouriteAdapter(private val mCtx: Context) :
 
 
             holder.removeFavourite.setOnClickListener {
-                val placeId = item.getPlaceId()
-                val sharedPreferences = mCtx.getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
-                val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
-                val newToken = "Bearer $token"
-                val userId = sharedPreferences.getString(Constants.USER_ID, "").toString()
+                listener?.removeFavourite(item.getPlaceId())
 
-                val userFavourite = hashMapOf("userId" to userId, "placeId" to placeId.toString())
-                val favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(mCtx.applicationContext as Application).create(FavouriteViewModel::class.java)
-
-                if (placeId != 0) {
-                    favouriteViewModel.deleteFavourite(newToken, userFavourite).observeForever({
-                        if (it.getStatus() == Constants.STATUS_OK) {
-                            Toast.makeText(mCtx, it.getMessage(), Toast.LENGTH_SHORT).show()
-                            val intent = Intent(mCtx, FavouriteActivity::class.java)
-                            mCtx.startActivity(intent)
-                        } else {
-                            Toast.makeText(mCtx, it.getMessage(), Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                }
             }
         } else {
             Toast.makeText(mCtx, "Item is null", Toast.LENGTH_LONG).show()
@@ -139,12 +124,16 @@ class FavouriteAdapter(private val mCtx: Context) :
                 val bundle = Bundle()
                 val item = getItem(bindingAdapterPosition)
                 bundle.putParcelable(Constants.PLACE_RESPOSNE,item)
+                bundle.putBoolean(Constants.IS_FAVOURITE,true)
                 intent.putExtras(bundle)
                 mCtx.startActivity(intent)
             }
 
         }
 
+    }
+    fun setListener(listener : OnFavouriteCLickListener){
+        this.listener = listener
     }
 
     companion object {
