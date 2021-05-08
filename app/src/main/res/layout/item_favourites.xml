@@ -103,6 +103,7 @@
         app:layout_constraintTop_toBottomOf="@id/type_favourite" />
 
     <ImageView
+        android:id="@+id/remove_favourite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"

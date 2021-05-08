@@ -68,7 +68,7 @@ class FavouriteRepository (private val application: Application)  {
 
     fun deleteFavourite(token : String, favourite : HashMap<String,String>): LiveData<FavouriteResponse> {
         var deleteFavouriteResponse : MutableLiveData<FavouriteResponse> = MutableLiveData()
-        val getFavouriteCall = favouriteApi.addToFavourite(token,favourite)
+        val getFavouriteCall = favouriteApi.deleteFavourite(token,favourite)
         getFavouriteCall.enqueue(object : Callback<FavouriteResponse> {
             override fun onResponse(call: Call<FavouriteResponse>, response: Response<FavouriteResponse>) {
                 if (response.isSuccessful) {

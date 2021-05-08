@@ -18,7 +18,7 @@ interface FavouriteApi {
     fun addToFavourite(@Header("Authorization") token : String,
                        @Body favourite : HashMap<String,String> ) : Call<FavouriteResponse>
 
-    @DELETE("deleteFavourite")
+    @HTTP(method = "DELETE", path = "deleteFavourite", hasBody = true)
     fun deleteFavourite(@Header("Authorization") token : String,
                         @Body favourite : HashMap<String,String> ) : Call<FavouriteResponse>
 }

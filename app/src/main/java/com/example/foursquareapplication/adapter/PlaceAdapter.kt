@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +88,7 @@ class PlaceAdapter (private val mCtx: Context) :
                 holder.placeBinding.address.text = it.getLandmark()
             }
             holder.placeBinding.distance.text = String.format("%.1f km", item.getDistance())
+            val sharedPreferences = mCtx.getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
 
 
         } else {
