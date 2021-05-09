@@ -5,7 +5,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/fav"
-            android:icon="@drawable/favourite_icon"
+            android:icon="@drawable/favourite_icon_copy"
             android:title="@string/favourites">
 
         </item>
