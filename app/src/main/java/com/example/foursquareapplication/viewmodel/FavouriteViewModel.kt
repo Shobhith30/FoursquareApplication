@@ -41,7 +41,7 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
 
         //Building the paged list
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
-        itemPagedList?.value?.dataSource?.invalidate()
+        //itemPagedList?.value?.dataSource?.invalidate()
 
     }
 
@@ -75,6 +75,10 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
 
     fun deleteFavourite(token : String, favourite : HashMap<String,String>): LiveData<FavouriteResponse> {
         return favouriteRepository.deleteFavourite(token, favourite)
+    }
+
+    fun invalidateFavourite(){
+        itemPagedList?.value?.dataSource?.invalidate()
     }
 
 

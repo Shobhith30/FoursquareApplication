@@ -44,6 +44,8 @@ class SearchSuggestionsFragment : Fragment() {
         searchSuggestionBinding.suggestionListView.setOnItemClickListener { _, view, position, _ ->
 
             selectedSuggetion((view as TextView).text.toString())
+            val transaction = childFragmentManager.beginTransaction()
+
 
         }
 
@@ -52,7 +54,7 @@ class SearchSuggestionsFragment : Fragment() {
 
     private fun selectedSuggetion(value:String){
         val searchView = activity?.findViewById<androidx.appcompat.widget.SearchView>(R.id.search_place)
-        searchView?.setQuery(value,true)
+        searchView?.setQuery(value,false)
     }
 
 }

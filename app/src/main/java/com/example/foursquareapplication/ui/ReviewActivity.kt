@@ -37,8 +37,9 @@ class ReviewActivity : AppCompatActivity() {
         if(placeId!=0) {
             reviewViewModel.getReview(placeId)?.observe(this, {
                 if (it != null) {
+
                     reviewAdapter.submitList(it)
-                    reviewBinding.toolbarTitle.text = it[0]?.getPlaceName()
+
                 }
 
 
@@ -54,6 +55,7 @@ class ReviewActivity : AppCompatActivity() {
         reviewBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        reviewBinding.toolbarTitle.text = intent.getStringExtra(Constants.PLACE_NAME)
         reviewBinding.toolbar.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.add_review -> startActivity(Intent(this, AddReviewActivity::class.java))

@@ -77,31 +77,7 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
         }
 
         favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(FavouriteViewModel::class.java)
-        favouriteAdapter = FavouriteAdapter(this)
-        favouriteAdapter.setListener(this)
-        favouriteBinding.favouriteRecyclerView.layoutManager = LinearLayoutManager(this)
-        favouriteBinding.favouriteRecyclerView.adapter = favouriteAdapter
-
-        val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
-        val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
-        val newToken = "Bearer $token"
-        val userId = sharedPreferences.getString(Constants.USER_ID, "")?.toInt()
-
-        if (userId != null) {
-            favouriteViewModel.getFavourite("", userId, newToken)
-            favouriteViewModel.getItemPageList()?.observe(this) {
-
-                if (it.size > 0) {
-                    if (it.get(0) != null) {
-                        pagedList.value = it
-                        //favouriteAdapter.submitList(it)
-
-                    }
-                }
-            }
-        }
-
-
+        setAdapter()
 
 
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -109,6 +85,13 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
         favouriteBinding.favouriteRecyclerView.addItemDecoration(divider)
 
         favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(FavouriteViewModel::class.java)
+    }
+
+    private fun setAdapter() {
+        favouriteAdapter = FavouriteAdapter(this)
+        favouriteAdapter.setListener(this)
+        favouriteBinding.favouriteRecyclerView.layoutManager = LinearLayoutManager(this)
+        favouriteBinding.favouriteRecyclerView.adapter = favouriteAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -120,40 +103,19 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
         super.onResume()
         getFavourite()
     }
+
     fun getFavourite(){
-        pagedList.observe(this){
-            if (it.size > 0) {
-                if (it.get(0) != null) {
-                    favouriteAdapter = FavouriteAdapter(this)
-                    favouriteAdapter.setListener(this)
-                    favouriteBinding.favouriteRecyclerView.layoutManager = LinearLayoutManager(this)
-                    favouriteBinding.favouriteRecyclerView.adapter = favouriteAdapter
-                    favouriteAdapter.submitList(it)
-                    it.dataSource.invalidate()
-                }
-            }
-        }
+        val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
+        val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
+        val newToken = "Bearer $token"
+        val userId = sharedPreferences.getString(Constants.USER_ID, "").toString()
+        favouriteViewModel.getFavourite("".toString(), userId.toInt(), newToken)
+        favouriteViewModel.getItemPageList()?.observe(this@FavouriteActivity, {
+            favouriteAdapter.submitList(it)
+        })
+
     }
 
-    fun performFilter(query: String?) {
-        var data: PagedList<Place>? = favList
-        if (favList != null) {
-            Log.d("Navya S", favList.toString())
-            if (query != null) {
-                for (i in favList!!) {
-
-                    if (!(i.getName().contains(query, true)))
-                        Log.d("Navya S", "match")
-                    data?.remove(i)
-                    Log.d("Navya S", "matched $data")
-                }
-            } else {
-                data = favList
-            }
-        }
-        val list = favouriteAdapter.currentList
-        list?.removeAt(0)
-    }
 
     override fun onFavouriteClick(isFav: Boolean, id: Int?) {}
 
@@ -173,12 +135,15 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
 
         if (placeId != null) {
             favouriteViewModel.deleteFavourite(newToken, userFavourite).observe(this) {
-                if (it.getStatus() == Constants.STATUS_OK) {
-                    getFavourite()
-                    Toast.makeText(this, it.getMessage(), Toast.LENGTH_SHORT).show()
+                if(it!=null) {
+                    if (it.getStatus() == Constants.STATUS_OK) {
+                        getFavourite()
+                        Toast.makeText(this, it.getMessage(), Toast.LENGTH_SHORT).show()
 
-                } else {
-                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
         }

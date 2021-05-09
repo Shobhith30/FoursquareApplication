@@ -122,6 +122,7 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
+            drawer.closeDrawers()
             true
         }
     }

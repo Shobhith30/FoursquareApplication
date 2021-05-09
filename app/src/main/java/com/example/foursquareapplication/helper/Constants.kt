@@ -1,6 +1,10 @@
 package com.example.foursquareapplication.helper
 
 object Constants {
+    val PLACE_NAME: String = "com.example.foursquareapplication.helper.place_name"
+    val LATITUDE: String = "com.example.foursquareapplication.helper.latitude"
+    val LONGITUDE = "com.example.foursquareapplication.helper.longitude"
+    val LAST_LOCATION: String = "com.example.foursquareapplication.helper.last_location"
     val REQUEST_EXTERNAL_STORAGE: Int = 101
     const val MAX_AGE = 30
     const val MAX_STALE = 30

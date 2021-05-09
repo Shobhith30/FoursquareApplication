@@ -2,6 +2,7 @@ package com.example.foursquareapplication.ui
 
 import android.Manifest
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
@@ -42,6 +43,7 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
     private lateinit var placeAdapter: PlaceAdapter
     private lateinit var favouriteViewModel: FavouriteViewModel
     private val pageData: MutableLiveData<PagedList<DataPlace>> = MutableLiveData()
+    private lateinit var locationPreferences: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +53,7 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
         val fm = childFragmentManager
         val supportMapFragment = SupportMapFragment.newInstance()
         fm.beginTransaction().replace(R.id.mapLayout, supportMapFragment).commit()
+        locationPreferences = requireContext().getSharedPreferences(Constants.LAST_LOCATION,MODE_PRIVATE)
         supportMapFragment.getMapAsync {
             myMap = it
             mapReady = true
@@ -66,14 +69,46 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
         nearYouBinding.locationProgress.visibility = View.VISIBLE
         setPlaceAdapter()
         placeViewModel = ViewModelProvider(this).get(PlaceViewModel::class.java)
+        setLastPlaceData()
+        enableMyLocationIfPermitted()
+        setCurrentLocationOnMap()
         locationViewModel.getLocation().observe(viewLifecycleOwner, {
             location = it
+            saveLocation(it)
             enableMyLocationIfPermitted()
             setCurrentLocationOnMap()
             loadPlaceData(it)
 
         })
         return nearYouBinding.root
+    }
+
+    private fun setLastPlaceData() {
+        val location  =getLastLocation()
+        if(location!=null){
+            loadPlaceData(location)
+        }
+    }
+
+    private fun getLastLocation() : Location? {
+        if(locationPreferences.contains(Constants.LATITUDE)){
+            val latitude = locationPreferences.getString(Constants.LATITUDE,"")?.toDouble()
+            val longitude = locationPreferences.getString(Constants.LONGITUDE,"")?.toDouble()
+            val location = Location("")
+            if (latitude != null && longitude!=null) {
+                location.latitude = latitude
+                location.longitude = longitude
+            }
+            return location
+        }else
+            return null
+    }
+
+    private fun saveLocation(location : Location) {
+        val locationEditor = locationPreferences.edit()
+        locationEditor.putString(Constants.LATITUDE,location.latitude.toString())
+        locationEditor.putString(Constants.LONGITUDE,location.longitude.toString())
+        locationEditor.apply()
     }
 
     private fun setPlaceAdapter() {
@@ -156,20 +191,22 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
         )
         val userId = sharedPreferences.getString(Constants.USER_ID, "")
         var token = sharedPreferences.getString(Constants.USER_TOKEN, "")
-        if (userId != null && token != null) {
-            val userToken = "Bearer $token"
-            val pageNumber = Constants.FAV_PAGE_NUMBER
-            val pageSize = Constants.FAV_PAGE_SIZE
-            favouriteViewModel.getFavouriteData(userId.toInt(), pageNumber, pageSize, userToken)
-                .observe(viewLifecycleOwner, {
-                    if (it != null) {
-                        if (it.getStatus() == Constants.STATUS_OK) {
-                            placeAdapter.favouriteData = it.getData()
-                            placeAdapter.notifyDataSetChanged()
+        if(sharedPreferences.contains(Constants.USER_ID)) {
+            if (userId != null && token != null) {
+                val userToken = "Bearer $token"
+                val pageNumber = Constants.FAV_PAGE_NUMBER
+                val pageSize = Constants.FAV_PAGE_SIZE
+                favouriteViewModel.getFavouriteData(userId.toInt(), pageNumber, pageSize, userToken)
+                    .observe(viewLifecycleOwner, {
+                        if (it != null) {
+                            if (it.getStatus() == Constants.STATUS_OK) {
+                                placeAdapter.favouriteData = it.getData()
+                                placeAdapter.notifyDataSetChanged()
 
+                            }
                         }
-                    }
-                })
+                    })
+            }
         }
     }
 

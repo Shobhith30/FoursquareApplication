@@ -141,8 +141,8 @@ class SignInActivity : AppCompatActivity() {
         var isValid = false
         when{
             email.isEmpty() ->{
-                signInBinding.signinEmail.error = "Enter Email Address"
-                signInBinding.signinEmail.requestFocus()
+                signInBinding.signinUsername.error = "Enter Email Address"
+                signInBinding.signinUsername.requestFocus()
 
             }
 
