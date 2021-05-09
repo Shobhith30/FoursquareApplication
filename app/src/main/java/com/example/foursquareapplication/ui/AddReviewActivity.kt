@@ -213,14 +213,10 @@ class AddReviewActivity : AppCompatActivity() {
                     for (i in 0 until count){
                         selectedImage=data.clipData!!.getItemAt(i).uri
                         modelList.add(ReviewPhotos(selectedImage!!))
-                        initialise(modelList)
                     }
-                }
-                else{
-                    selectedImage=data.data
-                    modelList.add(ReviewPhotos(selectedImage!!))
                     initialise(modelList)
                 }
+
             }
         }
 

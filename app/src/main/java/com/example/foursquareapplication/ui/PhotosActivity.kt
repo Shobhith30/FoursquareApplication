@@ -121,14 +121,9 @@ class PhotosActivity : AppCompatActivity() {
                     for (i in 0 until count){
                         selectedImage=data.clipData!!.getItemAt(i).uri
                         modelList.add(ReviewPhotos(selectedImage!!))
-                        addReviewImage()
                     }
                 }
-                else{
-                    selectedImage=data.data
-                    modelList.add(ReviewPhotos(selectedImage!!))
-                    addReviewImage()
-                }
+                addReviewImage()
             }
         }
     }
@@ -190,7 +185,6 @@ class PhotosActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     Toast.makeText(applicationContext, "Review Added", Toast.LENGTH_LONG).show()
                 }
-
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                 }
