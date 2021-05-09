@@ -1,11 +1,16 @@
 package com.example.foursquareapplication.ui
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.foursquareapplication.R
@@ -84,12 +89,24 @@ class PhotosActivity : AppCompatActivity() {
     }
 
     private fun openImageChooser() {
-        Intent(Intent.ACTION_PICK).also {
-            it.type="image/*"
-            val minType= arrayOf("image/jpeg","image/png")
-            it.putExtra(Intent.EXTRA_MIME_TYPES,minType)
-            it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
-            startActivityForResult(Intent.createChooser(it, "SELECT IMAGES"), REQUEST_CODE)
+        val permission =
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    Constants.REQUEST_EXTERNAL_STORAGE
+            )
+        } else {
+            Intent(Intent.ACTION_PICK).also {
+                it.type = "image/*"
+                val minType = arrayOf("image/jpeg", "image/png")
+                it.putExtra(Intent.EXTRA_MIME_TYPES, minType)
+                it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                startActivityForResult(it, REQUEST_CODE)
+            }
         }
     }
 
@@ -104,62 +121,81 @@ class PhotosActivity : AppCompatActivity() {
                     for (i in 0 until count){
                         selectedImage=data.clipData!!.getItemAt(i).uri
                         modelList.add(ReviewPhotos(selectedImage!!))
+                        addReviewImage()
                     }
                 }
                 else{
-                    val selectedImage=data.data
+                    selectedImage=data.data
                     modelList.add(ReviewPhotos(selectedImage!!))
-
-
+                    addReviewImage()
                 }
-                println("size"+modelList.size)
-
-
             }
         }
-        uploadImage()
-
     }
 
-    private fun uploadImage(){
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
+        if (cursor == null) {
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == Constants.REQUEST_EXTERNAL_STORAGE)
+                openImageChooser()
+        }
+    }
+    private fun addReviewImage() {
+        val reviewImagesParts = arrayListOf<MultipartBody.Part>()
         val sharedPreferences = getSharedPreferences(
                 Constants.USER_PREFERENCE,
                 MODE_PRIVATE
         )
-        val token = sharedPreferences.getString(Constants.USER_TOKEN,"")
-        println(token)
-        if (token != null) {
-            val newtoken = "Bearer $token"
+        var token = sharedPreferences.getString(Constants.USER_TOKEN, "")
+        if(token!=null){
+            token = "Bearer $token"
 
-            for (images in modelList) {
+            for (image in modelList) {
+                image.image?.let{
+                    val file = File(getRealPathFromURI(it))
+                    val reviewBody = RequestBody.create(MediaType.parse("image/*"), file)
+                    val part = MultipartBody.Part.createFormData(
+                            "files",
+                            file.name,
+                            reviewBody
+                    )
+                    reviewImagesParts.add(part)
+                }
 
-                println("sizeM"+modelList.size)
 
-                val parcelFileDiscriptor = contentResolver.openFileDescriptor(selectedImage!!, "r", null)
-                        ?: return
-                val inputStream = FileInputStream(parcelFileDiscriptor.fileDescriptor)
-                val file = File(cacheDir, contentResolver.getFileName(images.image!!))
-                val outputStream = FileOutputStream(file)
-                inputStream.copyTo(outputStream)
-
-                val imagefile = RequestBody.create(MediaType.parse("image/*"), file)
-
-//                PhotosApi.uploadReviewImage(9, 74, newtoken, MultipartBody.Part.createFormData("files", file.name, imagefile)
-//                ).enqueue(object : Callback<User> {
-//                    override fun onResponse(call: Call<User>, response: Response<User>) {
-//                        Toast.makeText(applicationContext,"uploaded",Toast.LENGTH_LONG).show()
-//                    }
-//
-//                    override fun onFailure(call: Call<User>, t: Throwable) {
-//                        println("error"+t.message)
-//                        Toast.makeText(applicationContext,"not uploaded"+ t.message,Toast.LENGTH_LONG).show()
-//
-//                    }
-//
-//                })
             }
-            startActivity(Intent(this,PhotosActivity::class.java))
 
+            PhotosApi.uploadReviewImage(
+                    9, 74, token, reviewImagesParts
+            ).enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    Toast.makeText(applicationContext, "Review Added", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                }
+
+            })
         }
     }
 
