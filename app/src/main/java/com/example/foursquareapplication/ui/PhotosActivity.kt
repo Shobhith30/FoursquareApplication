@@ -18,6 +18,8 @@ import com.example.foursquareapplication.adapter.PictureAdapter
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
 import com.example.foursquareapplication.getFileName
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.ApiResponse
+import com.example.foursquareapplication.model.Review
 import com.example.foursquareapplication.model.ReviewPhotos
 import com.example.foursquareapplication.model.User
 import com.example.foursquareapplication.network.FourSquareApiInstance
@@ -181,11 +183,19 @@ class PhotosActivity : AppCompatActivity() {
 
             PhotosApi.uploadReviewImage(
                     9, 74, token, reviewImagesParts
-            ).enqueue(object : Callback<User> {
-                override fun onResponse(call: Call<User>, response: Response<User>) {
-                    Toast.makeText(applicationContext, "Review Added", Toast.LENGTH_LONG).show()
+            ).enqueue(object : Callback<ApiResponse> {
+                override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                    if (response.isSuccessful) {
+                        if (response.body()?.getStatus() == Constants.STATUS_OK) {
+                            Toast.makeText(applicationContext, "Photo(s) Added", Toast.LENGTH_LONG)
+                                .show()
+                        }
+                    } else {
+                        Toast.makeText(applicationContext, "Error Uploading Image", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                override fun onFailure(call: Call<User>, t: Throwable) {
+
+                override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                     Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                 }
 

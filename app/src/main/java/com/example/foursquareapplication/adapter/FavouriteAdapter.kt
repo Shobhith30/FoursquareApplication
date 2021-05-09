@@ -55,7 +55,7 @@ class FavouriteAdapter(private val mCtx: Context) :
             val rating = item.getOverallRating()
             if (rating != 0.0f) {
                 holder.favouriteBinding.ratingBackgroundFavourite.visibility = View.VISIBLE
-                holder.favouriteBinding.ratingFavourite.text = item.getOverallRating().toString()
+                holder.favouriteBinding.ratingFavourite.text = String.format("%.1f",item.getOverallRating())
                 val ratingBackground = ChangeRatingColor().getRatingColor(
                         rating)
                 holder.favouriteBinding.ratingBackgroundFavourite.setBackgroundColor(ratingBackground)

@@ -91,7 +91,8 @@ class SignInActivity : AppCompatActivity() {
         val signInPassword = signInBinding.siginPassword.text.toString()
         if(validateUserInputs(signInUserName,signInPassword)) {
                         val loginUser = hashMapOf("email" to signInUserName, "password" to signInPassword)
-                        authenticationViewModel.authenticateUser(loginUser).observe(this, {
+                        val authenticateUser = authenticationViewModel.authenticateUser(loginUser)
+                        authenticateUser.observe(this, {
 
                             when (it.status) {
                                 Status.LOADING -> {
@@ -99,7 +100,7 @@ class SignInActivity : AppCompatActivity() {
                                 }
                                 Status.SUCCESS -> {
                                     val data = it.data
-                                    if (data != null) {
+                                    if (data != null && data.getData().getUserData()!=null) {
                                         val sharedPreferences = getSharedPreferences(
                                             Constants.USER_PREFERENCE,
                                             MODE_PRIVATE
@@ -117,6 +118,7 @@ class SignInActivity : AppCompatActivity() {
                                         sharedEditor.remove(Constants.GUEST_USER)
                                         sharedEditor.apply()
                                         hideProgressBar()
+                                        authenticateUser.removeObservers(this)
                                         startActivity(Intent(this, HomeActivity::class.java))
                                     }
                                 }

@@ -25,6 +25,17 @@ class ReviewActivity : AppCompatActivity() {
         setContentView(reviewBinding.root)
 
         setToolbar()
+        loadReviewData()
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadReviewData()
+    }
+
+    private fun loadReviewData() {
         val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
         isLoggedIn = sharedPreferences.contains(Constants.USER_ID)
         reviewViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(ReviewViewModel::class.java)
@@ -45,8 +56,6 @@ class ReviewActivity : AppCompatActivity() {
 
             })
         }
-
-
     }
 
     private fun setToolbar() {
@@ -58,7 +67,14 @@ class ReviewActivity : AppCompatActivity() {
         reviewBinding.toolbarTitle.text = intent.getStringExtra(Constants.PLACE_NAME)
         reviewBinding.toolbar.setOnMenuItemClickListener {
             when(it.itemId){
-                R.id.add_review -> startActivity(Intent(this, AddReviewActivity::class.java))
+                R.id.add_review -> {
+                    val addReviewIntent = Intent(this,AddReviewActivity::class.java)
+                    val placeId = intent.extras?.getInt(Constants.PLACE_ID)
+                    val placeName = intent.extras?.getString(Constants.PLACE_NAME)
+                    addReviewIntent.putExtra(Constants.PLACE_ID, placeId)
+                    addReviewIntent.putExtra(Constants.PLACE_NAME,placeName)
+                    startActivity(addReviewIntent)
+                }
             }
             true
 

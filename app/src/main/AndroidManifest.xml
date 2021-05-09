@@ -41,7 +41,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ui.HomeActivity"/>
-        <activity android:name=".ui.ReviewActivity" />
+        <activity android:name=".ui.ReviewActivity" android:launchMode="singleTop" />
         <activity android:name=".ui.authentication.SignInActivity"/>
         <activity android:name=".ui.authentication.SignUpActivity"/>
         <activity android:name=".ui.authentication.ForgotPassword"/>

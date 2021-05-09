@@ -3,6 +3,7 @@ package com.example.foursquareapplication.ui
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -20,6 +21,8 @@ import com.example.foursquareapplication.adapter.AddReviewPhotoAdapter
 import com.example.foursquareapplication.databinding.ActivityAddReviewBinding
 import com.example.foursquareapplication.getFileName
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.ApiResponse
+import com.example.foursquareapplication.model.Review
 import com.example.foursquareapplication.model.ReviewPhotos
 import com.example.foursquareapplication.model.User
 import com.example.foursquareapplication.network.FourSquareApiInstance
@@ -40,7 +43,7 @@ class AddReviewActivity : AppCompatActivity() {
     private lateinit var addReviewViewModel : AddReviewViewModel
     private var selectedImage: Uri?=null
     private val PhotosApi= FourSquareApiInstance.getApiInstance(com.example.foursquareapplication.network.PhotosApi::class.java)
-
+    private lateinit var sharedPreferences: SharedPreferences
 
 
     var modelList=ArrayList<ReviewPhotos>()
@@ -53,10 +56,10 @@ class AddReviewActivity : AppCompatActivity() {
         addReviewBinding = ActivityAddReviewBinding.inflate(layoutInflater)
         setContentView(addReviewBinding.root)
 
+        sharedPreferences  = getSharedPreferences(Constants.USER_PREFERENCE, MODE_PRIVATE)
         addReviewViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(
             AddReviewViewModel::class.java
         )
-
         addReviewSubmit()
         setToolbar()
 
@@ -97,6 +100,9 @@ class AddReviewActivity : AppCompatActivity() {
             MODE_PRIVATE
         )
         val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
+        val userId = sharedPreferences.getString(Constants.USER_ID,"").toString()
+        val placeId = intent.extras?.getInt(Constants.PLACE_ID).toString()
+        Toast.makeText(applicationContext, " here ${placeId.toString()}", Toast.LENGTH_SHORT).show()
 
 
         addReviewBinding.submit.setOnClickListener{
@@ -110,8 +116,8 @@ class AddReviewActivity : AppCompatActivity() {
                     val newtoken = "Bearer $token"
 
                     val userReview = hashMapOf(
-                        "userId" to "74",
-                        "placeId" to "9",
+                        "userId" to userId,
+                        "placeId" to placeId,
                         "review" to review
                     )
 
@@ -121,19 +127,19 @@ class AddReviewActivity : AppCompatActivity() {
                         if (it.getStatus() == Constants.STATUS_OK) {
                             if (modelList.isNotEmpty()){
                                 addReviewImage()
+                            }else{
+                                Toast.makeText(applicationContext,"Review Added",Toast.LENGTH_LONG).show()
+                                onBackPressed()
                             }
                         } else {
                             Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT)
                                 .show()
                         }
-                    } else {
-
                     }
                 })
             }
             }
-            val intent=Intent(this,DetailsActivity::class.java)
-            startActivity(intent)
+
         }
     }
     private fun getRealPathFromURI(contentURI: Uri): String? {
@@ -169,11 +175,14 @@ class AddReviewActivity : AppCompatActivity() {
             MODE_PRIVATE
         )
         var token = sharedPreferences.getString(Constants.USER_TOKEN, "")
-        if(token!=null){
+        val placeId = intent.extras?.getInt(Constants.PLACE_ID)
+        val userId = sharedPreferences.getString(Constants.USER_ID,"")
+
+        if(token!=null && placeId!=null && userId!=null) {
             token = "Bearer $token"
 
             for (image in modelList) {
-                image.image?.let{
+                image.image?.let {
                     val file = File(getRealPathFromURI(it))
                     val reviewBody = RequestBody.create(MediaType.parse("image/*"), file)
                     val part = MultipartBody.Part.createFormData(
@@ -186,19 +195,34 @@ class AddReviewActivity : AppCompatActivity() {
 
 
             }
+            if (reviewImagesParts.size > 0) {
+                Toast.makeText(applicationContext, "Uploading Images..Please wait..", Toast.LENGTH_SHORT).show()
 
-            PhotosApi.uploadReviewImage(
-                9, 74, token, reviewImagesParts
-            ).enqueue(object : Callback<User> {
-                override fun onResponse(call: Call<User>, response: Response<User>) {
-                    Toast.makeText(applicationContext, "Review Added", Toast.LENGTH_LONG).show()
-                }
+                PhotosApi.uploadReviewImage(
+                    placeId, userId.toInt(), token, reviewImagesParts
+                ).enqueue(object : Callback<ApiResponse> {
+                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
 
-                override fun onFailure(call: Call<User>, t: Throwable) {
-                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-                }
+                        if (response.isSuccessful) {
+                            if (response.body()?.getStatus() == Constants.STATUS_OK) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Review Added",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                onBackPressed()
+                            }
+                        } else {
+                            Toast.makeText(applicationContext, "Error Uploading Image", Toast.LENGTH_SHORT).show()
+                        }
+                    }
 
-            })
+                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                    }
+
+                })
+            }
         }
     }
 
@@ -235,7 +259,10 @@ class AddReviewActivity : AppCompatActivity() {
 
     private fun setToolbar() {
         addReviewBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
-        addReviewBinding.toolbarTitle.text = "Add Review"
+        addReviewBinding.toolbarTitle.text = intent.extras?.getString(Constants.PLACE_NAME)
+        addReviewBinding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
 
     }
 

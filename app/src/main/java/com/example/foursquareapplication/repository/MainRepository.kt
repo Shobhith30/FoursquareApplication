@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.model.Resource
 import com.example.foursquareapplication.model.User
 import com.example.foursquareapplication.network.AuthenticationApi
@@ -47,7 +48,11 @@ class MainRepository(private val application: Application) {
         authenticateCall.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    loginUser.postValue(Resource.success(response.body()))
+                    if(response.body()?.getStatus() == Constants.STATUS_OK) {
+                        loginUser.postValue(Resource.success(response.body()))
+                    }else{
+                        loginUser.postValue(Resource.error(response.body()?.getMessage().toString()))
+                    }
 
                 } else {
                     loginUser.postValue(Resource.error("Couldn't login! Check username or password"))

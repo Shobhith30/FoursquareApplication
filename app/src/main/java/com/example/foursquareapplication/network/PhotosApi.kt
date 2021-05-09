@@ -1,8 +1,6 @@
 package com.example.foursquareapplication.network
 
-import com.example.foursquareapplication.model.PhotoDetails
-import com.example.foursquareapplication.model.Photos
-import com.example.foursquareapplication.model.User
+import com.example.foursquareapplication.model.*
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -30,6 +28,6 @@ interface PhotosApi {
         @Query("userId") userId:Int,
         @Header("Authorization") token:String,
         @Part files: ArrayList<MultipartBody.Part>
-        ):Call<User>
+        ):Call<ApiResponse>
 
 }

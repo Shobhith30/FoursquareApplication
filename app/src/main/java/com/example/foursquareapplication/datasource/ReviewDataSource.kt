@@ -70,7 +70,7 @@ class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>(
                             val key =
                                 if (!(response.body()!!.getLastPage())) params.key + 1 else null
 
-                            callback.onResult(response.body()!!.getData(), key)
+                            callback.onResult(response.body()!!.getData() , key)
                         }
                     }
                 }
