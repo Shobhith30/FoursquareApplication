@@ -121,6 +121,10 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun gotoAddReviewScreen() {
         detailsBinding.addReviewButton.setOnClickListener {
             val addReviewIntent = Intent(this, AddReviewActivity::class.java)
+            val placeId = placeResponse?.getPlaceId()
+            val placeName = placeResponse?.getName()
+            addReviewIntent.putExtra(Constants.PLACE_ID, placeId)
+            addReviewIntent.putExtra(Constants.PLACE_NAME,placeName)
             startActivity(addReviewIntent)
         }
     }
@@ -178,7 +182,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (ratingValue != null) {
                 val rating = ratingDialog.findViewById<TextView>(R.id.overall_rating)
                 rating.setTextColor(ChangeRatingColor().getRatingColor(ratingValue))
-                rating.text = ratingValue.toString()
+                rating.text = String.format("%.1f",ratingValue)
             }
             val submitRating = ratingDialog.findViewById<TextView>(R.id.submit)
             val ratingBar = ratingDialog.findViewById<RatingBar>(R.id.rating_bar)

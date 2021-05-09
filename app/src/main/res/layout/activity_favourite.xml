@@ -2,7 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#E6E6E6">
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/no_favourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Favourite(s) Added"
+        android:layout_centerInParent="true"
+        android:textSize="16sp"
+        android:fontFamily="@font/avenir_medium"
+        android:textColor="@color/blue_button"/>
+
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout_favourite"
@@ -38,7 +52,7 @@
                 android:background="@drawable/search_box_design"
                 android:textColor="@color/black"
                 app:iconifiedByDefault="false"
-                app:queryHint="@string/attil"
+                app:queryHint="Search in Favourites"
                 app:searchIcon="@drawable/search_grey"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="12dp"

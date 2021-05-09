@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -111,7 +112,15 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
         val userId = sharedPreferences.getString(Constants.USER_ID, "").toString()
         favouriteViewModel.getFavourite("".toString(), userId.toInt(), newToken)
         favouriteViewModel.getItemPageList()?.observe(this@FavouriteActivity, {
-            favouriteAdapter.submitList(it)
+            if (it != null) {
+                if (it.size > 0) {
+                    favouriteAdapter.submitList(it)
+                } else {
+                    favouriteAdapter.submitList(null)
+                    favouriteBinding.noFavourite.visibility  = View.VISIBLE
+
+                }
+            }
         })
 
     }

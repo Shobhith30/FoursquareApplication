@@ -70,7 +70,7 @@ class PlaceAdapter (private val mCtx: Context) :
                 val rating = it.getOverallRating()
                 if(rating!=0.0f) {
                     holder.placeBinding.ratingBackground.visibility = View.VISIBLE
-                    holder.placeBinding.rating.text = item.getPlace()?.getOverallRating().toString()
+                    holder.placeBinding.rating.text = String.format("%.1f",item.getPlace()?.getOverallRating())
                     val ratingBackground = ChangeRatingColor().getRatingColor(
                         rating)
                     holder.placeBinding.ratingBackground.setBackgroundColor(ratingBackground)
