@@ -41,7 +41,9 @@ class PlaceAdapter (private val mCtx: Context) :
     var favouriteData : List<Place>?=null
     private  var listeenr : OnFavouriteCLickListener? =null
     init {
-        getFavourite()
+        if(sharedPreferences.contains(Constants.USER_ID)) {
+            getFavourite()
+        }
     }
 
 
@@ -89,7 +91,7 @@ class PlaceAdapter (private val mCtx: Context) :
                 holder.placeBinding.address.text = it.getLandmark()
             }
             holder.placeBinding.distance.text = String.format("%.1f km", item.getDistance())
-            val sharedPreferences = mCtx.getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
+
 
 
         } else {
@@ -123,10 +125,18 @@ class PlaceAdapter (private val mCtx: Context) :
                     intent.putExtras(bundle)
                     mCtx.startActivity(intent)
                 }
-                placeBinding.favourite.setOnClickListener {
-                    val item = getItem(bindingAdapterPosition)?.getPlace()
-                    listeenr?.onFavouriteClick(placeBinding.favourite.isChecked,item?.getPlaceId())
+                if(sharedPreferences.contains(Constants.USER_ID)) {
+                    placeBinding.favourite.setOnClickListener {
 
+                        val item = getItem(bindingAdapterPosition)?.getPlace()
+                        listeenr?.onFavouriteClick(
+                            placeBinding.favourite.isChecked,
+                            item?.getPlaceId()
+                        )
+
+                    }
+                }else{
+                    placeBinding.favourite.visibility = View.GONE
                 }
 
             }

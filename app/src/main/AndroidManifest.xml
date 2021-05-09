@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.FavouriteActivity"/>
+        <activity android:name=".ui.FavouriteActivity" android:launchMode="singleTop"/>
         <activity android:name=".ui.search.SearchActivity"/>
         <activity android:name=".ui.PhotosDetailsActivity" />
         <activity android:name=".ui.PhotosActivity" />

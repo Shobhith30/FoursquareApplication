@@ -140,13 +140,12 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun gotoReviewScreen() {
         detailsBinding.toReviewScreen.setOnClickListener {
-            if(!isLoggedIn){
-                Toast.makeText(applicationContext, "Please Login to Add Review", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+
             val reviewIntent = Intent(this, ReviewActivity::class.java)
             val placeId = placeResponse?.getPlaceId()
+            val placeName = placeResponse?.getName()
             reviewIntent.putExtra(Constants.PLACE_ID, placeId)
+            reviewIntent.putExtra(Constants.PLACE_NAME,placeName)
             startActivity(reviewIntent)
         }
     }
@@ -154,6 +153,10 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun gotoPhotosScreen() {
         detailsBinding.toPhotoScreen.setOnClickListener {
             val photosIntent = Intent(this, PhotosActivity::class.java)
+            val placeId = placeResponse?.getPlaceId()
+            val placeName = placeResponse?.getName()
+            photosIntent.putExtra(Constants.PLACE_ID, placeId)
+            photosIntent.putExtra(Constants.PLACE_NAME,placeName)
             startActivity(photosIntent)
         }
     }
@@ -183,8 +186,8 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 if(!isLoggedIn){
                     Toast.makeText(
                         applicationContext,
-                        "Please Login to Add Review",
-                        Toast.LENGTH_SHORT
+                        "Please Login to Rate this Place",
+                        Toast.LENGTH_LONG
                     ).show()
                 }else {
                     val userRating = ratingBar.rating.toInt()
@@ -235,7 +238,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         when (item.itemId) {
             R.id.fav_not_selected -> {
 
-                if (userId != null && token != null)
+                if (userId != null && token != null && sharedPreferences.contains(Constants.USER_ID))
                     addFavourite(placeResponse, userId, token)
                 else
                     Toast.makeText(
@@ -247,7 +250,7 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             R.id.fav_selected -> {
 
-                if (userId != null && token != null)
+                if (userId != null && token != null && sharedPreferences.contains(Constants.USER_ID))
                     removeFavourite(placeResponse, userId, token)
                 else
                     Toast.makeText(
@@ -307,11 +310,20 @@ class DetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         private fun sharePlace() {
-        val sharePlaceIntent = Intent(Intent.ACTION_SEND)
-        sharePlaceIntent.putExtra(Intent.EXTRA_TEXT, "place details")
-        sharePlaceIntent.type = "plain/text"
-        val chooser = Intent.createChooser(sharePlaceIntent, "Select App")
-        startActivity(chooser)
+            val sharePlaceIntent = Intent(Intent.ACTION_SEND)
+            val placeUrl = "https://www.google.com/maps/place/${placeResponse?.getLatitude()},${placeResponse?.getLongitude()} "
+            val dataToSend = """
+                ${placeResponse?.getName()}
+                ${placeResponse?.getAddress()}
+                ${placeResponse?.getPhone()}
+                ${placeUrl}
+            """.trimIndent()
+
+            sharePlaceIntent.putExtra(Intent.EXTRA_TEXT,dataToSend)
+
+            sharePlaceIntent.type = "plain/text"
+            val chooser = Intent.createChooser(sharePlaceIntent, "Select App")
+            startActivity(chooser)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
