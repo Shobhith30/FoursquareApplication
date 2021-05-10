@@ -50,7 +50,7 @@ class PicturesDataSource(val placeId : Int) : PageKeyedDataSource<Int, PhotoData
             .getPictures(placeId,params.key,3)
             .enqueue(object : Callback<Photos>{
                 override fun onResponse(call: Call<Photos>, response: Response<Photos>) {
-                    if (response.body() != null) {
+                    if (response.body()?.getData() != null) {
                         //if the response has next page
                         //incrementing the next page number
                         Log.e("after","after")
