@@ -5,16 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#E6E6E6">
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/no_favourite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Favourite(s) Added"
-        android:layout_centerInParent="true"
-        android:textSize="16sp"
-        android:fontFamily="@font/avenir_medium"
-        android:textColor="@color/blue_button"/>
 
 
 
@@ -35,12 +25,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/favourites"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:layout_gravity="center"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
@@ -74,5 +66,43 @@
         android:layout_marginHorizontal="7dp"
         android:layout_marginTop="7dp"
         />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/error_message"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_medium"
+            android:text="Could not load data"
+            android:textColor="@color/toolbar_background"
+            android:textSize="16sp" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_medium"
+            android:text="No Favourites Found"
+            android:textColor="@color/toolbar_background"
+            android:textSize="16sp"
+            />
+        <Button
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retry"
+            android:id="@+id/retry"/>
+    </LinearLayout>
 
 </RelativeLayout>

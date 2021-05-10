@@ -28,7 +28,7 @@ internal class HomeTabAdapter(fm: FragmentManager, var totalTabs: Int): Fragment
             2->{
                 val fragment =  NearYouFragment()
                 val bundle = Bundle()
-                bundle.putString("key","popular")
+                bundle.putString("key","topPick")
                 fragment.arguments = bundle
                 return fragment
             }

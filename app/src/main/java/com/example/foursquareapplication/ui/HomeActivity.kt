@@ -82,7 +82,7 @@ class HomeActivity : AppCompatActivity() {
         pager.adapter = adapter
 
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        //pager.offscreenPageLimit = 3
+        pager.offscreenPageLimit = 3
         val intent=intent
         val getPosition=intent.getIntExtra("position",0)
         pager.currentItem = getPosition

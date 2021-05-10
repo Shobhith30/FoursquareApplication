@@ -9,7 +9,7 @@ data class FavouriteResponse (
     private val pageNo: Int,
     private val pageSize: Int,
     private val lastPage: Boolean,
-    private val data: List<Place>
+    private val data: List<Place>?
     ){
         fun getStatus() = status
         fun getMessage() = message

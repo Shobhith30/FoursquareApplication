@@ -1,21 +1,14 @@
 package com.example.foursquareapplication.viewmodel
 
 import android.app.Application
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
-import androidx.arch.core.util.Function
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PageKeyedDataSource
-import androidx.paging.PagedList
-import com.example.foursquareapplication.datasource.FavouriteDataSourceFactory
+import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.example.foursquareapplication.datasource.ReviewDataSource
 import com.example.foursquareapplication.model.Place
-import android.util.Log
 import com.example.foursquareapplication.datasource.GetFavouriteDataSourceFactory
-import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.model.AddFavouriteResponse
 import com.example.foursquareapplication.model.FavouriteResponse
 import com.example.foursquareapplication.repository.FavouriteRepository
@@ -29,19 +22,19 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
     var text : MutableLiveData<String> = MutableLiveData()
 
     fun getFavourite(query: String,userId : Int , token : String) {
-        val itemDataSourceFactory = FavouriteDataSourceFactory(query,userId,token)
-
-        //getting the live data source from data source factory
-        liveDataSource = itemDataSourceFactory.itemLiveDataSource
-
-        //Getting PagedList config
-        val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false).setInitialLoadSizeHint(5)
-            .setPageSize(Constants.FAV_PAGE_SIZE).build()
-
-        //Building the paged list
-        itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
-        //itemPagedList?.value?.dataSource?.invalidate()
+//        val itemDataSourceFactory = FavouriteDataSourceFactory(query,userId,token)
+//
+//        //getting the live data source from data source factory
+//        liveDataSource = itemDataSourceFactory.itemLiveDataSource
+//
+//        //Getting PagedList config
+//        val pagedListConfig = PagedList.Config.Builder()
+//            .setEnablePlaceholders(false).setInitialLoadSizeHint(5)
+//            .setPageSize(Constants.FAV_PAGE_SIZE).build()
+//
+//        //Building the paged list
+//        itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
+//        //itemPagedList?.value?.dataSource?.invalidate()
 
     }
 
@@ -77,10 +70,13 @@ class FavouriteViewModel(application: Application)  : AndroidViewModel(applicati
         return favouriteRepository.deleteFavourite(token, favourite)
     }
 
-    fun invalidateFavourite(){
-        itemPagedList?.value?.dataSource?.invalidate()
-    }
+    var favouriteData : LiveData<PagingData<Place>> = MutableLiveData()
 
+    fun getFavouriteData(query: String,userId: Int,token: String): LiveData<PagingData<Place>> {
+        favouriteData = favouriteRepository.getFavouriteData(query, userId, token).cachedIn(viewModelScope)
+        return favouriteData
+
+    }
 
 
 }

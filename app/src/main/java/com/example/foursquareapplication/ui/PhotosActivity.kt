@@ -59,8 +59,8 @@ class PhotosActivity : AppCompatActivity() {
         photoBinding.gridViewRecyclerView.layoutManager=gridView
         photoBinding.gridViewRecyclerView.adapter=pictureAdapter
 
-      //  val placeId = intent.getIntExtra(Constants.PLACE_ID,0)
-        val placeId=10
+      val placeId = intent.getIntExtra(Constants.PLACE_ID,0)
+
         if(placeId!=0) {
             photosViewModel.getPictures(placeId)?.observe(this,{
                 if (it!=null)
@@ -79,7 +79,7 @@ class PhotosActivity : AppCompatActivity() {
     private fun setToolbar() {
 
         photoBinding.toolbar.setNavigationIcon(R.drawable.back_icon)
-        photoBinding.toolbarTitle.text = "Attil"
+        photoBinding.toolbarTitle.text = intent.extras?.getString(Constants.PLACE_NAME)
         photoBinding.toolbar.inflateMenu(R.menu.menu_photo)
         photoBinding.toolbar.setNavigationOnClickListener {
             onBackPressed()
@@ -163,7 +163,10 @@ class PhotosActivity : AppCompatActivity() {
                 MODE_PRIVATE
         )
         var token = sharedPreferences.getString(Constants.USER_TOKEN, "")
-        if(token!=null){
+        val userId = sharedPreferences.getString(Constants.USER_ID,"")
+        val placeId = intent.extras?.getInt(Constants.PLACE_ID)
+        if(token!=null && userId!=null && placeId!=null){
+            val userId = userId.toInt()
             token = "Bearer $token"
 
             for (image in modelList) {
@@ -182,16 +185,24 @@ class PhotosActivity : AppCompatActivity() {
             }
 
             PhotosApi.uploadReviewImage(
-                    9, 74, token, reviewImagesParts
+                    placeId, userId, token, reviewImagesParts
             ).enqueue(object : Callback<ApiResponse> {
                 override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                     if (response.isSuccessful) {
                         if (response.body()?.getStatus() == Constants.STATUS_OK) {
                             Toast.makeText(applicationContext, "Photo(s) Added", Toast.LENGTH_LONG)
                                 .show()
+                            photosViewModel.itemPagedList?.value?.dataSource?.invalidate()
+                        } else {
+
+                            Toast.makeText(applicationContext, response.body()?.getMessage(), Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(applicationContext, "Error Uploading Image", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "Error Uploading Image",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
