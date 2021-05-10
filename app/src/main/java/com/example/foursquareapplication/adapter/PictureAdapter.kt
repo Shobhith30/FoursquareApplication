@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,7 +19,7 @@ import com.example.foursquareapplication.model.ReviewData
 import com.example.foursquareapplication.ui.PhotosDetailsActivity
 
 class PictureAdapter (private val mCtx: Context) :
-    PagedListAdapter<PhotoData, PictureAdapter.ItemViewHolder>(PictureAdapter.DIFF_CALLBACK){
+    PagingDataAdapter<PhotoData, PictureAdapter.ItemViewHolder>(DIFF_CALLBACK){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 
@@ -30,7 +31,7 @@ class PictureAdapter (private val mCtx: Context) :
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = getItem(position)
         if (item != null) {
-          //  println("gehhhh"+ item?.getphotoId())
+
 
             Glide.with(mCtx).load(item.getImageUrl()).placeholder(R.drawable.loading).into(holder.photosBinding.image1)
 
@@ -58,14 +59,14 @@ class PictureAdapter (private val mCtx: Context) :
                     oldItem:PhotoData,
                     newItem: PhotoData
                 ): Boolean {
-                    return oldItem.getplaceId() == newItem.getplaceId()
+                    return oldItem.getphotoId() == newItem.getphotoId()
                 }
 
                 override fun areContentsTheSame(
                     oldItem: PhotoData,
                     newItem: PhotoData
                 ): Boolean {
-                    return oldItem == newItem
+                    return oldItem.getphotoId() == newItem.getphotoId()
                 }
             }
     }

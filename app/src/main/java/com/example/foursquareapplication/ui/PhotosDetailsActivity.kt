@@ -56,7 +56,7 @@ class PhotosDetailsActivity : AppCompatActivity() {
             val intent = intent
             val photoId = intent.getIntExtra("photoId", 0)
             println("jscj0" + photoId)
-            photosViewModel.getPicture(newtoken, photoId)?.observe(this, {
+            photosViewModel.getPictureDetails(newtoken, photoId)?.observe(this, {
                 Glide.with(applicationContext).load(it.getData().getphotoUrl()).into(activityPhotoDetailsBinding.imageview)
                 Glide.with(applicationContext).load(it.getData().getuserImage()).into(activityPhotoDetailsBinding.profilePicture)
                 activityPhotoDetailsBinding.UserName.text = it.getData().getuserNamw()

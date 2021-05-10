@@ -69,63 +69,74 @@ class MainRepository(private val application: Application) {
         return loginUser
     }
 
-    fun generateOtp(email : HashMap<String,String>) : LiveData<User> {
+    fun generateOtp(email : HashMap<String,String>) : LiveData<Resource<User>> {
 
-        val userOtp : MutableLiveData<User> = MutableLiveData()
+        val userOtp : MutableLiveData<Resource<User>> = MutableLiveData()
         val generateOtpCall = authenticationApi.generateOtp(email)
+        userOtp.postValue(Resource.loading())
         generateOtpCall.enqueue(object : Callback<User>{
             override fun onResponse(call: Call<User>, response: Response<User>) {
 
                 if(response.isSuccessful){
-                    userOtp.value = response.body()
+                    if(response.body()?.getStatus() == Constants.STATUS_OK)
+                        userOtp.value = Resource.success(response.body())
+                    else
+                        userOtp.postValue(Resource.error(response.body()?.getMessage().toString()))
+                }else{
+                    userOtp.postValue(Resource.error("Could not send OTP!!"))
                 }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                userOtp.value = null
-                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+                userOtp.postValue(Resource.error(t.message.toString()))
             }
 
         })
         return userOtp
     }
 
-    fun validateOtp( otp : HashMap<String,String>): LiveData<User> {
-        val userOtp : MutableLiveData<User> = MutableLiveData()
+    fun validateOtp( otp : HashMap<String,String>): LiveData<Resource<User>> {
+        val userOtp : MutableLiveData<Resource<User>> = MutableLiveData()
         val validateOtpCall = authenticationApi.validateOtp(otp)
+        userOtp.postValue(Resource.loading())
         validateOtpCall.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    userOtp.value = response.body()
+                    if(response.body()?.getStatus() == Constants.STATUS_OK)
+                        userOtp.value = Resource.success(response.body())
+                    else
+                        userOtp.postValue(Resource.error(response.body()?.getMessage().toString()))
                 } else {
-                    Toast.makeText(application, "Invalid OTP", Toast.LENGTH_SHORT).show()
+                    userOtp.postValue(Resource.error("Could not validate OTP"))
                 }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                userOtp.value = null
-                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+                userOtp.postValue(Resource.error(t.message.toString()))
             }
 
         })
           return userOtp
         }
 
-    fun confirmPassword(password: HashMap<String, String>): LiveData<User> {
-        val userPassword : MutableLiveData<User> = MutableLiveData()
+    fun confirmPassword(password: HashMap<String, String>): LiveData<Resource<User>> {
+        val userPassword : MutableLiveData<Resource<User>> = MutableLiveData()
         val validateOtpCall = authenticationApi.confirmPassword(password)
+        userPassword.postValue(Resource.loading())
         validateOtpCall.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    userPassword.value = response.body()
+                    if(response.body()?.getStatus() == Constants.STATUS_OK)
+                        userPassword.value = Resource.success(response.body())
+                    else
+                        userPassword.postValue(Resource.error(response.body()?.getMessage().toString()))
                 } else {
-                    Toast.makeText(application, "Invalid OTP", Toast.LENGTH_SHORT).show()
+                    userPassword.postValue(Resource.error("Could not update password!!"))
                 }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                userPassword.value = null
-                Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
+               userPassword.postValue(Resource.error(t.message.toString()))
             }
 
         })

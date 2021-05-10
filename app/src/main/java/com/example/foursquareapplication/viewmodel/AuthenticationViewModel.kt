@@ -20,15 +20,15 @@ class AuthenticationViewModel(application: Application)  :AndroidViewModel(appli
         return mainRepository.authenticateUser(user)
     }
 
-    fun generateOtp(email : HashMap<String,String>): LiveData<User> {
+    fun generateOtp(email : HashMap<String,String>): LiveData<Resource<User>> {
         return mainRepository.generateOtp(email)
     }
 
-    fun validateOtp( otp : HashMap<String,String>) : LiveData<User>{
+    fun validateOtp( otp : HashMap<String,String>) : LiveData<Resource<User>>{
         return mainRepository.validateOtp(otp)
     }
 
-    fun confirmPassword( password : HashMap<String,String>) : LiveData<User>{
+    fun confirmPassword( password : HashMap<String,String>) : LiveData<Resource<User>>{
         return  mainRepository.confirmPassword(password)
     }
 }

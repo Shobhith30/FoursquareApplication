@@ -3,85 +3,23 @@ package com.example.foursquareapplication.datasource
 import android.content.ClipData
 import android.util.Log
 import androidx.paging.PageKeyedDataSource
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.example.foursquareapplication.model.Review
 import com.example.foursquareapplication.model.ReviewData
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.network.ReviewApi
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import java.lang.Exception
 
 
-class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>() {
+class ReviewDataSource(val reviewApi: ReviewApi,val placeId : Int) : PagingSource<Int,ReviewData>() {
     //this will be called once to load the initial data
-    override fun loadInitial(
-        params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, ReviewData>
-    ) {
-        try {
-            val response = FourSquareApiInstance.getApiInstance(ReviewApi::class.java)
-                .getReviews(placeId, FIRST_PAGE, 3)
-                .execute()
-            if(response.isSuccessful){
-                if (response.body()?.getData() != null) {
-
-                    callback.onResult(response.body()!!.getData(), null, FIRST_PAGE + 1)
-                }
-            }
-        }catch(e:Exception){}
-
-    }
-
-    //this will load the previous page
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, ReviewData>) {
-        val response = FourSquareApiInstance.getApiInstance(ReviewApi::class.java)
-            .getReviews(placeId,params.key,3)
-            .enqueue(object : Callback<Review>{
-                override fun onResponse(call: Call<Review>, response: Response<Review>) {
-                    val adjacentKey = if (params.key > 0) params.key - 1 else null
-                    if (response.body() != null) {
-                        if(response.body()?.getData()!=null) {
-
-                            callback.onResult(response.body()!!.getData(), adjacentKey)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Review>, t: Throwable) {
-
-                }
-
-            })
-
-
-                }
-
-
-
-    //this will load the next page
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ReviewData>) {
-        FourSquareApiInstance.getApiInstance(ReviewApi::class.java)
-            .getReviews(placeId,params.key,3)
-            .enqueue(object : Callback<Review>{
-                override fun onResponse(call: Call<Review>, response: Response<Review>) {
-                    if (response.body() != null) {
-                        if(response.body()?.getData()!=null) {
-                            val key =
-                                if (!(response.body()!!.getLastPage())) params.key + 1 else null
-
-                            callback.onResult(response.body()!!.getData() , key)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Review>, t: Throwable) {
-
-                }
-
-            })
-
-                }
 
 
 
@@ -94,5 +32,27 @@ class ReviewDataSource(val placeId : Int) : PageKeyedDataSource<Int,ReviewData>(
 
         //we need to fetch from stackoverflow
         private const val SITE_NAME = "stackoverflow"
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, ReviewData>): Int? {
+        return state?.anchorPosition
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ReviewData> {
+        val position = params.key ?: 0
+        return try {
+            val response =
+                reviewApi.getReviews(placeId, position, params.loadSize)
+            val review = response.getData()
+            LoadResult.Page (
+                data = review?: emptyList(),
+                prevKey = if (position == 0) null else position - 1,
+                nextKey = if (review==null) null else position + 1
+            )
+        }catch (exception : IOException){
+            LoadResult.Error(exception)
+        }catch (exception : HttpException){
+            LoadResult.Error(exception)
+        }
     }
 }

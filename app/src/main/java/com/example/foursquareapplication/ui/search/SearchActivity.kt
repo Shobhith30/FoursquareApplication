@@ -24,6 +24,7 @@ class SearchActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_search)
         setSupportActionBar(toolbar)
+        openFilter()
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
          toolbar.setNavigationOnClickListener {
@@ -68,6 +69,16 @@ class SearchActivity : AppCompatActivity() {
 
 
 }
+
+    private fun openFilter() {
+        if(intent.extras?.getString("filter") =="filter") {
+            val fragmentSearchFilter = SearchFilterFragment()
+            val fragmentManager = supportFragmentManager
+            val transaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.search_fragment, fragmentSearchFilter)
+            transaction.commit()
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_favourite, menu)

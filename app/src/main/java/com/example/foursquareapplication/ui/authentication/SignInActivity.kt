@@ -67,16 +67,24 @@ class SignInActivity : AppCompatActivity() {
             signInBinding.signinUsername.requestFocus()
         }else{
             val email = hashMapOf("email" to signInUserName)
-            authenticationViewModel.generateOtp(email).observe(this, {
-                if (it.getStatus() == Constants.STATUS_OK) {
-                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this,ForgotPassword::class.java)
-                    intent.putExtra("email" , signInUserName)
-                    startActivity(intent)
-                }else{
-                    Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT).show()
+            authenticationViewModel.generateOtp(email).observe(this){
+                when(it.status){
+                    Status.LOADING ->{showProgressBar()}
+                    Status.SUCCESS ->{
+                        val response = it.data
+                        Toast.makeText(applicationContext, response?.getMessage(), Toast.LENGTH_SHORT).show()
+                        hideProgressBar()
+                        val intent = Intent(this,ForgotPassword::class.java)
+                        intent.putExtra("email" , signInUserName)
+                        startActivity(intent)
+                    }
+                    Status.ERROR -> {
+                        hideProgressBar()
+                        Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-            })
+            }
+
         }
     }
 
