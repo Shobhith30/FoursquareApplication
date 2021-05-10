@@ -6,11 +6,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.example.foursquareapplication.datasource.FavouriteDataSource
+import com.example.foursquareapplication.datasource.LocationDataSource
 import com.example.foursquareapplication.model.AddFavouriteResponse
+import com.example.foursquareapplication.model.DataPlace
 import com.example.foursquareapplication.model.FavouriteResponse
+import com.example.foursquareapplication.model.Place
 
 import com.example.foursquareapplication.network.FavouriteApi
 import com.example.foursquareapplication.network.FourSquareApiInstance
+import com.example.foursquareapplication.network.PlaceApi
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -90,6 +99,18 @@ class FavouriteRepository (private val application: Application)  {
 
         })
         return deleteFavouriteResponse
+    }
+
+
+    fun getFavouriteData(query  :String,userId: Int,token: String): LiveData<PagingData<Place>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 3,
+                maxSize = 500,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { FavouriteDataSource(favouriteApi,query, userId, token) }
+        ).liveData
     }
 
 

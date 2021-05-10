@@ -80,6 +80,7 @@ class SignUpActivity :  AppCompatActivity() {
                                         sharedEditor.apply()
                                         hideProgressBar()
                                         startActivity(Intent(this, HomeActivity::class.java))
+                                        finish()
                                     }
                                 }
                                 Status.ERROR -> {

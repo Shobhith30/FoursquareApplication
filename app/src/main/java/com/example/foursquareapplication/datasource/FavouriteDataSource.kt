@@ -10,43 +10,55 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import com.example.foursquareapplication.model.DataPlace
+import com.example.foursquareapplication.model.Place
+import com.example.foursquareapplication.network.PlaceApi
+import retrofit2.HttpException
+import java.io.IOException
 
-class FavouriteDataSource(val query : String,val userId: Int, val token: String) : PageKeyedDataSource<Int, Place>() {
+class FavouriteDataSource(private val favouriteApi : FavouriteApi,val query : String,val userId: Int, val token: String):
+    PagingSource<Int, Place>(){
 
-    //this will be called once to load the initial data
-    val mainPlaceList = arrayListOf<Place>()
-    override fun loadInitial(
-        params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, Place>
-    ) {
-        try {
-            val response = FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
-                    .getFavourite(userId.toInt(), FIRST_PAGE,Constants.FAV_PAGE_SIZE,token).execute()
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Place> {
+        val position = params.key ?: 0
+        return try {
+            val response =
+                favouriteApi.getFavouriteData(userId, position, params.loadSize,token)
+            val place = response.getData()
+            LoadResult.Page (
+                data = filterData(place)?: emptyList(),
+                prevKey = if (position == 0) null else position - 1,
+                nextKey = if (place==null) null else position + 1
+            )
 
-            if (response.isSuccessful) {
-                if (response.body()?.getData() != null) {
-
-                    Log.d("after","initial")
-                    //loadAfter(params,ca)
-                    val data = filterData(response.body()?.getData()!!)
-                    callback.onResult(data, null, FIRST_PAGE + 1)
-                }
-            }
-        } catch (e: Exception){}
-
+        }catch (exception : IOException){
+            LoadResult.Error(exception)
+        }catch (exception : HttpException){
+            LoadResult.Error(exception)
+        }
     }
-    fun filterData(data :List<Place>): List<Place> {
+
+    override fun getRefreshKey(state: PagingState<Int, Place>): Int? {
+        return state?.anchorPosition
+    }
+
+
+    fun filterData(data :List<Place>?): List<Place>? {
         val temp = arrayListOf<Place>()
         return if(query == ""){
             Log.d("original",data.toString())
             data
 
         }else{
-            for(i in data){
-                if(i.getName().contains(query,true)){
-                    if(!temp.contains(i)) {
-                        temp.add(i)
-                        Log.e("here", temp.toString())
+            if (data != null) {
+                for(i in data){
+                    if(i.getName().contains(query,true)){
+                        if(!temp.contains(i)) {
+                            temp.add(i)
+                            Log.e("here", temp.toString())
+                        }
                     }
                 }
             }
@@ -54,54 +66,6 @@ class FavouriteDataSource(val query : String,val userId: Int, val token: String)
         }
     }
 
-
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Place>) {
-        val response = FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
-            .getFavourite(userId.toInt(),params.key,Constants.FAV_PAGE_SIZE,token)
-            .enqueue(object : Callback<FavouriteResponse>{
-                override fun onResponse(call: Call<FavouriteResponse>, response: Response<FavouriteResponse>) {
-                    val adjacentKey = if (params.key > 0) params.key - 1 else null
-                    if (response.body()?.getData() != null) {
-
-
-                        Log.d("after","before")
-                        val data = filterData(response.body()!!.getData())
-                        callback.onResult(data, adjacentKey)
-                    }
-                }
-
-                override fun onFailure(call: Call<FavouriteResponse>, t: Throwable) {
-
-                }
-
-            })
-    }
-
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int,Place>) {
-        FourSquareApiInstance.getApiInstance(FavouriteApi::class.java)
-            .getFavourite(userId.toInt(),params.key,Constants.FAV_PAGE_SIZE,token)
-            .enqueue(object : Callback<FavouriteResponse>{
-                override fun onResponse(call: Call<FavouriteResponse>, response: Response<FavouriteResponse>) {
-                    if (response.body()?.getData() != null) {
-                        //if the response has next page
-                        //incrementing the next page number
-                        Log.d("after","after")
-                        val key = if (!(response.body()!!.getLastPage())) params.key + 1 else null
-
-                        //passing the loaded data and next page value
-
-                        val data = filterData(response.body()!!.getData())
-                        callback.onResult(data, key)
-
-                    }
-                }
-
-                override fun onFailure(call: Call<FavouriteResponse>, t: Throwable) {
-
-                }
-
-            })
-    }
 
 
 
