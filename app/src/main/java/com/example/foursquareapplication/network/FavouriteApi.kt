@@ -10,10 +10,16 @@ import retrofit2.http.*
 interface FavouriteApi {
 
     @GET("getFavourite")
-    fun getFavourite(@Query("userId") userId : Int,
+     fun getFavourite(@Query("userId") userId : Int,
                      @Query("pageNo") pageNumber : Int,
                      @Query("pageSize") pageSize : Int,
                      @Header("Authorization") token : String) : Call<FavouriteResponse>
+
+    @GET("getFavourite")
+    suspend fun getFavouriteData(@Query("userId") userId : Int,
+                             @Query("pageNo") pageNumber : Int,
+                             @Query("pageSize") pageSize : Int,
+                             @Header("Authorization") token : String) : FavouriteResponse
 
     @POST("addFavourite")
     fun addToFavourite(@Header("Authorization") token : String,

@@ -10,15 +10,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.paging.LoadState
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.foursquareapplication.OnFavouriteCLickListener
 import com.example.foursquareapplication.R
 import com.example.foursquareapplication.adapter.FavouriteAdapter
+import com.example.foursquareapplication.adapter.FavouriteDataAdapter
+import com.example.foursquareapplication.adapter.HeaderAdapter
 import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.ActivityFavouriteBinding
 import com.example.foursquareapplication.databinding.ActivityReviewBinding
@@ -34,10 +40,10 @@ import com.example.foursquareapplication.viewmodel.ReviewViewModel
 class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
 
     private lateinit var favouriteBinding: ActivityFavouriteBinding
-    private lateinit var favouriteAdapter: FavouriteAdapter
+    private lateinit var favouriteAdapter: FavouriteDataAdapter
     private lateinit var favouriteViewModel: FavouriteViewModel
-    private var favList: PagedList<Place>? = null
-    private var pagedList :  MutableLiveData<PagedList<Place>> = MutableLiveData()
+    private var favList: List<Place>? = null
+    private var pagedList :  MutableLiveData<PagingData<Place>> = MutableLiveData()
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +54,7 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
         supportActionBar?.hide()
         favouriteBinding.searchFavourite.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                favouriteViewModel.text.value = query.toString()
+                //favouriteViewModel.text.value = query.toString()
 
                 return false
             }
@@ -59,9 +65,10 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
                 val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
                 val newToken = "Bearer $token"
                 val userId = sharedPreferences.getString(Constants.USER_ID, "")?.toInt()
-                favouriteViewModel.getFavourite(newText.toString(), userId!!, newToken)
-                favouriteViewModel.getItemPageList()?.observe(this@FavouriteActivity, {
-                    favouriteAdapter.submitList(it)
+                //favouriteViewModel.getFavourite(newText.toString(), userId!!, newToken)
+                favouriteViewModel.getFavouriteData(newText.toString(),userId!!,newToken).observe(this@FavouriteActivity, {
+                    favouriteAdapter.submitData(lifecycle,it)
+                    Log.e("data",favouriteAdapter.snapshot().items.toString())
                 })
 
                 return true
@@ -78,7 +85,6 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
         }
 
         favouriteViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(FavouriteViewModel::class.java)
-        setAdapter()
 
 
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -89,10 +95,13 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
     }
 
     private fun setAdapter() {
-        favouriteAdapter = FavouriteAdapter(this)
+        favouriteAdapter = FavouriteDataAdapter(this)
         favouriteAdapter.setListener(this)
         favouriteBinding.favouriteRecyclerView.layoutManager = LinearLayoutManager(this)
         favouriteBinding.favouriteRecyclerView.adapter = favouriteAdapter
+        favouriteBinding.retry.setOnClickListener {
+            favouriteAdapter.retry()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -102,26 +111,53 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
 
     override fun onResume() {
         super.onResume()
+        setAdapter()
         getFavourite()
     }
 
-    fun getFavourite(){
-        val sharedPreferences = getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
+    fun getFavourite() {
+        val sharedPreferences =
+            getSharedPreferences(Constants.USER_PREFERENCE, AppCompatActivity.MODE_PRIVATE)
         val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
         val newToken = "Bearer $token"
         val userId = sharedPreferences.getString(Constants.USER_ID, "").toString()
-        favouriteViewModel.getFavourite("".toString(), userId.toInt(), newToken)
-        favouriteViewModel.getItemPageList()?.observe(this@FavouriteActivity, {
-            if (it != null) {
-                if (it.size > 0) {
-                    favouriteAdapter.submitList(it)
-                } else {
-                    favouriteAdapter.submitList(null)
-                    favouriteBinding.noFavourite.visibility  = View.VISIBLE
+        //favouriteViewModel.getFavourite("".toString(), userId.toInt(), newToken)
+
+        favouriteViewModel.getFavouriteData("", userId.toInt(), newToken)
+            .observe(this@FavouriteActivity) {
+
+
+                if(it!=null) {
+
+                    favouriteAdapter.submitData(lifecycle, it)
 
                 }
             }
-        })
+
+
+
+
+
+
+        favouriteAdapter.addLoadStateListener { loadState->
+
+
+            favouriteBinding.apply {
+
+                progress.isVisible = loadState.source.refresh is LoadState.Loading
+                favouriteRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                retry.isVisible = loadState.source.refresh is LoadState.Error
+                errorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                if(loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached
+                    && favouriteAdapter.itemCount<1){
+                    favouriteRecyclerView.isVisible  =false
+                    noData.isVisible = true
+                }else{
+                    noData.isVisible = false
+                }
+
+            }
+        }
 
     }
 
@@ -146,7 +182,7 @@ class FavouriteActivity : AppCompatActivity(),OnFavouriteCLickListener {
             favouriteViewModel.deleteFavourite(newToken, userFavourite).observe(this) {
                 if(it!=null) {
                     if (it.getStatus() == Constants.STATUS_OK) {
-                        getFavourite()
+                        startActivity(Intent(this,FavouriteActivity::class.java))
                         Toast.makeText(this, it.getMessage(), Toast.LENGTH_SHORT).show()
 
                     } else {

@@ -12,15 +12,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foursquareapplication.OnFavouriteCLickListener
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.adapter.HeaderAdapter
 import com.example.foursquareapplication.adapter.PlaceAdapter
+import com.example.foursquareapplication.adapter.PlaceLocationAdapter
 import com.example.foursquareapplication.databinding.FragmentNearYouBinding
 import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.model.DataPlace
@@ -31,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import retrofit2.http.Header
 
 
 class NearYouFragment : Fragment(), OnFavouriteCLickListener {
@@ -40,7 +45,7 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
     private lateinit var nearYouBinding: FragmentNearYouBinding
     private lateinit var placeViewModel: PlaceViewModel
     private val locationViewModel: LocationViewModel by activityViewModels()
-    private lateinit var placeAdapter: PlaceAdapter
+    private lateinit var placeAdapter: PlaceLocationAdapter
     private lateinit var favouriteViewModel: FavouriteViewModel
     private val pageData: MutableLiveData<PagedList<DataPlace>> = MutableLiveData()
     private lateinit var locationPreferences: SharedPreferences
@@ -54,11 +59,16 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
         val supportMapFragment = SupportMapFragment.newInstance()
         fm.beginTransaction().replace(R.id.mapLayout, supportMapFragment).commit()
         locationPreferences = requireContext().getSharedPreferences(Constants.LAST_LOCATION,MODE_PRIVATE)
+        if (arguments?.getString("key") == "nearBy") {
+            nearYouBinding.mapLayout.visibility = View.VISIBLE
+            nearYouBinding.locationProgress.visibility = View.VISIBLE
+        }
         supportMapFragment.getMapAsync {
             myMap = it
             mapReady = true
             enableMyLocationIfPermitted()
             setCurrentLocationOnMap()
+            nearYouBinding.locationProgress.visibility = View.GONE
 
         }
 
@@ -66,26 +76,35 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
         favouriteViewModel =
             ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
                 .create(FavouriteViewModel::class.java)
-        nearYouBinding.locationProgress.visibility = View.VISIBLE
-        setPlaceAdapter()
+
         placeViewModel = ViewModelProvider(this).get(PlaceViewModel::class.java)
-        setLastPlaceData()
-        enableMyLocationIfPermitted()
-        setCurrentLocationOnMap()
+
+        //setLastPlaceData()
+        //enableMyLocationIfPermitted()
+        //setCurrentLocationOnMap()
+
+
+        return nearYouBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
         locationViewModel.getLocation().observe(viewLifecycleOwner, {
             location = it
             saveLocation(it)
             enableMyLocationIfPermitted()
             setCurrentLocationOnMap()
+            setPlaceAdapter()
             loadPlaceData(it)
 
         })
-        return nearYouBinding.root
     }
+
 
     private fun setLastPlaceData() {
         val location  =getLastLocation()
         if(location!=null){
+            this.location= location
             loadPlaceData(location)
         }
     }
@@ -112,11 +131,18 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
     }
 
     private fun setPlaceAdapter() {
-        placeAdapter = PlaceAdapter(requireActivity())
+        placeAdapter = PlaceLocationAdapter(requireActivity())
         nearYouBinding.placeRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         nearYouBinding.placeRecyclerview.isNestedScrollingEnabled = false
-        nearYouBinding.placeRecyclerview.adapter = placeAdapter
+        nearYouBinding.placeRecyclerview.adapter = placeAdapter.withLoadStateHeaderAndFooter(
+            header = HeaderAdapter { placeAdapter.retry() },
+            footer = HeaderAdapter { placeAdapter.retry() }
+        )
+        nearYouBinding.retry.setOnClickListener {
+            placeAdapter.retry()
+        }
         placeAdapter.setClickListener(this)
+
     }
 
     private fun setCurrentLocationOnMap() {
@@ -132,52 +158,45 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        getData()
-
-    }
-
 
     private fun loadPlaceData(location: Location) {
-        nearYouBinding.locationProgress.visibility = View.GONE
+
         if (arguments?.getString("key") != null) {
             val type = arguments?.getString("key").toString()
-            if (type == "nearBy") {
-                nearYouBinding.mapLayout.visibility = View.VISIBLE
-            }
 
-            nearYouBinding.locationProgress.visibility = View.VISIBLE
-            getFavourite()
-            placeViewModel.getPlaceDetails(type, location.latitude, location.longitude)
-                ?.observe(viewLifecycleOwner, {
-                    if (it != null) {
-                        if (it.size > 0) {
-                            if (it.get(0)?.getPlace() != null) {
-                                pageData.value = it
+            if(type!=null) {
 
-                            }
+
+                getFavourite()
+
+                placeViewModel.getLocationData(type, location.latitude, location.longitude)
+                    .observe(viewLifecycleOwner) {
+                        if (it != null) {
+                            placeAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+
                         }
-                    }
-                    nearYouBinding.locationProgress.visibility = View.GONE
 
-                })
-        }
-    }
-
-    private fun getData() {
-        pageData.observe(this, {
-            if (it != null) {
-                if (it.size > 0) {
-                    if (it.get(0)?.getPlace() != null) {
-                        setPlaceAdapter()
-                        placeAdapter.submitList(it)
                     }
+            }else{
+                nearYouBinding.noPlaces.isVisible = true
+            }
+            placeAdapter.addLoadStateListener { loadState->
+                nearYouBinding.apply {
+                    progress.isVisible = loadState.source.refresh is LoadState.Loading
+                    placeRecyclerview.isVisible = loadState.source.refresh is LoadState.NotLoading
+                    retry.isVisible = loadState.source.refresh is LoadState.Error
+                    errorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                    if(loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached
+                        && placeAdapter.itemCount<1){
+                        placeRecyclerview.isVisible  =false
+                        noPlaces.isVisible = true
+                    }else{
+                        noPlaces.isVisible = false
+                    }
+
                 }
             }
-
-        })
+        }
     }
 
 
@@ -282,7 +301,8 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
             favouriteViewModel.addToFavourite(token, favourite).observe(this, {
                 if (it != null) {
                     if (it.getStatus() == Constants.STATUS_OK) {
-
+                        //getFavourite()
+                        //placeAdapter.notifyDataSetChanged()
                         Toast.makeText(context, "Added to favourite", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -298,6 +318,10 @@ class NearYouFragment : Fragment(), OnFavouriteCLickListener {
             favouriteViewModel.deleteFavourite(token, favourite).observe(this, {
                 if (it != null) {
                     if (it.getStatus() == Constants.STATUS_OK) {
+
+                        //getFavourite()
+
+                        //placeAdapter.notifyDataSetChanged()
                         Toast.makeText(
                             context,
                             "Removed from favourite",

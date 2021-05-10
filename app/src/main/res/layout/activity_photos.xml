@@ -41,17 +41,17 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-   <!-- <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:horizontalSpacing="2dp"
-        android:verticalSpacing="2dp"
-        android:layout_marginTop="2dp"
-        >
+    <!-- <GridView
+         android:id="@+id/gridView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:numColumns="3"
+         android:horizontalSpacing="2dp"
+         android:verticalSpacing="2dp"
+         android:layout_marginTop="2dp"
+         >
 
-    </GridView>-->
+     </GridView>-->
 
 
 </LinearLayout>

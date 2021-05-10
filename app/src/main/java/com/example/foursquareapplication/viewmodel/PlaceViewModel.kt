@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import com.example.foursquareapplication.datasource.PlaceDataSourceFactory
 import com.example.foursquareapplication.datasource.ReviewDataSource
 import com.example.foursquareapplication.datasource.ReviewDataSourceFactory
@@ -19,6 +20,7 @@ import com.example.foursquareapplication.repository.PlaceRepository
 
 class PlaceViewModel() : ViewModel() {
 
+    private val placeRepository = PlaceRepository()
 
     var itemPagedList: LiveData<PagedList<DataPlace>>? = null
     private var locationData : MutableLiveData<Location> = MutableLiveData()
@@ -36,6 +38,16 @@ class PlaceViewModel() : ViewModel() {
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
         return itemPagedList
     }
+
+    var placeData : LiveData<PagingData<DataPlace>> = MutableLiveData()
+
+    fun getLocationData(type: String,latitude: Double,longitude: Double): LiveData<PagingData<DataPlace>> {
+        placeData = placeRepository.getPlaceData(type,latitude, longitude)
+        return placeData
+
+    }
+
+
 
 
 }

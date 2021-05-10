@@ -14,4 +14,10 @@ interface PlaceApi {
                  @Query("longitude") longitude :Double,
                  @Query("pageNo") pageNo :Int,
                  @Query("pageSize") pageSize : Int) : Call<PlaceResponse>
+    @GET("PlaceApi/{type}")
+    suspend fun getPlaceData(@Path("type") type : String,
+                 @Query("latitude") latitude: Double,
+                 @Query("longitude") longitude :Double,
+                 @Query("pageNo") pageNo :Int,
+                 @Query("pageSize") pageSize : Int) : PlaceResponse
 }
