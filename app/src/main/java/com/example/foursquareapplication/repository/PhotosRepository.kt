@@ -5,8 +5,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.example.foursquareapplication.datasource.PicturesDataSource
+import com.example.foursquareapplication.model.PhotoData
 import com.example.foursquareapplication.model.PhotoDetails
-import com.example.foursquareapplication.model.PhotoDetailsData
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.network.PhotosApi
 import retrofit2.Call
@@ -45,6 +50,18 @@ class PhotosRepository(private val application: Application) {
 
         })
         return getFoodPictures
+    }
+
+    fun getPhotos(placeId : Int): LiveData<PagingData<PhotoData>> {
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = 3,
+                maxSize = 500,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PicturesDataSource(photosApi,placeId) }
+        ).liveData
     }
 
 }

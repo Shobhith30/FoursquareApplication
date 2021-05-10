@@ -11,19 +11,19 @@ import java.io.IOException
 import java.lang.Exception
 
 class LocationDataSource(private val placeApi : PlaceApi,private val type :String,
-private val latitude : Double, private val longitude  :Double):
-    PagingSource<Int, DataPlace>(){
+                         private val latitude : Double, private val longitude  :Double):
+        PagingSource<Int, DataPlace>(){
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataPlace> {
         val position = params.key ?: 0
         return try {
             val response =
-                placeApi.getPlaceData(type, latitude, longitude, position, params.loadSize)
+                    placeApi.getPlaceData(type, latitude, longitude, position, params.loadSize)
             val place = response.getData()
             LoadResult.Page (
-                data = place ?: emptyList(),
-                prevKey = if (position == 0) null else position - 1,
-                nextKey = if (place==null) null else position + 1
+                    data = place?: emptyList(),
+                    prevKey = if (position == 0) null else position - 1,
+                    nextKey = if (place==null) null else position + 1
             )
         }catch (exception : IOException){
             LoadResult.Error(exception)
@@ -33,6 +33,6 @@ private val latitude : Double, private val longitude  :Double):
     }
 
     override fun getRefreshKey(state: PagingState<Int, DataPlace>): Int? {
-       return state?.anchorPosition
+        return state?.anchorPosition
     }
 }

@@ -233,6 +233,12 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             return@setOnMenuItemClickListener true
         }
+        menu?.findItem(R.id.menu_filter_home)?.setOnMenuItemClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            intent.putExtra("filter","filter")
+            startActivity(intent)
+            return@setOnMenuItemClickListener true
+        }
 
         return super.onCreateOptionsMenu(menu)
     }

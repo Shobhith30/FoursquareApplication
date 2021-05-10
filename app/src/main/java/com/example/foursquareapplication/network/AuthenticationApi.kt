@@ -31,12 +31,12 @@ interface AuthenticationApi {
 
     @PUT("changePassword")
     fun confirmPassword( @Body password : HashMap<String,String>) : Call<User>
-
+/*
     @GET("getPictures")
     fun getPictures(
         @Query("placeId")placeId:Int,
         @Query("pageNo")pageNo:Int,
         @Query("pageSize")pageSize:Int
-    ) :Call<Photos>
+    ) :Call<Photos>*/
 
 }

@@ -35,23 +35,51 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gridView_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        >
+        android:layout_height="wrap_content">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <!-- <GridView
-         android:id="@+id/gridView"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:numColumns="3"
-         android:horizontalSpacing="2dp"
-         android:verticalSpacing="2dp"
-         android:layout_marginTop="2dp"
-         >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress"
+            android:visibility="gone"/>
 
-     </GridView>-->
+        <TextView
+            android:id="@+id/error_message"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_medium"
+            android:text="Could not load data"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/avenir_medium"
+            android:text="No Photos Found"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+        <Button
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retry"
+            android:id="@+id/retry"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>

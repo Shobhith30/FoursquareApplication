@@ -6,7 +6,6 @@ import com.example.foursquareapplication.datasource.LocationDataSource
 import com.example.foursquareapplication.model.DataPlace
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.network.PlaceApi
-import com.example.foursquareapplication.viewmodel.PlaceViewModel
 
 class PlaceRepository {
 
@@ -19,7 +18,7 @@ class PlaceRepository {
                 maxSize = 500,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = {LocationDataSource(placeApi,type,latitude, longitude)}
+            pagingSourceFactory = { LocationDataSource(placeApi,type,latitude, longitude) }
         ).liveData
     }
 }

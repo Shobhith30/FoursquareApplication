@@ -9,6 +9,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -92,7 +93,8 @@ class AddReviewActivity : AppCompatActivity() {
             }
         }
     }
-
+// select * from bootdb.review_photos where place_id=23
+    // delete from bootdb.review_photos where photo_id=166
     private fun addReviewSubmit() {
 
         val sharedPreferences = getSharedPreferences(
@@ -102,7 +104,6 @@ class AddReviewActivity : AppCompatActivity() {
         val token = sharedPreferences.getString(Constants.USER_TOKEN, "")
         val userId = sharedPreferences.getString(Constants.USER_ID,"").toString()
         val placeId = intent.extras?.getInt(Constants.PLACE_ID).toString()
-        Toast.makeText(applicationContext, " here ${placeId.toString()}", Toast.LENGTH_SHORT).show()
 
 
         addReviewBinding.submit.setOnClickListener{
@@ -191,10 +192,12 @@ class AddReviewActivity : AppCompatActivity() {
                         reviewBody
                     )
                     reviewImagesParts.add(part)
+
                 }
 
 
             }
+            Log.d("Images",reviewImagesParts.size.toString())
             if (reviewImagesParts.size > 0) {
                 Toast.makeText(applicationContext, "Uploading Images..Please wait..", Toast.LENGTH_SHORT).show()
 

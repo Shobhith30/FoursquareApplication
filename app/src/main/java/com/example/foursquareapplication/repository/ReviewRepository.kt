@@ -5,10 +5,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.foursquareapplication.helper.Constants
-import com.example.foursquareapplication.model.Rating
-import com.example.foursquareapplication.model.Review
-import com.example.foursquareapplication.model.User
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.example.foursquareapplication.datasource.ReviewDataSource
+import com.example.foursquareapplication.model.*
 import com.example.foursquareapplication.network.AuthenticationApi
 import com.example.foursquareapplication.network.FourSquareApiInstance
 import com.example.foursquareapplication.network.ReviewApi
@@ -64,5 +66,16 @@ class ReviewRepository(private val application: Application) {
 
         })
         return ratingData
+    }
+
+    fun getReviewData(placeId : Int): LiveData<PagingData<ReviewData>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 3,
+                maxSize = 500,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ReviewDataSource(reviewApi,placeId) }
+        ).liveData
     }
 }

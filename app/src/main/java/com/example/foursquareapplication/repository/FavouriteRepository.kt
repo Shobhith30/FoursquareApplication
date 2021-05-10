@@ -11,16 +11,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.example.foursquareapplication.datasource.FavouriteDataSource
-import com.example.foursquareapplication.datasource.LocationDataSource
 import com.example.foursquareapplication.model.AddFavouriteResponse
-import com.example.foursquareapplication.model.DataPlace
 import com.example.foursquareapplication.model.FavouriteResponse
 import com.example.foursquareapplication.model.Place
 
 import com.example.foursquareapplication.network.FavouriteApi
 import com.example.foursquareapplication.network.FourSquareApiInstance
-import com.example.foursquareapplication.network.PlaceApi
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

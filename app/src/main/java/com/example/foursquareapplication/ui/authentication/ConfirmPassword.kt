@@ -2,6 +2,7 @@ package com.example.foursquareapplication.ui.authentication
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import com.example.foursquareapplication.R
 import com.example.foursquareapplication.databinding.ActivityConfrimPasswordBinding
 import com.example.foursquareapplication.databinding.ActivityForgotPasswordBinding
 import com.example.foursquareapplication.helper.Constants
+import com.example.foursquareapplication.model.Status
 import com.example.foursquareapplication.viewmodel.AuthenticationViewModel
 
 class ConfirmPassword : AppCompatActivity() {
@@ -33,27 +35,43 @@ class ConfirmPassword : AppCompatActivity() {
         confirmPasswordBinding.submit.setOnClickListener {
             val email = intent.getStringExtra("email").toString()
             val password = confirmPasswordBinding.password.text.toString().trim()
-            val reEnteredPassword = confirmPasswordBinding.confrimPasswordValue.text.toString().trim()
+            val reEnteredPassword =
+                confirmPasswordBinding.confrimPasswordValue.text.toString().trim()
 
             if (validateUserInputs(password, reEnteredPassword)) {
                 val user = hashMapOf("email" to email, "password" to password)
-                authenticationViewModel.confirmPassword(user).observe(this, {
-                    if (it != null) {
-                        if (it.getStatus() == Constants.STATUS_OK) {
-                            Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT)
+                authenticationViewModel.confirmPassword(user).observe(this) {
+                    when (it.status) {
+                        Status.LOADING -> showProgressBar()
+                        Status.SUCCESS -> {
+                            val response = it.data
+                            Toast.makeText(
+                                applicationContext,
+                                response?.getMessage(),
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                             val intent = Intent(this, SignInActivity::class.java)
                             startActivity(intent)
                             finish()
-                        } else {
-                            Toast.makeText(applicationContext, it.getMessage(), Toast.LENGTH_SHORT)
+                        }
+                        Status.ERROR -> {
+                            Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT)
                                 .show()
+                            hideProgressBar()
                         }
                     }
-                })
 
+                }
             }
         }
+    }
+
+    private fun showProgressBar() {
+        confirmPasswordBinding.progressBar.visibility = View.VISIBLE
+    }
+    private fun hideProgressBar(){
+        confirmPasswordBinding.progressBar.visibility = View.GONE
     }
 
 

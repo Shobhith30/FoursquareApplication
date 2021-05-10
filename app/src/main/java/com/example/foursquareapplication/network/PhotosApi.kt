@@ -8,11 +8,11 @@ import retrofit2.http.*
 interface PhotosApi {
 
     @GET("getPictures")
-    fun getPictures(
+    suspend fun getPictures(
         @Query("placeId")placeId:Int,
         @Query("pageNo")pageNo:Int,
         @Query("pageSize")pageSize:Int
-    ) : Call<Photos>
+    ) : Photos
 
     @GET("getPhoto")
     fun getPhotoDetails(
