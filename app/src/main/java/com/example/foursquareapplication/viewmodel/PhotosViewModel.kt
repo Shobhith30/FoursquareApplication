@@ -6,37 +6,23 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import com.example.foursquareapplication.datasource.PicturesDataSource
-import com.example.foursquareapplication.datasource.PicturesDataSourseFactory
 import com.example.foursquareapplication.model.*
 import com.example.foursquareapplication.repository.PhotosRepository
 
 class PhotosViewModel(application: Application)  : AndroidViewModel(application) {
 
-    //creating livedata for PagedList  and PagedKeyedDataSource
-    var itemPagedList: LiveData<PagedList<PhotoData>>? = null
-    var liveDataSource: LiveData<PageKeyedDataSource<Int, PhotoData>>? = null
 
-    private val getPhotosRepository = PhotosRepository(application)
+    private val photosRepository = PhotosRepository(application)
 
-    fun getPicture(token: String?, photoId: Int): LiveData<PhotoDetails> {
-println("bgf"+photoId)
-        return getPhotosRepository.getPhotoDetails(token,photoId)
+    fun getPictureDetails(token: String?, photoId: Int): LiveData<PhotoDetails> {
+        return photosRepository.getPhotoDetails(token,photoId)
     }
-    fun getPictures(placeId : Int)  : LiveData<PagedList<PhotoData>>?{
-        val itemDataSourceFactory = PicturesDataSourseFactory(placeId)
 
-        //getting the live data source from data source factory
-        liveDataSource = itemDataSourceFactory.itemLiveDataSource
+    fun getPicture(placeId: Int): LiveData<PagingData<PhotoData>> {
 
-        //Getting PagedList config
-        val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false).setInitialLoadSizeHint(5)
-            .setPageSize(PicturesDataSource.PAGE_SIZE).build()
-
-        //Building the paged list
-        itemPagedList = LivePagedListBuilder(itemDataSourceFactory,pagedListConfig).build()
-        return itemPagedList
+        return photosRepository.getPhotos(placeId)
     }
 
 

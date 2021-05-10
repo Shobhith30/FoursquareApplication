@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,7 +20,7 @@ import com.example.foursquareapplication.model.ReviewData
 
 
 class ReviewAdapter (private val mCtx: Context) :
-    PagedListAdapter<ReviewData, ReviewAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+    PagingDataAdapter<ReviewData, ReviewAdapter.ItemViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 
         val inflater =
@@ -32,18 +33,21 @@ class ReviewAdapter (private val mCtx: Context) :
         val item = getItem(position)
         if (item != null) {
 
-            holder.reviewBinding.name.text = item.getUserName()
-            holder.reviewBinding.reviewDate.text = item.getDate()
-            holder.reviewBinding.reviewText.text = item.getReview()
-            Glide.with(mCtx).load(item.getUserImage()).placeholder(R.drawable.loading).into(holder.reviewBinding.profilePicture)
-
-        } else {
-            Toast.makeText(mCtx, "Item is null", Toast.LENGTH_LONG).show()
+            holder.bind(item)
         }
     }
 
     inner class ItemViewHolder(val reviewBinding: ItemReviewBinding) :
         RecyclerView.ViewHolder(reviewBinding.root) {
+
+            fun bind(item : ReviewData){
+                reviewBinding.apply {
+                   name.text = item.getUserName()
+                    reviewDate.text = item.getDate()
+                    reviewText.text = item.getReview()
+                    Glide.with(mCtx).load(item.getUserImage()).placeholder(R.drawable.loading).into(profilePicture)
+                }
+            }
 
     }
 

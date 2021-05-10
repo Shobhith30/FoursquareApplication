@@ -4,14 +4,18 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
+import androidx.paging.LoadState
+import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.adapter.HeaderAdapter
 import com.example.foursquareapplication.adapter.ReviewAdapter
 import com.example.foursquareapplication.databinding.ActivityReviewBinding
 import com.example.foursquareapplication.helper.Constants
 import com.example.foursquareapplication.viewmodel.ReviewViewModel
+import retrofit2.http.Header
 
 class ReviewActivity : AppCompatActivity() {
 
@@ -41,20 +45,42 @@ class ReviewActivity : AppCompatActivity() {
         reviewViewModel = ViewModelProvider.AndroidViewModelFactory(application).create(ReviewViewModel::class.java)
         reviewAdapter = ReviewAdapter(this)
         reviewBinding.reviewRecyclerView.layoutManager = LinearLayoutManager(this)
-        reviewBinding.reviewRecyclerView.adapter = reviewAdapter
+        reviewBinding.reviewRecyclerView.adapter = reviewAdapter.withLoadStateHeaderAndFooter(
+            header = HeaderAdapter{reviewAdapter.retry()},
+            footer = HeaderAdapter{reviewAdapter.retry()}
+        )
+        reviewBinding.retry.setOnClickListener {
+            reviewAdapter.retry()
+        }
 
 
         val placeId = intent.getIntExtra(Constants.PLACE_ID,0)
         if(placeId!=0) {
-            reviewViewModel.getReview(placeId)?.observe(this, {
-                if (it != null) {
+            reviewViewModel.getReviewData(placeId).observe(this) {
 
-                    reviewAdapter.submitList(it)
+                    reviewAdapter.submitData(lifecycle,it)
+
+            }
+
+            reviewAdapter.addLoadStateListener { loadState->
+
+
+                reviewBinding.apply {
+
+                    progress.isVisible = loadState.source.refresh is LoadState.Loading
+                    reviewRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                    retry.isVisible = loadState.source.refresh is LoadState.Error
+                    errorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                    if(loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached
+                        && reviewAdapter.itemCount<1){
+                        reviewRecyclerView.isVisible  =false
+                        noData.isVisible = true
+                    }else{
+                        noData.isVisible = false
+                    }
 
                 }
-
-
-            })
+            }
         }
     }
 

@@ -8,9 +8,9 @@ import retrofit2.http.*
 interface ReviewApi {
 
     @GET("reviews")
-    fun getReviews(@Query("PlaceId") placeId : Int,
+    suspend fun getReviews(@Query("PlaceId") placeId : Int,
                    @Query("pageNo") pageNo :Int,
-                   @Query("pageSize") pageSize : Int) : Call<Review>
+                   @Query("pageSize") pageSize : Int) : Review
 
     @POST("addRating")
     fun addRating(@Header("Authorization") token : String, @Body rating : HashMap<String,String>) : Call<Rating>

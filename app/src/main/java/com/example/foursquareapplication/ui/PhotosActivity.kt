@@ -9,11 +9,15 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.foursquareapplication.R
+import com.example.foursquareapplication.adapter.HeaderAdapter
 import com.example.foursquareapplication.adapter.PictureAdapter
 import com.example.foursquareapplication.databinding.ActivityPhotosBinding
 import com.example.foursquareapplication.getFileName
@@ -57,19 +61,42 @@ class PhotosActivity : AppCompatActivity() {
         pictureAdapter= PictureAdapter(this)
         val gridView=GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false)
         photoBinding.gridViewRecyclerView.layoutManager=gridView
-        photoBinding.gridViewRecyclerView.adapter=pictureAdapter
+        photoBinding.gridViewRecyclerView.adapter=pictureAdapter.withLoadStateHeaderAndFooter(
+            header = HeaderAdapter{pictureAdapter.retry()},
+            footer = HeaderAdapter{pictureAdapter.retry()}
+        )
+        photoBinding.retry.setOnClickListener {
+            pictureAdapter.retry()
+        }
 
       val placeId = intent.getIntExtra(Constants.PLACE_ID,0)
 
         if(placeId!=0) {
-            photosViewModel.getPictures(placeId)?.observe(this,{
-                if (it!=null)
-                    pictureAdapter.submitList(it)
-            })
+            photosViewModel.getPicture(placeId).observe(this){
 
-        }
-        else{
-            println("124578"+placeId)
+                    pictureAdapter.submitData(lifecycle,it)
+            }
+
+            pictureAdapter.addLoadStateListener { loadState->
+
+
+                photoBinding.apply {
+
+                    progress.isVisible = loadState.source.refresh is LoadState.Loading
+                    gridViewRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                    retry.isVisible = loadState.source.refresh is LoadState.Error
+                    errorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                    if(loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached
+                        && pictureAdapter.itemCount<1){
+                        gridViewRecyclerView.visibility  = View.INVISIBLE
+                        noData.isVisible = true
+                    }else{
+                        noData.isVisible = false
+                    }
+
+                }
+            }
+
         }
 
     }
@@ -184,6 +211,7 @@ class PhotosActivity : AppCompatActivity() {
 
             }
 
+
             PhotosApi.uploadReviewImage(
                     placeId, userId, token, reviewImagesParts
             ).enqueue(object : Callback<ApiResponse> {
@@ -192,7 +220,7 @@ class PhotosActivity : AppCompatActivity() {
                         if (response.body()?.getStatus() == Constants.STATUS_OK) {
                             Toast.makeText(applicationContext, "Photo(s) Added", Toast.LENGTH_LONG)
                                 .show()
-                            photosViewModel.itemPagedList?.value?.dataSource?.invalidate()
+
                         } else {
 
                             Toast.makeText(applicationContext, response.body()?.getMessage(), Toast.LENGTH_SHORT).show()
@@ -212,6 +240,7 @@ class PhotosActivity : AppCompatActivity() {
 
             })
         }
+        modelList.clear()
     }
 
 }
